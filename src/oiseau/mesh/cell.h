@@ -24,64 +24,50 @@ std::string &celltype_to_string(CellType &type);
 
 class Cell {
   protected:
+    std::string m_name;
     CellType m_type;
     int m_dim;
-    std::string m_name;
-    std::unique_ptr<Cell> m_facet;
-    std::unique_ptr<Cell> m_edge;
     std::array<int, 4> m_entities_number;
 
   public:
-    virtual std::string &name() { return m_name; }
-    virtual int &dimension() { return m_dim; }
-    virtual Cell *facet() { return m_facet.get(); }
-    virtual Cell *edge() { return m_facet.get(); }
-    virtual CellType &type() { return m_type; }
-    virtual int num_entities(int dim) { return m_entities_number[dim]; }
+    virtual Cell *facet() = 0;
+    virtual Cell *edge() { return facet()->facet(); }
+    std::string &name();
+    int dimension();
+    CellType &type();
+    int num_entities(int dim) const;
 };
 
 class PointCell : public Cell {
   public:
-    PointCell() {
-        m_name = "Point";
-        m_dim = 0;
-        m_type = CellType::point;
-        m_entities_number = {1, 0, 0, 0};
-    };
+    PointCell();
+    Cell *facet() override { return nullptr; }
+    Cell *edge() override { return nullptr; }
 };
 
 class IntervalCell : public Cell {
+  private:
+    PointCell m_facet;
+
   public:
-    IntervalCell() {
-        m_name = "Line";
-        m_dim = 1;
-        m_facet = std::unique_ptr<Cell>(new PointCell());
-        m_type = CellType::line;
-        m_entities_number = {2, 1, 0, 0};
-    };
+    IntervalCell();
+    Cell *facet() override { return &m_facet; }
 };
 
 class TriangleCell : public Cell {
+    IntervalCell m_facet;
+
   public:
-    TriangleCell() {
-        m_name = "Triangle";
-        m_dim = 2;
-        m_facet = std::unique_ptr<Cell>(new IntervalCell());
-        m_edge = std::unique_ptr<Cell>(new PointCell());
-        m_type = CellType::triangle;
-        m_entities_number = {2, 1, 0, 0};
-    }
+    TriangleCell();
+    Cell *facet() override { return &m_facet; }
 };
 
 class TetrahedronCell : public Cell {
-    TetrahedronCell() {
-        m_name = "Tetrahedron";
-        m_dim = 3;
-        m_facet = std::unique_ptr<Cell>(new TriangleCell());
-        m_edge = std::unique_ptr<Cell>(new IntervalCell());
-        m_type = CellType::tetrahedron;
-        m_entities_number = {4, 6, 4, 1};
-    }
+    TriangleCell m_facet;
+
+  public:
+    TetrahedronCell();
+    Cell *facet() override { return &m_facet; }
 };
 
 } // namespace mesh
