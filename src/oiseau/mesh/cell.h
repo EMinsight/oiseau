@@ -1,26 +1,12 @@
 #pragma once
 
 #include <array>
-#include <memory>
-#include <stdexcept>
 #include <string>
-#include <unordered_map>
-
-namespace {
-template <typename K, typename V> std::unordered_map<V, K> reverse_map(const std::unordered_map<K, V> &m) {
-    std::unordered_map<V, K> r;
-    for (const auto &[k, v] : m)
-        r[v] = k;
-    return r;
-}
-} // namespace
 
 namespace oiseau {
 namespace mesh {
 
 enum class CellType : int { point = 1, line = 2, triangle = 3, tetrahedron = 4 };
-CellType &celltype_from_string(std::string &name);
-std::string &celltype_to_string(CellType &type);
 
 class Cell {
   protected:
@@ -69,6 +55,9 @@ class TetrahedronCell : public Cell {
     TetrahedronCell();
     Cell *facet() override { return &m_facet; }
 };
+
+CellType &celltype_from_string(std::string &name);
+std::string &celltype_to_string(CellType &type);
 
 } // namespace mesh
 } // namespace oiseau
