@@ -4,8 +4,7 @@
 using namespace oiseau::mesh;
 
 int main() {
-    TriangleCell tricell;
-    std::cout << tricell.name() << std::endl;
-    std::cout << tricell.dimension() << std::endl;
-    std::cout << celltype_to_string(tricell.type()) << std::endl;
+    auto tri = get_cell_type("triangle");
+    std::cout << tri->name() << std::endl;
+    std::cout << tri->dimension() << std::endl;
 }

@@ -1,17 +1,17 @@
 #pragma once
 
 #include <array>
+#include <stdexcept>
 #include <string>
 
 namespace oiseau {
 namespace mesh {
 
-enum class CellType : int { point = 1, line = 2, triangle = 3, tetrahedron = 4 };
+#define CellType Cell *
 
 class Cell {
   protected:
     std::string m_name;
-    CellType m_type;
     int m_dim;
     std::array<int, 4> m_entities_number;
 
@@ -20,7 +20,6 @@ class Cell {
     virtual Cell *edge() { return facet()->facet(); }
     std::string &name();
     int dimension();
-    CellType &type();
     int num_entities(int dim) const;
 };
 
@@ -38,6 +37,7 @@ class IntervalCell : public Cell {
   public:
     IntervalCell();
     Cell *facet() override { return &m_facet; }
+    Cell *edge() override { return nullptr; }
 };
 
 class TriangleCell : public Cell {
@@ -56,8 +56,7 @@ class TetrahedronCell : public Cell {
     Cell *facet() override { return &m_facet; }
 };
 
-CellType &celltype_from_string(std::string &name);
-std::string &celltype_to_string(CellType &type);
+CellType get_cell_type(const std::string &cell);
 
 } // namespace mesh
 } // namespace oiseau
