@@ -4,7 +4,7 @@
 
 namespace oiseau::mesh {
 
-Cell *get_cell_type(const std::string &cell) {
+CellType get_cell_type(const std::string &cell) {
     static PointCell point;
     static IntervalCell interval;
     static TriangleCell triangle;
@@ -14,9 +14,9 @@ Cell *get_cell_type(const std::string &cell) {
     else if (cell == "interval") {
         return &interval;
     } else if (cell == "triangle") {
-        return &interval;
+        return &triangle;
     } else if (cell == "tetrahedron") {
-        return &interval;
+        return &tetrahedron;
     } else
         throw std::runtime_error("Unknown cell type (" + cell + ")");
 }

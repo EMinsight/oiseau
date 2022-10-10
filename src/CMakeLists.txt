@@ -9,6 +9,8 @@ file(
 )
 
 set(OISEAU_SOURCES ${OISEAU_SOURCE_GLOB})
+set(OISEAU_HEADERS ${CMAKE_CURRENT_LIST_DIR})
 
-add_library(oiseau STATIC ${OISEAU_SOURCES})
-target_include_directories(oiseau PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+add_library(oiseau_core INTERFACE)
+target_sources(oiseau_core INTERFACE ${OISEAU_SOURCES})
+target_include_directories(oiseau_core INTERFACE ${OISEAU_HEADERS})

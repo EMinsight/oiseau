@@ -3,7 +3,6 @@ set(ENABLE_PRIVATE_API ON)
 
 find_package(GMSH)
 
-if (NOT GMSH_FOUND)
 FetchContent_Declare(
     gmsh
     GIT_REPOSITORY https://gitlab.onelab.info/gmsh/gmsh
@@ -12,4 +11,3 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(gmsh)
-endif (NOT GMSH_FOUND)
