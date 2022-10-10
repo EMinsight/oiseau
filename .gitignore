@@ -1,2 +1,5 @@
 **/build
 **/.cache
+**/__pycache__
+python/.pytest_cache
+**/Testing
