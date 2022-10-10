@@ -1,0 +1,9 @@
+dist/
+sdist/
+build/
+setup.py
+*.egg-info/
+.eggs/
+__pycache__/
+compile_commands.json 
+*.so
