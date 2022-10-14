@@ -6,6 +6,7 @@ file(
     oiseau/dg/*.cpp
     oiseau/mesh/*.cpp
     oiseau/plotting/*.cpp
+    oiseau/utils/*.cpp
 )
 
 set(OISEAU_SOURCES ${OISEAU_SOURCE_GLOB})
