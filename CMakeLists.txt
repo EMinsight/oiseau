@@ -15,7 +15,7 @@ add_subdirectory(src)
 # export oiseau target
 add_library(oiseau SHARED)
 target_link_libraries(oiseau PUBLIC oiseau_core)
-target_link_libraries(oiseau PUBLIC xtensor_stack Boost::math)
+target_link_libraries(oiseau PUBLIC oiseau_deps)
 
 # demos
 add_subdirectory(demo)

@@ -3,10 +3,20 @@ include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)
 set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 
-include(boost-math.cmake)
 include(googletest.cmake)
 include(xtensor.cmake)
-# include(blaze.cmake)
-# include(eigen.cmake)
-# include(pybind11.cmake)
-# include(gmsh.cmake)
+include(boost/math.cmake)
+
+add_library(oiseau_deps INTERFACE)
+target_link_libraries(oiseau_deps INTERFACE xtensor_stack Boost::math)
+target_precompile_headers(
+    oiseau_deps
+    INTERFACE
+    <boost/math/special_functions/gamma.hpp>
+    <boost/math/special_functions/jacobi.hpp>
+    <xtensor-blas/xlinalg.hpp>
+    <xtensor/xarray.hpp>
+    <xtensor/xio.hpp>
+    <xtensor/xmath.hpp>
+    <xtensor/xtensor.hpp>
+)
