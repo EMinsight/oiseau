@@ -9,4 +9,4 @@ class Geometry {
     std::vector<std::array<double, 3>> m_cell_vertices;
     std::vector<std::array<double, 3>> m_vertices;
 };
-} // namespace oiseau::geometry
+} // namespace oiseau::mesh

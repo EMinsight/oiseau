@@ -6,6 +6,7 @@
 #include <boost/math/special_functions/jacobi.hpp>
 #include <concepts>
 #include <ranges>
+#include <utility>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>

@@ -8,10 +8,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(pybind11 REQUIRED)
 
-pybind11_add_module(cpp MODULE
-    oiseau/wrappers/oiseau.cpp
-    oiseau/wrappers/mesh.cpp
-    oiseau/wrappers/io.cpp
+pybind11_add_module(
+    cpp MODULE oiseau/wrappers/oiseau.cpp oiseau/wrappers/mesh.cpp oiseau/wrappers/io.cpp
 )
 
 add_subdirectory(.. oiseau)
