@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/special_functions/jacobi.hpp>
 #include <concepts>
@@ -10,6 +11,7 @@
 #include <xtensor/xarray.hpp>
 #include <xtensor/xio.hpp>
 #include <xtensor/xmath.hpp>
+#include <xtensor/xtensor.hpp>
 
 namespace oiseau::utils {
 
@@ -70,6 +72,26 @@ template <std::floating_point T = double, std::floating_point Real>
 xt::xarray<T> jacobi_gl(unsigned n, Real alpha, Real beta) {
     auto [x, _] = jacobi_gq(n - 2, alpha + 1.0, beta + 1.0);
     return xt::concatenate(xt::xtuple(-xt::ones<T>({1}), x, xt::ones<T>({1})));
+}
+
+template <std::floating_point T = double> xt::xarray<T> vandermonde_1d(unsigned n, const xt::xarray<T> &r) {
+    std::array<size_t, 2> shape = {r.size(), n + 1};
+    xt::xtensor<double, 2> output(shape);
+    for (size_t i = 0; i < n + 1; i++) {
+        auto view = xt::view(output, xt::all(), i);
+        view = oiseau::utils::jacobi_p(i, 0.0, 0.0, r);
+    }
+    return output;
+}
+
+template <std::floating_point T = double> xt::xarray<T> grad_vandermonde_1d(unsigned n, const xt::xarray<T> &r) {
+    std::array<size_t, 2> shape = {r.size(), n + 1};
+    xt::xtensor<double, 2> output(shape);
+    for (size_t i = 0; i < n + 1; i++) {
+        auto view = xt::view(output, xt::all(), i);
+        view = oiseau::utils::grad_jacobi_p(i, 0.0, 0.0, r);
+    }
+    return output;
 }
 
 } // namespace oiseau::utils
