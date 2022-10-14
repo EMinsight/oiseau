@@ -3,17 +3,17 @@
 
 namespace oiseau::mesh {
 class Mesh {
-  public:
-    Mesh();
-    Mesh(Mesh &&) = default;
-    Mesh(const Mesh &) = default;
-    Mesh &operator=(Mesh &&) = default;
-    Mesh &operator=(const Mesh &) = default;
-    ~Mesh();
+ public:
+  Mesh();
+  Mesh(Mesh &&) = default;
+  Mesh(const Mesh &) = default;
+  Mesh &operator=(Mesh &&) = default;
+  Mesh &operator=(const Mesh &) = default;
+  ~Mesh();
 
-  private:
-    Topology topology;
-    Geometry geometry;
+ private:
+  Topology topology;
+  Geometry geometry;
 };
 
-} // namespace oiseau::mesh
+}  // namespace oiseau::mesh

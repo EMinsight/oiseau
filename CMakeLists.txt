@@ -8,6 +8,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(OISEAU_BUILD_DEMO "Build demo" ON)
+option(OISEAU_BUILD_TEST "Build test" ON)
+
 # third party dependencies
 add_subdirectory(vendor)
 add_subdirectory(src)
@@ -18,8 +21,12 @@ target_link_libraries(oiseau PUBLIC oiseau_core)
 target_link_libraries(oiseau PUBLIC oiseau_deps)
 
 # demos
-add_subdirectory(demo)
+if(OISEAU_BUILD_DEMO)
+    add_subdirectory(demo)
+endif()
 
 # tests
-enable_testing()
-add_subdirectory(test)
+if(OISEAU_BUILD_TEST)
+    enable_testing()
+    add_subdirectory(test)
+endif()
