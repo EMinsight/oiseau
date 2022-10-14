@@ -1,4 +1,4 @@
-#include "oiseau/mesh/cell.h"
+#include "oiseau/mesh/cell.hpp"
 #include <array>
 #include <vector>
 

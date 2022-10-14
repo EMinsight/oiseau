@@ -1,4 +1,4 @@
-#include "oiseau/mesh/cell.h"
+#include "oiseau/mesh/cell.hpp"
 #include <string>
 
 namespace oiseau::mesh {

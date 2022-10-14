@@ -1,5 +1,5 @@
+#include "oiseau/utils/math.hpp"
 #include <gtest/gtest.h>
-#include <oiseau/utils/math.h>
 
 #define EXPECT_FLOATS_NEARLY_EQ(expected, actual, thresh)                                                              \
     EXPECT_EQ(expected.size(), actual.size()) << "Array sizes differ.";                                                \
