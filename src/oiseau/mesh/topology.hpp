@@ -1,3 +1,5 @@
+#pragma once
+
 namespace oiseau::mesh {
 
 class Topology {

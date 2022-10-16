@@ -7,7 +7,7 @@
 namespace oiseau {
 namespace mesh {
 
-#define CellType Cell *
+#define CellType Cell const *
 
 class Cell {
  protected:

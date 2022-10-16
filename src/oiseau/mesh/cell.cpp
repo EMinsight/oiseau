@@ -4,10 +4,10 @@
 namespace oiseau::mesh {
 
 CellType get_cell_type(const std::string &cell) {
-  static PointCell point;
-  static IntervalCell interval;
-  static TriangleCell triangle;
-  static TetrahedronCell tetrahedron;
+  static const PointCell point;
+  static const IntervalCell interval;
+  static const TriangleCell triangle;
+  static const TetrahedronCell tetrahedron;
   if (cell == "point")
     return &point;
   else if (cell == "interval") {
