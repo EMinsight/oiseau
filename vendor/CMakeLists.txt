@@ -6,9 +6,10 @@ set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 include(googletest.cmake)
 include(xtensor.cmake)
 include(boost/math.cmake)
+include(boost/algorithm.cmake)
 
 add_library(oiseau_deps INTERFACE)
-target_link_libraries(oiseau_deps INTERFACE xtensor_stack Boost::math)
+target_link_libraries(oiseau_deps INTERFACE xtensor_stack Boost::math Boost::algorithm)
 target_precompile_headers(
     oiseau_deps
     INTERFACE
