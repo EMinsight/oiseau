@@ -7,9 +7,12 @@ include(googletest.cmake)
 include(xtensor.cmake)
 include(boost/math.cmake)
 include(boost/algorithm.cmake)
+include(loguru.cmake)
 
 add_library(oiseau_deps INTERFACE)
-target_link_libraries(oiseau_deps INTERFACE xtensor_stack Boost::math Boost::algorithm)
+target_link_libraries(oiseau_deps INTERFACE xtensor_stack)
+target_link_libraries(oiseau_deps INTERFACE Boost::math Boost::algorithm)
+target_link_libraries(oiseau_deps INTERFACE loguru)
 target_precompile_headers(
     oiseau_deps
     INTERFACE
@@ -20,4 +23,5 @@ target_precompile_headers(
     <xtensor/xio.hpp>
     <xtensor/xmath.hpp>
     <xtensor/xtensor.hpp>
+    <loguru.hpp>
 )
