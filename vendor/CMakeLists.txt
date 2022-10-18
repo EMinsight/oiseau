@@ -8,6 +8,7 @@ include(xtensor.cmake)
 include(boost/math.cmake)
 include(boost/algorithm.cmake)
 include(loguru.cmake)
+include(benchmark.cmake)
 
 add_library(oiseau_deps INTERFACE)
 target_link_libraries(oiseau_deps INTERFACE xtensor_stack)

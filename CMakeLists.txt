@@ -10,9 +10,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(OISEAU_BUILD_DEMO "Build demo" ON)
 option(OISEAU_BUILD_TEST "Build test" ON)
+option(OISEAU_BUILD_DOCS "Build Docs" OFF)
+option(OISEAU_BUILD_BENC "Build Benc" OFF)
 
 # third party dependencies
 add_subdirectory(vendor)
+
+# oiseau library
 add_subdirectory(src)
 
 # export oiseau target
@@ -30,3 +34,10 @@ if(OISEAU_BUILD_TEST)
     enable_testing()
     add_subdirectory(test)
 endif()
+
+# benchmarks
+if(OISEAU_BUILD_BENC)
+    add_subdirectory(benchmark)
+endif()
+
+add_subdirectory(doc)
