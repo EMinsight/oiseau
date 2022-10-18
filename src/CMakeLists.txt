@@ -1,8 +1,6 @@
 file(
     GLOB_RECURSE
     OISEAU_SOURCE_GLOB
-    oiseau/assembly/*.cpp
-    oiseau/common/*.cpp
     oiseau/dg/*.cpp
     oiseau/io/*.cpp
     oiseau/mesh/*.cpp
