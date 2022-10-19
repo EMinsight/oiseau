@@ -3,6 +3,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/xtensor-stack/xtl.git
     GIT_SHALLOW 1
     GIT_PROGRESS 1
+    FIND_PACKAGE_ARGS REQUIRED
 )
 
 FetchContent_Declare(
@@ -10,6 +11,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/xtensor-stack/xtensor.git
     GIT_SHALLOW 1
     GIT_PROGRESS 1
+    FIND_PACKAGE_ARGS REQUIRED
 )
 
 FetchContent_Declare(
@@ -17,6 +19,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/xtensor-stack/xtensor-blas
     GIT_SHALLOW 1
     GIT_PROGRESS 1
+    FIND_PACKAGE_ARGS REQUIRED
 )
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)

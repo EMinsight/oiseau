@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.24)
 
 project(oiseau)
 
@@ -40,4 +40,6 @@ if(OISEAU_BUILD_BENC)
     add_subdirectory(benchmark)
 endif()
 
-add_subdirectory(doc)
+if(OISEAU_BUILD_DOCS)
+    add_subdirectory(doc)
+endif()
