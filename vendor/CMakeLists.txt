@@ -24,6 +24,10 @@ target_precompile_headers(
     <xtensor/xtensor.hpp>
 )
 
+include(fmt.cmake)
+target_link_libraries(oiseau_deps INTERFACE fmt::fmt)
+target_precompile_headers(oiseau_deps INTERFACE <fmt/ranges.h> <fmt/core.h>)
+
 include(eigen.cmake)
 include(blaze.cmake)
 
