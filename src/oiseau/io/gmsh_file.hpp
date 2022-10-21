@@ -8,11 +8,11 @@
 namespace oiseau::io {
 struct MeshFormatSection {
   double version{};
-  int is_ascii{};
+  int is_binary{};
   std::size_t data_size{};
   MeshFormatSection() = default;
-  MeshFormatSection(double version, int is_ascii, std::size_t data_size)
-      : version(version), is_ascii(is_ascii), data_size(data_size) {}
+  MeshFormatSection(double version, int is_binary, std::size_t data_size)
+      : version(version), is_binary(is_binary), data_size(data_size) {}
 };
 
 struct EntityEntry {
@@ -35,9 +35,9 @@ struct EntityEntry {
 };
 
 struct EntitiesSection {
-  std::array<std::vector<EntityEntry>, 4> m_blocks{};
+  std::array<std::vector<EntityEntry>, 4> blocks{};
   EntitiesSection() = default;
-  explicit EntitiesSection(std::array<std::vector<EntityEntry>, 4>&& blocks) : m_blocks(blocks) {}
+  explicit EntitiesSection(std::array<std::vector<EntityEntry>, 4>&& blocks) : blocks(blocks) {}
 };
 
 struct PhysicalNamesSection {
