@@ -143,4 +143,13 @@ class GMSHFile {
  private:
   void read(const std::string& filename);
 };
+
+namespace detail {
+MeshFormatSection mesh_format_handler(std::istream& f_handler);
+PhysicalNamesSection physical_names_handler(std::istream& f_handler);
+EntitiesSection entities_handler(std::istream& f_handler, bool is_binary);
+NodesSection nodes_handler(std::istream& f_handler, bool is_binary);
+ElementSection elements_handler(std::istream& f_handler, bool is_binary);
+
+}  // namespace detail
 }  // namespace oiseau::io

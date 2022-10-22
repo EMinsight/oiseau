@@ -6,9 +6,9 @@
 
 #define PREFIX '$'
 
-namespace {
-using namespace oiseau::io;
+namespace oiseau::io {
 
+namespace detail {
 const std::size_t gmsh_nodes_per_cell(const std::size_t s) {
   if (s == 1)  // line
     return 2;
@@ -57,13 +57,15 @@ std::vector<T> from_file(std::istream& f, int n, bool is_binary = false) {
 
 MeshFormatSection mesh_format_handler(std::istream& f_handler) {
   auto [version] = from_file<1, double>(f_handler);
-  auto [is_ascii] = from_file<1, int>(f_handler);
+  auto [is_binary] = from_file<1, int>(f_handler);
   auto [size_t_size] = from_file<1, std::size_t>(f_handler);
-  f_handler.get();  // skip NF
-  auto [verify_one] = from_file<1, int>(f_handler, true);
-  if (verify_one != 1) throw std::runtime_error("Invalid GMSH file");
-  if (size_t_size != sizeof(std::size_t)) throw std::runtime_error("Invalid GMSH file");
-  return {version, is_ascii, size_t_size};
+  if (is_binary) {
+    f_handler.get();  // skip NF
+    auto [verify_one] = from_file<1, int>(f_handler, true);
+    if (verify_one != 1) throw std::runtime_error("Invalid GMSH file");
+    if (size_t_size != sizeof(std::size_t)) throw std::runtime_error("Invalid GMSH file");
+  }
+  return {version, is_binary, size_t_size};
 };
 
 PhysicalNamesSection physical_names_handler(std::istream& f_handler) {
@@ -159,10 +161,10 @@ void skip_to_end_of_environment(std::istream& f_handler) {
     if (line.starts_with(PREFIX)) break;
   }
 }
+}  // namespace detail
 
-}  // namespace
-
-void oiseau::io::GMSHFile::read(const std::string& filename) {
+void GMSHFile::read(const std::string& filename) {
+  using namespace detail;
   std::ifstream f_handler(filename);
   if (f_handler.fail()) throw std::runtime_error("Could not open file");
   std::string line;
@@ -187,3 +189,4 @@ void oiseau::io::GMSHFile::read(const std::string& filename) {
   }
   if (f_handler.is_open()) f_handler.close();
 }
+}  // namespace oiseau::io

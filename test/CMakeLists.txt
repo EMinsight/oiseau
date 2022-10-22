@@ -8,3 +8,4 @@ endmacro()
 
 add_test(oiseau_test_mesh test_mesh.cpp)
 add_test(oiseau_test_utils test_utils.cpp)
+add_test(oiseau_test_io test_io.cpp)
