@@ -7,4 +7,7 @@ xt::xarray<double> vandermonde_1d(unsigned n, const xt::xarray<double> &r);
 xt::xarray<double> grad_vandermonde_1d(unsigned n, const xt::xarray<double> &r);
 xt::xarray<double> generate_triangle_equidistant_nodes(std::size_t n);
 xt::xarray<double> warp_factor(std::size_t n, xt::xarray<double> &rout);
+xt::xarray<double> conversion_equilateral_xy_to_rs(xt::xarray<double> coords);
+xt::xarray<double> conversion_rs_to_ab(const xt::xarray<double> &rs);
+xt::xarray<double> generate_triangle_nodes(std::size_t n);
 }  // namespace oiseau::dg::nodal::utils

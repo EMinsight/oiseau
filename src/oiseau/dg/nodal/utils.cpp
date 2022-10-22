@@ -84,13 +84,70 @@ xt::xarray<double> warp_factor(std::size_t n, xt::xarray<double> &rout) {
   for (std::size_t i = 0; i < n + 1; ++i)
     xt::view(p_mat, i, xt::all()) = oiseau::utils::jacobi_p(i, 0.0, 0.0, rout);
   auto l_mat = xt::linalg::solve(xt::transpose(v_eq), p_mat);
-  std::cout << l_mat << std::endl;
-  std::cout << p_mat << std::endl;
   auto warp = xt::linalg::dot(xt::transpose(l_mat), (-r_eq + lgl_r));
   auto zerof = xt::abs(rout) < 1.0 - 1e-10;
   auto sf = 1.0 - xt::pow((zerof * rout), 2);
   warp = warp / sf + warp * (zerof - 1);
   return warp;
+}
+
+xt::xarray<double> conversion_equilateral_xy_to_rs(xt::xarray<double> coords) {
+  auto l_coords = xt::zeros_like(coords);
+  auto x = xt::view(coords, xt::all(), 0);
+  auto y = xt::view(coords, xt::all(), 1);
+  auto l1 = (std::sqrt(3.0) * y + 1.0) / 3.0;
+  auto l2 = (-3.0 * x - std::sqrt(3.0) * y + 2.0) / 6.0;
+  auto l3 = (3.0 * x - std::sqrt(3.0) * y + 2.0) / 6.0;
+  xt::view(l_coords, xt::all(), 0) = -l2 + l3 - l1;
+  xt::view(l_coords, xt::all(), 1) = -l2 - (l3 - l1);
+  return l_coords;
+}
+
+xt::xarray<double> conversion_rs_to_ab(const xt::xarray<double> &rs) {
+  auto ab = xt::zeros_like(rs);
+  auto r = xt::col(rs, 0);
+  auto s = xt::col(rs, 1);
+  for (auto i = 0; i < rs.shape()[0]; ++i)
+    ab(i, 0) = (s[i] == 1) ? -1 : 2 * (1 + r[i]) / (1 - s[i]) - 1;
+  xt::col(ab, 1) = s;
+  return ab;
+}
+
+xt::xarray<double> generate_triangle_nodes(std::size_t n) {
+  double alp_opt[] = {0.0000, 0.0000, 1.4152, 0.1001, 0.2751, 0.9800, 1.0999, 1.2832,
+                      1.3648, 1.4773, 1.4959, 1.5743, 1.5770, 1.6223, 1.6258};
+  double alpha = (n < 16) ? alp_opt[n - 1] : 5.0 / 3.0;
+  std::size_t n_p = (n + 1) * (n + 2) / 2;
+  xt::xarray<double> l1 = xt::zeros<double>({n_p});
+  xt::xarray<double> l3 = xt::zeros<double>({n_p});
+  xt::xarray<double> out = xt::zeros<double>(xt::xarray<double>::shape_type{n_p, 3});
+  std::size_t idx = 0;
+  for (std::size_t i = 0; i < n + 1; ++i)
+    for (std::size_t j = 0; j < n + 1 - i; ++j, ++idx) {
+      l1[idx] = i * 1.0 / n;
+      l3[idx] = j * 1.0 / n;
+    }
+  xt::xarray<double> l2 = (1.0 - l1 - l3);
+  auto blend1 = 4 * l2 * l3;
+  auto blend2 = 4 * l1 * l3;
+  auto blend3 = 4 * l1 * l2;
+  xt::xarray<double> e1 = -l2 + l3;
+  xt::xarray<double> e2 = -l3 + l1;
+  xt::xarray<double> e3 = -l1 + l2;
+  auto warpf1 = oiseau::dg::nodal::utils::warp_factor(n, e1);
+  auto warpf2 = oiseau::dg::nodal::utils::warp_factor(n, e2);
+  auto warpf3 = oiseau::dg::nodal::utils::warp_factor(n, e3);
+  auto warp1 = blend1 * warpf1 * xt::square(1 + (alpha * l1));
+  auto warp2 = blend2 * warpf2 * xt::square(1 + (alpha * l1));
+  auto warp3 = blend3 * warpf3 * xt::square(1 + (alpha * l1));
+  auto &&x = xt::col(out, 0);
+  auto &&y = xt::col(out, 0);
+  auto pi = xt::numeric_constants<double>::PI;
+  xt::col(out, 0) = -l2 + l3;
+  xt::col(out, 1) = (-l2 - l3 + 2.0 * l1) / std::sqrt(3.0);
+  x = x + 1 * warp1 + std::cos(2 * pi / 3) * warp2 + std::cos(4 * pi / 3) * warp3;
+  y = y + 0 * warp1 + std::sin(2 * pi / 3) * warp2 + std::sin(4 * pi / 3) * warp3;
+  return out;
 }
 
 }  // namespace oiseau::dg::nodal::utils
