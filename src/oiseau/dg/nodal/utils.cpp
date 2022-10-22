@@ -75,4 +75,22 @@ xt::xarray<double> generate_triangle_equidistant_nodes(std::size_t n) {
 #undef l2
   return out;
 }
+
+xt::xarray<double> warp_factor(std::size_t n, xt::xarray<double> &rout) {
+  auto lgl_r = oiseau::dg::nodal::utils::jacobi_gl(n, 0.0, 0.0);
+  auto r_eq = xt::linspace<double>(-1.0, 1.0, n + 1);
+  auto v_eq = oiseau::dg::nodal::utils::vandermonde_1d(n, r_eq);
+  xt::xarray<double> p_mat = xt::zeros<double>(xt::xarray<double>::shape_type{n + 1, rout.size()});
+  for (std::size_t i = 0; i < n + 1; ++i)
+    xt::view(p_mat, i, xt::all()) = oiseau::utils::jacobi_p(i, 0.0, 0.0, rout);
+  auto l_mat = xt::linalg::solve(xt::transpose(v_eq), p_mat);
+  std::cout << l_mat << std::endl;
+  std::cout << p_mat << std::endl;
+  auto warp = xt::linalg::dot(xt::transpose(l_mat), (-r_eq + lgl_r));
+  auto zerof = xt::abs(rout) < 1.0 - 1e-10;
+  auto sf = 1.0 - xt::pow((zerof * rout), 2);
+  warp = warp / sf + warp * (zerof - 1);
+  return warp;
+}
+
 }  // namespace oiseau::dg::nodal::utils

@@ -44,7 +44,6 @@ TEST(test_dg_nodal_utils, test_grad_vandermonde_1d) {
                                  {0., 1.22474487, 1.42302495, -1.54343367, -3.77064691},
                                  {0., 1.22474487, 3.32039154, 4.06905241, 1.59629356},
                                  {0., 1.22474487, 4.26907484, 8.55904127, 12.74383196}};
-
   EXPECT_FLOATS_NEARLY_EQ(output, expected, 0.0001);
 }
 
@@ -54,6 +53,12 @@ TEST(test_dg_nodal_utils, test_generate_triangle_equidistant_nodes) {
                                  {-0.577, -0.577, -0.577, 0.289, 0.289, 1.155},
                                  {0., 0., 0., 0., 0., 0.}};
   expected = xt::transpose(expected);
+  EXPECT_FLOATS_NEARLY_EQ(output, expected, 0.01);
+}
 
+TEST(test_dg_nodal_utils, test_warp_factor) {
+  xt::xarray<double> r = {0.1, 0.5, 0.9};
+  xt::xarray<double> output = warp_factor(3, r);
+  xt::xarray<double> expected = {0.038, 0.192, 0.346};
   EXPECT_FLOATS_NEARLY_EQ(output, expected, 0.01);
 }
