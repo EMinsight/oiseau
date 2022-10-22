@@ -1,0 +1,5 @@
+macro(add_test test_name)
+    add_executable(${test_name} ${ARGN})
+    target_link_libraries(${test_name} gtest_main oiseau)
+    gtest_discover_tests(${test_name})
+endmacro()
