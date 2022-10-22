@@ -1,8 +1,10 @@
 #include "oiseau/dg/nodal/utils.hpp"
 #include <boost/math/special_functions/gamma.hpp>
+#include <cmath>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xmath.hpp>
 #include <xtensor/xtensor.hpp>
+#include <xtensor/xview.hpp>
 #include "oiseau/utils/math.hpp"
 
 namespace oiseau::dg::nodal::utils {
@@ -52,5 +54,25 @@ xt::xarray<double> grad_vandermonde_1d(unsigned n, const xt::xarray<double> &r) 
     xt::view(output, xt::all(), i) = oiseau::utils::grad_jacobi_p(i, 0.0, 0.0, r);
   }
   return output;
+}
+
+xt::xarray<double> generate_triangle_equidistant_nodes(std::size_t n) {
+  std::size_t n_p = (n + 1) * (n + 2) / 2;
+  xt::xarray<double> l1 = xt::zeros<double>({n_p});
+  xt::xarray<double> l3 = xt::zeros<double>({n_p});
+  xt::xarray<double> out = xt::zeros<double>(xt::xarray<double>::shape_type{n_p, 3});
+
+  std::size_t idx = 0;
+  for (std::size_t i = 0; i < n + 1; ++i)
+    for (std::size_t j = 0; j < n + 1 - i; ++j, ++idx) {
+      l1[idx] = i * 1.0 / n;
+      l3[idx] = j * 1.0 / n;
+    }
+
+#define l2 (1.0 - l1 - l3)
+  xt::view(out, xt::all(), 0) = -l2 + l3;
+  xt::view(out, xt::all(), 1) = (-l2 - l3 + 2.0 * l1) / std::sqrt(3.0);
+#undef l2
+  return out;
 }
 }  // namespace oiseau::dg::nodal::utils

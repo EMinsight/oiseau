@@ -47,3 +47,13 @@ TEST(test_dg_nodal_utils, test_grad_vandermonde_1d) {
 
   EXPECT_FLOATS_NEARLY_EQ(output, expected, 0.0001);
 }
+
+TEST(test_dg_nodal_utils, test_generate_triangle_equidistant_nodes) {
+  xt::xarray<double> output = generate_triangle_equidistant_nodes(2);
+  xt::xarray<double> expected = {{-1., 0., 1., -0.5, 0.5, 0.},
+                                 {-0.577, -0.577, -0.577, 0.289, 0.289, 1.155},
+                                 {0., 0., 0., 0., 0., 0.}};
+  expected = xt::transpose(expected);
+
+  EXPECT_FLOATS_NEARLY_EQ(output, expected, 0.01);
+}
