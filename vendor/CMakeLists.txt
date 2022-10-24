@@ -22,6 +22,7 @@ target_precompile_headers(
     <xtensor/xio.hpp>
     <xtensor/xmath.hpp>
     <xtensor/xtensor.hpp>
+    <xtensor/xview.hpp>
 )
 
 include(fmt.cmake)
@@ -40,4 +41,22 @@ target_link_libraries(oiseau_deps INTERFACE Boost::boost)
 target_precompile_headers(
     oiseau_deps INTERFACE <boost/math/special_functions/gamma.hpp>
     <boost/math/special_functions/jacobi.hpp>
+)
+
+target_precompile_headers(
+    oiseau_deps
+    INTERFACE
+    <string>
+    <vector>
+    <array>
+    <cmath>
+    <iostream>
+)
+
+include(pybind11.cmake)
+target_link_libraries(oiseau_deps INTERFACE pybind11::embed)
+
+target_precompile_headers(
+    oiseau_deps INTERFACE <pybind11/embed.h> <pybind11/numpy.h> <pybind11/pytypes.h>
+    <pybind11/stl.h>
 )
