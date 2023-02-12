@@ -87,7 +87,7 @@ PhysicalNamesSection physical_names_handler(std::istream& f_handler) {
 };
 
 EntitiesSection entities_handler(std::istream& f_handler, bool is_binary) {
-  auto quantity = from_file<std::size_t, 1>(f_handler, is_binary);
+  auto quantity = from_file<std::size_t, 4>(f_handler, is_binary);
   std::array<std::vector<EntityEntry>, 4> blocks;
   for (std::size_t i = 0; i < 4; i++) blocks.at(i).reserve(quantity.at(i));
   for (int d = 0; d < 4; d++) {
