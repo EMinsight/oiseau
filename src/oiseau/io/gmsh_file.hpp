@@ -6,10 +6,12 @@
 #include <vector>
 
 namespace oiseau::io {
+
 struct MeshFormatSection {
   double version{};
   int is_binary{};
   std::size_t data_size{};
+
   MeshFormatSection() = default;
   MeshFormatSection(double version, int is_binary, std::size_t data_size)
       : version(version), is_binary(is_binary), data_size(data_size) {}
@@ -20,13 +22,13 @@ struct EntityEntry {
   std::vector<double> boundary_coords;
   std::vector<int> physical_tags;
   std::vector<int> bounding_tags;
+
   EntityEntry(std::size_t tag, std::vector<double>&& boundary_coords,
               std::vector<int>&& physical_tags, std::vector<int>&& bounding_tags)
       : tag(tag),
         boundary_coords(std::move(boundary_coords)),
         physical_tags(std::move(physical_tags)),
         bounding_tags(std::move(bounding_tags)) {}
-
   EntityEntry(std::size_t tag, std::vector<double>&& boundary_coords,
               std::vector<int>&& physical_tags)
       : tag(tag),
@@ -36,6 +38,7 @@ struct EntityEntry {
 
 struct EntitiesSection {
   std::array<std::vector<EntityEntry>, 4> blocks{};
+
   EntitiesSection() = default;
   explicit EntitiesSection(std::array<std::vector<EntityEntry>, 4>&& blocks) : blocks(blocks) {}
 };
@@ -45,6 +48,7 @@ struct PhysicalNamesSection {
   std::vector<int> dimensions{};
   std::vector<int> physical_tags{};
   std::vector<std::string> names{};
+
   PhysicalNamesSection() = default;
   PhysicalNamesSection(int num_physical_names, std::vector<int>&& dimensions,
                        std::vector<int>&& physical_tags, std::vector<std::string>&& names)
@@ -61,6 +65,7 @@ struct NodesBlock {
   std::size_t num_nodes_in_block;
   std::vector<std::size_t> node_tags;
   std::vector<double> node_coords;
+
   NodesBlock(int entity_dim, int entity_tag, int parametric, std::size_t num_nodes_in_block,
              std::vector<std::size_t>&& node_tags, std::vector<double>&& node_coords)
       : entity_dim(entity_dim),
@@ -77,6 +82,7 @@ struct NodesSection {
   std::size_t min_node_tag{};
   std::size_t max_node_tag{};
   std::vector<NodesBlock> blocks{};
+
   NodesSection() = default;
   NodesSection(std::size_t num_entity_blocks, std::size_t num_nodes, std::size_t min_node_tag,
                std::size_t max_node_tag, std::vector<NodesBlock>&& blocks)
