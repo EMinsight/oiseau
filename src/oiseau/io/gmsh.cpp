@@ -1,5 +1,62 @@
 #include "oiseau/io/gmsh.hpp"
+#include <fmt/ranges.h>
+#include <iostream>
+#include <string>
 #include <string_view>
+#include <utility>
+#include <vector>
+#include "fmt/core.h"
+#include "oiseau/io/gmsh_file.hpp"
+#include "oiseau/mesh/cell.hpp"
+#include "oiseau/mesh/mesh.hpp"
 
-void oiseau::io::gmsh_read(const std::string_view filename, oiseau::mesh::Mesh &mesh){};
+namespace oiseau::mesh {
+CellType gmsh_celltype_to_string(const std::size_t s) {
+  switch (s) {
+  case 1:
+    return oiseau::mesh::get_cell_type("interval");
+    break;
+  case 2:
+    return oiseau::mesh::get_cell_type("triangle");
+    break;
+  case 4:
+    return oiseau::mesh::get_cell_type("tetrahedron");
+    break;
+  default:
+    throw std::runtime_error("Unknown cell type");
+  }
+}
+}  // namespace oiseau::mesh
+
+oiseau::mesh::Mesh oiseau::io::gmsh_read(std::string filename) {
+  GMSHFile file = GMSHFile(std::string(filename));
+  std::vector<double> x;
+  std::vector<std::size_t> conn, offsets;
+  std::vector<CellType> cell_types;
+
+  x.reserve(file.nodes_section.num_nodes * 3);
+  for (auto &block : file.nodes_section.blocks)
+    x.insert(x.end(), block.node_coords.begin(), block.node_coords.end());
+
+  std::size_t n_elem_conn = 0;
+  for (auto &block : file.elements_section.blocks) n_elem_conn += block.data.size();
+  conn.reserve(n_elem_conn);
+  offsets.reserve(file.elements_section.num_elements);
+  cell_types.reserve(file.elements_section.num_elements);
+
+  std::size_t offset = 0;
+  for (auto &block : file.elements_section.blocks) {
+    conn.insert(conn.end(), block.data.begin(), block.data.end());
+    std::size_t elem_size = block.data.size() / block.num_elements_in_block;
+    for (int i = 0; i < block.num_elements_in_block; ++i) {
+      offsets.emplace_back(offset);
+      cell_types.emplace_back(oiseau::mesh::gmsh_celltype_to_string(block.element_type));
+      offset += elem_size;
+    }
+  }
+
+  oiseau::mesh::Geometry geometry = oiseau::mesh::Geometry(std::move(x), 3);
+  oiseau::mesh::Mesh mesh;
+  return mesh;
+};
 void oiseau::io::gmsh_write(const std::string_view filename, oiseau::mesh::Mesh &mesh){};

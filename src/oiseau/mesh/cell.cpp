@@ -1,6 +1,7 @@
 #include "oiseau/mesh/cell.hpp"
 #include <ranges>
 #include <string>
+#include <string_view>
 
 namespace oiseau::mesh {
 
@@ -21,9 +22,9 @@ CellType get_cell_type(const std::string &cell) {
     throw std::runtime_error("Unknown cell type (" + cell + ")");
 }
 
-std::string &Cell::name() { return m_name; }
+std::string_view Cell::name() const { return m_name; }
 
-int Cell::dimension() { return m_dim; }
+int Cell::dimension() const { return m_dim; }
 
 std::vector<std::vector<int>> Cell::get_sub_entities(int dim0, int dim1) {
   return m_topology[dim0][dim1];

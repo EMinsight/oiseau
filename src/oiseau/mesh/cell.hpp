@@ -3,11 +3,10 @@
 #include <array>
 #include <string>
 
+#define CellType oiseau::mesh::Cell const *
+
 namespace oiseau {
 namespace mesh {
-
-#define CellType Cell const *
-
 class Cell {
  protected:
   std::string m_name;
@@ -18,8 +17,8 @@ class Cell {
  public:
   virtual Cell *facet() = 0;
   virtual Cell *edge() = 0;
-  std::string &name();
-  int dimension();
+  std::string_view name() const;
+  int dimension() const;
   int num_entities(int dim) const;
   std::vector<std::vector<int>> get_entity_vertices(int dim);
   std::vector<std::vector<int>> get_sub_entities(int dim0, int dim1);

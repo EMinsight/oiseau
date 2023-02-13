@@ -6,6 +6,7 @@ namespace oiseau::mesh {
 class Geometry {
  public:
   Geometry();
+  Geometry(std::vector<double> &&x, int dim);
   Geometry(Geometry &&) = default;
   Geometry(const Geometry &) = default;
   Geometry &operator=(Geometry &&) = default;
@@ -16,5 +17,6 @@ class Geometry {
 
  private:
   std::vector<double> m_x;
+  int m_dim;
 };
 }  // namespace oiseau::mesh
