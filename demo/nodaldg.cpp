@@ -1,3 +1,1 @@
-#include "oiseau/utils/math.hpp"
-
-int main() {}
+int main() { return 0; }
