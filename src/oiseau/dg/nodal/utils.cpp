@@ -56,6 +56,16 @@ xt::xarray<double> grad_vandermonde_1d(unsigned n, const xt::xarray<double> &r) 
   return output;
 }
 
+xt::xarray<double> d_matrix_1d(const xt::xarray<double> &v, const xt::xarray<double> &gv) {
+  return xt::transpose(xt::linalg::solve(xt::transpose(v), xt::transpose(gv)));
+}
+
+xt::xarray<double> d_matrix_1d(unsigned n, const xt::xarray<double> &r) {
+  auto v = vandermonde_1d(n, r);
+  auto gv = grad_vandermonde_1d(n, r);
+  return d_matrix_1d(v, gv);
+}
+
 xt::xarray<double> generate_triangle_equidistant_nodes(std::size_t n) {
   std::size_t n_p = (n + 1) * (n + 2) / 2;
   xt::xarray<double> l1 = xt::zeros<double>({n_p});
