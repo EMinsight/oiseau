@@ -14,6 +14,7 @@ class Geometry {
   ~Geometry();
 
   std::span<double> x();
+  std::span<double> x_at(std::size_t pos);
 
  private:
   std::vector<double> m_x;

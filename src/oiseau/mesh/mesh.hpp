@@ -12,10 +12,10 @@ class Mesh {
   Mesh(Topology &&topology, Geometry &&geometry)
       : _topology(std::move(topology)), _geometry(std::move(geometry)) {}
 
-  // Mesh(Mesh &&) = delete;
-  // Mesh(const Mesh &) = delete;
-  // Mesh &operator=(Mesh &&) = delete;
-  // Mesh &operator=(const Mesh &) = delete;
+  Mesh(Mesh &&) = default;
+  Mesh(const Mesh &) = default;
+  Mesh &operator=(Mesh &&) = default;
+  Mesh &operator=(const Mesh &) = default;
   ~Mesh() = default;
 
   Topology &topology();
