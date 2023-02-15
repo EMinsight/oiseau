@@ -17,8 +17,8 @@ class DGElement {
 
 class RefLine : DGElement {
  private:
-  const static unsigned int n_fp = 1;
-  const static unsigned int n_faces = 2;
+  const static unsigned int m_nfp = 1;
+  const static unsigned int m_nfaces = 2;
 
  public:
   explicit RefLine(unsigned order);
@@ -36,6 +36,29 @@ class RefLine : DGElement {
   xt::xarray<double> m_r;
   unsigned m_order;
   unsigned m_np;
+};
+
+class RefTriangle : DGElement {
+ private:
+  const static unsigned int m_nfaces = 3;
+
+ public:
+  explicit RefTriangle(unsigned order);
+  RefTriangle(const RefTriangle &) = default;
+  RefTriangle &operator=(RefTriangle &&) = default;
+  RefTriangle &operator=(const RefTriangle &) = default;
+  ~RefTriangle() = default;
+
+  xt::xarray<double> &v() override;
+  xt::xarray<double> &gv() override;
+  xt::xarray<double> &d() override;
+  xt::xarray<double> &r() { return m_r; };
+
+ private:
+  xt::xarray<double> m_r;
+  unsigned m_order;
+  unsigned m_np;
+  unsigned int m_nfp = 1;
 };
 
 }  // namespace oiseau::dg::nodal

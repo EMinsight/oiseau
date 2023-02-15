@@ -103,14 +103,77 @@ xt::xarray<double> warp_factor(std::size_t n, xt::xarray<double> &rout) {
 
 xt::xarray<double> conversion_equilateral_xy_to_rs(xt::xarray<double> coords) {
   auto l_coords = xt::zeros_like(coords);
-  auto x = xt::view(coords, xt::all(), 0);
-  auto y = xt::view(coords, xt::all(), 1);
+  auto x = xt::col(coords, 0);
+  auto y = xt::col(coords, 1);
   auto l1 = (std::sqrt(3.0) * y + 1.0) / 3.0;
   auto l2 = (-3.0 * x - std::sqrt(3.0) * y + 2.0) / 6.0;
   auto l3 = (3.0 * x - std::sqrt(3.0) * y + 2.0) / 6.0;
-  xt::view(l_coords, xt::all(), 0) = -l2 + l3 - l1;
-  xt::view(l_coords, xt::all(), 1) = -l2 - (l3 - l1);
+  xt::col(l_coords, 0) = -l2 + l3 - l1;
+  xt::col(l_coords, 1) = -l2 - (l3 - l1);
   return l_coords;
+}
+
+xt::xarray<double> simplexp_2d(xt::xarray<double> ab, int i, int j) {
+  xt::xarray<double> a = xt::col(ab, 0);
+  xt::xarray<double> b = xt::col(ab, 1);
+  auto h1 = oiseau::utils::jacobi_p(i, 0.0, 0.0, a);
+  auto h2 = oiseau::utils::jacobi_p(j, 2.0 * i + 1.0, 0.0, b);
+  return std::sqrt(2.0) * h1 * h2 * xt::pow(1 - b, i);
+}
+
+xt::xarray<double> grad_simplexp_2d(xt::xarray<double> ab, int i, int j) {
+  xt::xarray<double> a = xt::col(ab, 0);
+  xt::xarray<double> b = xt::col(ab, 1);
+  xt::xarray<double> fa = oiseau::utils::jacobi_p(i, 0.0, 0.0, a);
+  xt::xarray<double> dfa = oiseau::utils::grad_jacobi_p(i, 0.0, 0.0, a);
+  xt::xarray<double> gb = oiseau::utils::jacobi_p(j, 2.0 * i + 1.0, 0.0, b);
+  xt::xarray<double> dgb = oiseau::utils::grad_jacobi_p(j, 2.0 * i + 1.0, 0.0, b);
+  xt::xarray<double> dmodedr = dfa * gb;
+  xt::xarray<double> dmodeds = dfa * (gb * (0.5 * (1 + a)));
+  xt::xarray<double> tmp = dgb * xt::pow(0.5 * (1 - b), i);
+  if (i > 0) {
+    dmodedr *= xt::pow(0.5 * (1 - b), i - 1);
+    dmodeds *= xt::pow(0.5 * (1 - b), i - 1);
+    tmp += -0.5 * i * gb * xt::pow(0.5 * (1 - b), i - 1);
+  }
+  dmodeds = dmodeds + fa * tmp;
+  dmodedr = pow(2.0, i + 0.5) * dmodedr;
+  dmodeds = pow(2.0, i + 0.5) * dmodeds;
+  return xt::stack(xt::xtuple(dmodedr, dmodeds), 1);
+}
+
+xt::xarray<double> vandermonde_2d(unsigned n, const xt::xarray<double> &rs) {
+  auto ab = conversion_rs_to_ab(rs);
+  auto res = simplexp_2d(ab, 0, 0);
+  std::cout << res << std::endl;
+  std::array<size_t, 2> shape = {rs.shape()[0], ((n + 1) * (n + 2)) / 2};
+  xt::xtensor<double, 2> output(shape);
+  int index = 0;
+  for (int i = 0; i <= n; ++i)
+    for (int j = 0; j <= n - i; ++j, ++index) xt::col(output, index) = simplexp_2d(ab, i, j);
+  return output;
+}
+
+xt::xarray<double> grad_vandermonde_2d(unsigned n, const xt::xarray<double> &rs) {
+  auto ab = conversion_rs_to_ab(rs);
+  std::array<size_t, 3> shape = {rs.shape()[0], ((n + 1) * (n + 2)) / 2, 2};
+  xt::xtensor<double, 3> output(shape);
+  int index = 0;
+  for (int i = 0; i <= n; ++i)
+    for (int j = 0; j <= n - i; ++j, ++index) {
+      auto tmp = grad_simplexp_2d(ab, i, j);
+      xt::view(output, xt::all(), index, 0) = xt::col(tmp, 0);
+      xt::view(output, xt::all(), index, 1) = xt::col(tmp, 1);
+    }
+  return output;
+}
+
+xt::xarray<double> d_matrix_2d(const xt::xarray<double> &v, const xt::xarray<double> &gv) {
+  auto gvr = xt::view(gv, xt::all(), xt::all(), 0);
+  auto gvs = xt::view(gv, xt::all(), xt::all(), 1);
+  auto dr = xt::transpose(xt::linalg::solve(xt::transpose(v), xt::transpose(gvr)));
+  auto ds = xt::transpose(xt::linalg::solve(xt::transpose(v), xt::transpose(gvs)));
+  return xt::stack(xt::xtuple(dr, ds), 2);
 }
 
 xt::xarray<double> conversion_rs_to_ab(const xt::xarray<double> &rs) {
@@ -130,7 +193,7 @@ xt::xarray<double> generate_triangle_nodes(std::size_t n) {
   std::size_t n_p = (n + 1) * (n + 2) / 2;
   xt::xarray<double> l1 = xt::zeros<double>({n_p});
   xt::xarray<double> l3 = xt::zeros<double>({n_p});
-  xt::xarray<double> out = xt::zeros<double>(xt::xarray<double>::shape_type{n_p, 3});
+  xt::xarray<double> out = xt::zeros<double>(xt::xarray<double>::shape_type{n_p, 2});
   std::size_t idx = 0;
   for (std::size_t i = 0; i < n + 1; ++i)
     for (std::size_t j = 0; j < n + 1 - i; ++j, ++idx) {
@@ -148,10 +211,10 @@ xt::xarray<double> generate_triangle_nodes(std::size_t n) {
   auto warpf2 = oiseau::dg::nodal::utils::warp_factor(n, e2);
   auto warpf3 = oiseau::dg::nodal::utils::warp_factor(n, e3);
   auto warp1 = blend1 * warpf1 * xt::square(1 + (alpha * l1));
-  auto warp2 = blend2 * warpf2 * xt::square(1 + (alpha * l1));
-  auto warp3 = blend3 * warpf3 * xt::square(1 + (alpha * l1));
+  auto warp2 = blend2 * warpf2 * xt::square(1 + (alpha * l2));
+  auto warp3 = blend3 * warpf3 * xt::square(1 + (alpha * l3));
   auto &&x = xt::col(out, 0);
-  auto &&y = xt::col(out, 0);
+  auto &&y = xt::col(out, 1);
   auto pi = xt::numeric_constants<double>::PI;
   xt::col(out, 0) = -l2 + l3;
   xt::col(out, 1) = (-l2 - l3 + 2.0 * l1) / std::sqrt(3.0);
