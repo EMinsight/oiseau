@@ -13,6 +13,7 @@ class DGElement {
   virtual xt::xarray<double> &v() = 0;
   virtual xt::xarray<double> &gv() = 0;
   virtual xt::xarray<double> &d() = 0;
+  virtual xt::xarray<double> &r() = 0;
 };
 
 class RefLine : DGElement {
@@ -30,7 +31,7 @@ class RefLine : DGElement {
   xt::xarray<double> &v() override;
   xt::xarray<double> &gv() override;
   xt::xarray<double> &d() override;
-  xt::xarray<double> &r() { return m_r; };
+  xt::xarray<double> &r() override;
 
  private:
   xt::xarray<double> m_r;
@@ -52,7 +53,7 @@ class RefTriangle : DGElement {
   xt::xarray<double> &v() override;
   xt::xarray<double> &gv() override;
   xt::xarray<double> &d() override;
-  xt::xarray<double> &r() { return m_r; };
+  xt::xarray<double> &r() override;
 
  private:
   xt::xarray<double> m_r;

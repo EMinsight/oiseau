@@ -24,6 +24,8 @@ xt::xarray<double> &RefLine::d() {
   return tmp;
 }
 
+xt::xarray<double> &RefLine::r() { return m_r; }
+
 RefTriangle::RefTriangle(unsigned order) : m_order(order) {
   using namespace oiseau::dg::nodal::utils;
   m_r = conversion_equilateral_xy_to_rs(generate_triangle_nodes(order));
@@ -49,5 +51,7 @@ xt::xarray<double> &RefTriangle::d() {
   static auto tmp = d_matrix_2d(v(), gv());
   return tmp;
 }
+
+xt::xarray<double> &RefTriangle::r() { return m_r; }
 
 }  // namespace oiseau::dg::nodal
