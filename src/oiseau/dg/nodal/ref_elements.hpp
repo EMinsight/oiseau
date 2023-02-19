@@ -62,4 +62,27 @@ class RefTriangle : DGElement {
   unsigned int m_nfp = 1;
 };
 
+class RefTetrahedron : DGElement {
+ private:
+  const static unsigned int m_nfaces = 4;
+
+ public:
+  explicit RefTetrahedron(unsigned order);
+  RefTetrahedron(const RefTetrahedron &) = default;
+  RefTetrahedron &operator=(RefTetrahedron &&) = default;
+  RefTetrahedron &operator=(const RefTetrahedron &) = default;
+  ~RefTetrahedron() = default;
+
+  xt::xarray<double> &v() override;
+  xt::xarray<double> &gv() override;
+  xt::xarray<double> &d() override;
+  xt::xarray<double> &r() override;
+
+ private:
+  xt::xarray<double> m_r;
+  unsigned m_order;
+  unsigned m_np;
+  unsigned int m_nfp = 1;
+};
+
 }  // namespace oiseau::dg::nodal
