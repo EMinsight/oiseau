@@ -23,6 +23,7 @@ target_precompile_headers(
     <xtensor/xmath.hpp>
     <xtensor/xtensor.hpp>
     <xtensor/xview.hpp>
+    <xtensor/xadapt.hpp>
 )
 
 include(fmt.cmake)
