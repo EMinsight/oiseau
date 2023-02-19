@@ -39,7 +39,7 @@ class AxesSubPlot {
 
   template <typename... Args>
   auto plot(Args &&...args) {
-    return plt().attr("plot")(std::forward<Args>(args)...);
+    return m_obj.attr("plot")(std::forward<Args>(args)...);
   }
 
  private:
@@ -49,6 +49,11 @@ class AxesSubPlot {
 class Figure {
  public:
   explicit Figure(py::object fig) : m_obj(fig) {}
+
+  template <typename... Args>
+  AxesSubPlot add_subplot(Args &&...args) {
+    return AxesSubPlot(m_obj.attr("add_subplot")(std::forward<Args>(args)...));
+  }
 
  private:
   py::object m_obj;
@@ -69,6 +74,11 @@ auto show(Args &&...args) {
 template <typename... Args>
 auto plot(Args &&...args) {
   return plt().attr("plot")(std::forward<Args>(args)...);
+}
+
+template <typename... Args>
+Figure figure(Args &&...args) {
+  return Figure((plt().attr("figure")(std::forward<Args>(args)...)));
 }
 
 template <typename... Args>
