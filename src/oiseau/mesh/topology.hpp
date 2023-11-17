@@ -12,6 +12,8 @@ class Topology {
   Topology &operator=(Topology &&) = default;
   Topology &operator=(const Topology &) = default;
   ~Topology();
+  std::span<CellType> cell_types();
+  std::span<std::vector<std::size_t>> conn();
 
  private:
   std::vector<std::vector<std::size_t>> m_conn;

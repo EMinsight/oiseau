@@ -8,7 +8,7 @@
 #include "oiseau/mesh/mesh.hpp"
 
 namespace oiseau::mesh {
-CellType gmsh_celltype_to_string(const std::size_t s) {
+CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
   switch (s) {
   case 1:
     return oiseau::mesh::get_cell_type("interval");
@@ -44,6 +44,7 @@ oiseau::mesh::Mesh oiseau::io::gmsh_read(std::string filename) {
       std::vector<std::size_t> tmp;
       tmp.reserve(elem_size);
       for (int j = 0; j < elem_size; ++j) tmp.emplace_back(block.data[i * elem_size + j]);
+      cell_types.emplace_back(oiseau::mesh::gmsh_celltype_to_oiseau_celltype(block.element_type));
       conn.emplace_back(std::move(tmp));
     }
   }
