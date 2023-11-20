@@ -1,8 +1,8 @@
-from distutils.command.build_ext import build_ext
 import os
 import subprocess
 import sys
 
+from setuptools.command.build_ext import build_ext
 from setuptools import Extension
 
 
@@ -48,6 +48,7 @@ class CMakeBuild(build_ext):
         if "CMAKE_BUILD_PARALLEL_LEVEL" not in os.environ:
             if hasattr(self, "parallel") and self.parallel:
                 build_args += [f"-j{self.parallel}"]
+        build_args += [f"-j{12}"]
 
         build_temp = os.path.join(self.build_temp, ext.name)
         if not os.path.exists(build_temp):
@@ -59,6 +60,7 @@ class CMakeBuild(build_ext):
 
 
 def build(setup_kwargs):
+    print("AHSDFHIASDHIFA")
     os.environ["CFLAGS"] = "-O3"
     setup_kwargs.update(
         {

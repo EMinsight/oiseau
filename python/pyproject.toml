@@ -3,21 +3,26 @@ name = "oiseau"
 version = "0.1.0"
 description = ""
 authors = ["tiagovla <tiagovla@gmail.com>"]
-build = "build.py"
+readme = "README.md"
+
+[tool.poetry.build]
+script = "build.py"
+generate-setup-file = true
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.11"
+python = ">=3.10,<3.12"
 numpy = "^1.22.4"
 scipy = "^1.8.1"
 gmsh = { version = "^4.10.3", optional = true }
 matplotlib = { version = "^3.5.2", optional = true }
+setuptools = "^68.2.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
 ninja = "^1.10.2"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["ninja", "setuptools", "poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
