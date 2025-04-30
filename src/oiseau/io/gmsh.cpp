@@ -55,4 +55,4 @@ oiseau::mesh::Mesh oiseau::io::gmsh_read(std::string filename) {
   return mesh;
 };
 
-void oiseau::io::gmsh_write(std::string filename, oiseau::mesh::Mesh &mesh){};
+void oiseau::io::gmsh_write(std::string filename, oiseau::mesh::Mesh &mesh) {};

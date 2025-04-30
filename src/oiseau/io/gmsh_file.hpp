@@ -55,7 +55,7 @@ struct PhysicalNamesSection {
       : num_physical_names(num_physical_names),
         dimensions(std::move(dimensions)),
         physical_tags(std::move(physical_tags)),
-        names(std::move(names)){};
+        names(std::move(names)) {};
 };
 
 struct NodesBlock {

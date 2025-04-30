@@ -6,9 +6,9 @@
 namespace oiseau::mesh {
 class DGMesh {
  public:
-  DGMesh(){};
-  DGMesh(Mesh &mesh) : _mesh(mesh){};
-  DGMesh(Mesh &mesh, std::size_t order) : _mesh(mesh), _order(order){};
+  DGMesh() {};
+  DGMesh(Mesh &mesh) : _mesh(mesh) {};
+  DGMesh(Mesh &mesh, std::size_t order) : _mesh(mesh), _order(order) {};
   DGMesh &operator=(DGMesh &&) = default;
   DGMesh &operator=(const DGMesh &) = default;
   ~DGMesh() = default;
