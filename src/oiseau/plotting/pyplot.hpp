@@ -20,6 +20,24 @@ struct type_caster<xt::xarray<T>> {
   }
 };
 
+template <typename E>
+requires xt::is_xexpression<E>::value
+struct type_caster<E> {
+  using value_type = typename E::value_type;
+  using array_type = xt::xarray<value_type>;
+
+  PYBIND11_TYPE_CASTER(array_type, _("xexpression"));
+  static handle cast(const E &expr, return_value_policy, handle) {
+    xt::xarray<value_type> tmp = xt::eval(expr);
+    xt::xarray<value_type> *data_holder = new xt::xarray<double>(std::move(tmp));
+    py::capsule owner_capsule(data_holder, [](void *p) {
+            delete static_cast<xt::xarray<value_type>*>(p);
+        });
+    py::array result(data_holder->shape(), data_holder->data(),owner_capsule);
+    return result.release();
+  }
+};
+
 }  // namespace pybind11::detail
 
 namespace plt {

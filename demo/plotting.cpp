@@ -13,9 +13,9 @@ int main() {
   plt::Figure fig = plt::figure();
   auto ax = fig.add_subplot("projection"_a = "3d");
 
-  std::cout << x << std::endl;
-  std::cout << y << std::endl;
-  std::cout << z << std::endl;
+  std::cout << "x: " << x << std::endl;
+  std::cout << "y: " << y << std::endl;
+  std::cout << "z: " << z << std::endl;
 
   ax.scatter(x, y, z);
   plt::show();
