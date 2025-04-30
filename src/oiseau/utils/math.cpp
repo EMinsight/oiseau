@@ -3,7 +3,7 @@
 #include <boost/math/special_functions/jacobi.hpp>
 #include <utility>
 #include <vector>
-#include <xtensor/xtensor.hpp>
+#include <xtensor/containers/xtensor.hpp>
 
 namespace oiseau::utils {
 
@@ -23,7 +23,7 @@ Container jacobi_p(unsigned n, Real alpha, Real beta, Container v) {
 template <std::floating_point Real, FloatingArrayLike Container>
 Container grad_jacobi_p(int n, Real alpha, Real beta, Container v) {
   if (n == 0) {
-    std::for_each(v.begin(), v.end(), [](auto &elm) { elm = 0; });
+    std::fill(v.begin(), v.end(), 0);
     return v;
   }
   double norm = std::sqrt(n * (n + alpha + beta + 1));

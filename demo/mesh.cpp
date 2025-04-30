@@ -5,4 +5,6 @@
 
 using namespace oiseau::mesh;
 using namespace oiseau::io;
-int main() {}
+int main() {
+
+}

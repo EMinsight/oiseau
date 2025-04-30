@@ -2,12 +2,13 @@
 #include <boost/math/special_functions/gamma.hpp>
 #include <cmath>
 #include <xtensor-blas/xlinalg.hpp>
-#include <xtensor/xmath.hpp>
-#include <xtensor/xtensor.hpp>
-#include <xtensor/xview.hpp>
+#include <xtensor/containers/xtensor.hpp>
+#include <xtensor/core/xmath.hpp>
+#include <xtensor/views/xview.hpp>
 #include "oiseau/utils/math.hpp"
 
 namespace oiseau::dg::nodal::utils {
+
 std::pair<xt::xarray<double>, xt::xarray<double>> jacobi_gq(unsigned n, double alpha, double beta) {
   if (n == 0) {
     xt::xarray<double> x = {(alpha - beta) / (alpha + beta + 2)};

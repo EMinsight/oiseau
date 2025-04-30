@@ -2,13 +2,13 @@
 
 #include <concepts>
 #include <ranges>
-#include <xtensor/xarray.hpp>
+#include <xtensor/containers/xarray.hpp>
 
 namespace oiseau::utils {
 
 template <class Container>
 concept FloatingArrayLike = std::ranges::contiguous_range<Container> &&
-    std::is_floating_point_v<typename Container::value_type>;
+                            std::is_floating_point_v<typename Container::value_type>;
 
 template <std::floating_point Real, FloatingArrayLike Container>
 Container jacobi_p(unsigned n, Real alpha, Real beta, Container v);

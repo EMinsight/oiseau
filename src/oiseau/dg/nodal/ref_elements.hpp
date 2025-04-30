@@ -1,7 +1,7 @@
 #pragma once
 
 #include <oiseau/dg/nodal/utils.hpp>
-#include <xtensor/xarray.hpp>
+#include <xtensor/containers/xarray.hpp>
 
 namespace oiseau::dg::nodal {
 

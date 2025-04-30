@@ -2,12 +2,13 @@
 #include <pybind11/numpy.h>
 #include <pybind11/pytypes.h>
 #include <pybind11/stl.h>
-#include <xtensor/xarray.hpp>
+#include <xtensor/containers/xarray.hpp>
 
 namespace py = pybind11;
 using namespace py::literals;
 
 namespace pybind11::detail {
+
 template <typename T>
 struct type_caster<xt::xarray<T>> {
  public:
@@ -18,6 +19,7 @@ struct type_caster<xt::xarray<T>> {
     return v.release();
   }
 };
+
 }  // namespace pybind11::detail
 
 namespace plt {

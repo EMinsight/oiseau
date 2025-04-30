@@ -18,12 +18,12 @@ target_precompile_headers(
     oiseau_deps
     INTERFACE
     <xtensor-blas/xlinalg.hpp>
-    <xtensor/xarray.hpp>
-    <xtensor/xio.hpp>
-    <xtensor/xmath.hpp>
-    <xtensor/xtensor.hpp>
-    <xtensor/xview.hpp>
-    <xtensor/xadapt.hpp>
+    <xtensor/containers/xarray.hpp>
+    <xtensor/io/xio.hpp>
+    <xtensor/core/xmath.hpp>
+    <xtensor/containers/xtensor.hpp>
+    <xtensor/views/xview.hpp>
+    <xtensor/containers/xadapt.hpp>
 )
 
 include(fmt.cmake)
@@ -31,7 +31,7 @@ target_link_libraries(oiseau_deps INTERFACE fmt::fmt)
 target_precompile_headers(oiseau_deps INTERFACE <fmt/ranges.h> <fmt/core.h>)
 
 include(eigen.cmake)
-include(blaze.cmake)
+# include(blaze.cmake)
 
 include(loguru.cmake)
 target_link_libraries(oiseau_deps INTERFACE loguru)
