@@ -6,6 +6,7 @@ FetchContent_Declare(
 )
 
 if(NOT loguru_POPULATED)
+    cmake_policy(SET CMP0169 OLD)
     FetchContent_Populate(loguru)
     add_library(loguru INTERFACE)
     target_include_directories(loguru INTERFACE ${loguru_SOURCE_DIR})
