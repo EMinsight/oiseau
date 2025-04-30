@@ -53,14 +53,12 @@ class CMakeBuild(build_ext):
         build_temp = os.path.join(self.build_temp, ext.name)
         if not os.path.exists(build_temp):
             os.makedirs(build_temp)
-        print("HAHA" * 50)
         print(["cmake", ext.sourcedir] + cmake_args)
         subprocess.check_call(["cmake", ext.sourcedir] + cmake_args, cwd=build_temp)
         subprocess.check_call(["cmake", "--build", "."] + build_args, cwd=build_temp)
 
 
 def build(setup_kwargs):
-    print("AHSDFHIASDHIFA")
     os.environ["CFLAGS"] = "-O3"
     setup_kwargs.update(
         {
