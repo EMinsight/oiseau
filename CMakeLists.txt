@@ -23,6 +23,7 @@ add_subdirectory(src)
 add_library(oiseau SHARED)
 target_link_libraries(oiseau PUBLIC oiseau_core)
 target_link_libraries(oiseau PUBLIC oiseau_deps)
+set_target_properties(oiseau PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
 # demos
 if(OISEAU_BUILD_DEMO)

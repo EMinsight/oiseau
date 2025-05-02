@@ -6,7 +6,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# find_package(pybind11 REQUIRED)
+set(OISEAU_BUILD_DEMO OFF)
+set(OISEAU_BUILD_TEST OFF)
+set(OISEAU_BUILD_DOCS OFF)
+set(OISEAU_BUILD_BENC OFF)
 
 add_subdirectory(.. oiseau)
 pybind11_add_module(

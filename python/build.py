@@ -1,72 +1,57 @@
 import os
-import subprocess
 import sys
+import subprocess
+from pathlib import Path
 
-from setuptools.command.build_ext import build_ext
+import ninja
 from setuptools import Extension
+from setuptools.command.build_ext import build_ext
 
 
 class CMakeExtension(Extension):
-    def __init__(self, name, sourcedir=""):
-        Extension.__init__(self, name, sources=[])
-        self.sourcedir = os.path.abspath(sourcedir)
+    def __init__(self, name: str, sourcedir: str = ""):
+        super().__init__(name, sources=[])
+        self.sourcedir = str(Path(sourcedir).resolve())
 
 
 class CMakeBuild(build_ext):
     def build_extension(self, ext):
-        extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
+        extdir = Path(self.get_ext_fullpath(ext.name)).parent.resolve()
+        build_temp = Path(self.build_temp) / ext.name
+        build_temp.mkdir(parents=True, exist_ok=True)
 
-        if not extdir.endswith(os.path.sep):
-            extdir += os.path.sep
-
-        debug = int(os.environ.get("DEBUG", 0)) if self.debug is None else self.debug
-        cfg = "Debug" if debug else "Release"
-
-        cmake_generator = os.environ.get("CMAKE_GENERATOR", "")
-
-        cmake_args = [
-            f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
+        cmake_command = [
+            "cmake",
+            ext.sourcedir,
+            f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
-            f"-DCMAKE_BUILD_TYPE={cfg}",
+            "-DCMAKE_BUILD_TYPE=Release",
+            "-GNinja",
+            f"-DCMAKE_MAKE_PROGRAM={Path(ninja.BIN_DIR) / 'ninja'}",
         ]
-        build_args = []
+
         if "CMAKE_ARGS" in os.environ:
-            cmake_args += [item for item in os.environ["CMAKE_ARGS"].split(" ") if item]
+            cmake_command += os.environ["CMAKE_ARGS"].split()
 
-        if not cmake_generator or cmake_generator == "Ninja":
-            try:
-                import ninja  # noqa: F401
+        cmake_build_command = ["cmake", "--build", ".", "-j8"]
 
-                ninja_executable_path = os.path.join(ninja.BIN_DIR, "ninja")
-                cmake_args += [
-                    "-GNinja",
-                    f"-DCMAKE_MAKE_PROGRAM:FILEPATH={ninja_executable_path}",
-                ]
-            except ImportError:
-                pass
-
-        if "CMAKE_BUILD_PARALLEL_LEVEL" not in os.environ:
-            if hasattr(self, "parallel") and self.parallel:
-                build_args += [f"-j{self.parallel}"]
-        build_args += [f"-j{12}"]
-
-        build_temp = os.path.join(self.build_temp, ext.name)
-        if not os.path.exists(build_temp):
-            os.makedirs(build_temp)
-        print(["cmake", ext.sourcedir] + cmake_args)
-        subprocess.check_call(["cmake", ext.sourcedir] + cmake_args, cwd=build_temp)
-        subprocess.check_call(["cmake", "--build", "."] + build_args, cwd=build_temp)
+        try:
+            subprocess.check_call(cmake_command, cwd=build_temp)
+            subprocess.check_call(cmake_build_command, cwd=build_temp)
+        except subprocess.CalledProcessError as e:
+            print(f"\n❌ Error while building {ext.name}: {e}\n", file=sys.stderr)
+            raise
 
 
 def build(setup_kwargs):
     os.environ["CFLAGS"] = "-O3"
+
     setup_kwargs.update(
         {
             "version": "0.1.0",
             "author": "tiagovla",
             "author_email": "tiagovla@gmail.com",
             "description": "DG Framework",
-            "long_description": "",
             "packages": ["oiseau", "oiseau.wrappers"],
             "package_data": {"oiseau.cpp": ["*.h"]},
             "ext_modules": [CMakeExtension("oiseau.cpp")],
