@@ -79,7 +79,9 @@ class AxesSubPlot {
   explicit AxesSubPlot(py::object axes) : m_obj(std::move(axes)) {}
 
   DEFINE_PY_CLASS_METHOD_AUTO(scatter)
+  DEFINE_PY_CLASS_METHOD_AUTO(triplot)
   DEFINE_PY_CLASS_METHOD_AUTO(plot)
+  DEFINE_PY_CLASS_METHOD_AUTO(text)
   DEFINE_PY_CLASS_METHOD_AUTO(set_xlabel)
   DEFINE_PY_CLASS_METHOD_AUTO(set_ylabel)
   DEFINE_PY_CLASS_METHOD_AUTO(set_zlabel)
