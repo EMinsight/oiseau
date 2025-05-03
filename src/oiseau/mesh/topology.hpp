@@ -14,6 +14,7 @@ class Topology {
   ~Topology();
   std::span<CellType> cell_types();
   std::span<std::vector<std::size_t>> conn();
+  std::size_t n_cells() const;
 
  private:
   std::vector<std::vector<std::size_t>> m_conn;

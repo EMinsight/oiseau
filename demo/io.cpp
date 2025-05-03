@@ -15,7 +15,8 @@ int main() {
   auto cell_types = topology.cell_types();
   auto conn = topology.conn();
 
-  auto dgmesh = DGMesh(mesh);
+  auto dgmesh = DGMesh(mesh, 5);
 
-  fmt::print("n_nodes_per_element = {}\n", conn[0].size());
+  fmt::print("number of elements = {}\n", dgmesh.mesh().topology().n_cells());
+  fmt::print("order of the first element = {}\n", dgmesh.order_at(0));
 }

@@ -13,3 +13,5 @@ Topology::Topology(std::vector<std::vector<std::size_t>> &&conn, std::vector<Cel
 std::span<CellType> Topology::cell_types() { return m_cell_types; };
 
 std::span<std::vector<std::size_t>> Topology::conn() { return m_conn; };
+
+std::size_t Topology::n_cells() const { return m_conn.size(); }
