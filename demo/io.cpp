@@ -1,7 +1,6 @@
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 #include "oiseau/io/gmsh.hpp"
-#include "oiseau/io/gmsh_file.hpp"
 #include "oiseau/mesh/dgmesh.hpp"
 
 using namespace oiseau::io;
@@ -19,4 +18,8 @@ int main() {
 
   fmt::print("number of elements = {}\n", dgmesh.mesh().topology().n_cells());
   fmt::print("order of the first element = {}\n", dgmesh.order_at(0));
+  topology.calculate_connectivity();
+
+  auto e_to_f = topology.e_to_f();
+  fmt::print("{}", e_to_f);
 }
