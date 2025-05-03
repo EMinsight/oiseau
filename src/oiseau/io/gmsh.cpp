@@ -42,8 +42,8 @@ oiseau::mesh::Mesh oiseau::io::gmsh_read(std::string filename) {
     std::size_t elem_size = block.data.size() / block.num_elements_in_block;
     for (int i = 0; i < block.num_elements_in_block; ++i) {
       std::vector<std::size_t> tmp;
-      tmp.reserve(elem_size);
-      for (int j = 0; j < elem_size; ++j) tmp.emplace_back(block.data[i * elem_size + j]);
+      tmp.reserve(elem_size - 1);
+      for (int j = 1; j < elem_size; ++j) tmp.emplace_back(block.data[i * elem_size + j] - 1);
       cell_types.emplace_back(oiseau::mesh::gmsh_celltype_to_oiseau_celltype(block.element_type));
       conn.emplace_back(std::move(tmp));
     }
