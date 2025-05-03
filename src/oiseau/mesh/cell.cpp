@@ -1,5 +1,4 @@
 #include "oiseau/mesh/cell.hpp"
-#include <ranges>
 #include <string>
 #include <string_view>
 
@@ -26,11 +25,11 @@ std::string_view Cell::name() const { return m_name; }
 
 int Cell::dimension() const { return m_dim; }
 
-std::vector<std::vector<int>> Cell::get_sub_entities(int dim0, int dim1) {
+std::vector<std::vector<int>> Cell::get_sub_entities(int dim0, int dim1) const {
   return m_topology[dim0][dim1];
 };
 
-std::vector<std::vector<int>> Cell::get_entity_vertices(int dim) {
+std::vector<std::vector<int>> Cell::get_entity_vertices(int dim) const {
   std::vector<std::vector<int>> slice;
   slice.reserve(m_topology[dim].size());
   for (const auto &s : m_topology[dim]) {
@@ -39,7 +38,7 @@ std::vector<std::vector<int>> Cell::get_entity_vertices(int dim) {
   return slice;
 }
 
-int Cell::num_sub_entities(int dim) {
+int Cell::num_sub_entities(int dim) const {
   if (dim <= m_dim) {
     return m_topology[dim].size();
   }
@@ -48,6 +47,7 @@ int Cell::num_sub_entities(int dim) {
 
 PointCell::PointCell() {
   m_name = "point";
+  m_kind = CellKind::Point;
   m_dim = 0;
   m_geometry = {
       {0.0},
@@ -62,6 +62,7 @@ PointCell::PointCell() {
 
 IntervalCell::IntervalCell() {
   m_name = "interval";
+  m_kind = CellKind::Interval;
   m_dim = 1;
   m_geometry = {
       {0.0, 1.0},
@@ -80,6 +81,7 @@ IntervalCell::IntervalCell() {
 
 TriangleCell::TriangleCell() {
   m_name = "triangle";
+  m_kind = CellKind::Triangle;
   m_dim = 2;
   m_geometry = {
       {0.0, 0.0, 1.0, 0.0, 0.0, 1.0},
@@ -104,6 +106,7 @@ TriangleCell::TriangleCell() {
 
 TetrahedronCell::TetrahedronCell() {
   m_name = "tetrahedron";
+  m_kind = CellKind::Tetrahedron;
   m_dim = 3;
   m_geometry = {
       {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0},

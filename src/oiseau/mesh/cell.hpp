@@ -7,23 +7,35 @@
 
 namespace oiseau {
 namespace mesh {
+
+enum class CellKind {
+  Undefined = 0,  // Optional: A default/error value
+  Point,
+  Interval,
+  Triangle,
+  Tetrahedron
+};
+
 class Cell {
  protected:
+  CellKind m_kind;
   std::string m_name;
   int m_dim;
   std::vector<std::vector<std::vector<std::vector<int>>>> m_topology;
   std::pair<std::vector<double>, std::array<std::size_t, 2>> m_geometry;
 
  public:
+  virtual ~Cell() = default;
   virtual Cell *facet() = 0;
   virtual Cell *edge() = 0;
   std::string_view name() const;
   int dimension() const;
   int num_entities(int dim) const;
-  std::vector<std::vector<int>> get_entity_vertices(int dim);
-  std::vector<std::vector<int>> get_sub_entities(int dim0, int dim1);
+  std::vector<std::vector<int>> get_entity_vertices(int dim) const;
+  std::vector<std::vector<int>> get_sub_entities(int dim0, int dim1) const;
   std::vector<std::vector<std::vector<std::vector<int>>>> topology() const { return m_topology; }
-  int num_sub_entities(int dim);
+  int num_sub_entities(int dim) const;
+  CellKind kind() const { return m_kind; } 
 };
 
 class PointCell : public Cell {
