@@ -1,9 +1,14 @@
 #include "oiseau/utils/logging.hpp"
 #include <vector>
 
-void oiseau::logging::init(int argc, char** argv) {
-  loguru::g_stderr_verbosity = loguru::Verbosity_WARNING;
+namespace oiseau::logging {
+
+void set_verbosity(Verbosity level) { loguru::g_stderr_verbosity = level; }
+
+void init(int argc, char** argv) {
+  set_verbosity(Verbosity::INFO);  // Default to INFO
   std::vector<char*> argvv(argv, argv + argc);
   argvv.push_back(nullptr);
   loguru::init(argc, argvv.data());
 }
+}  // namespace oiseau::logging
