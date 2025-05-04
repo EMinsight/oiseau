@@ -44,7 +44,8 @@ int main() {
     xt::view(centroids, e) = centroid;
   }
 
-  auto [fig, ax] = plt::subplots(1, 1, "constrained_layout"_a = true, "figsize"_a = std::array<double, 2>{8, 8});
+  auto [fig, ax] =
+      plt::subplots(1, 1, "constrained_layout"_a = true, "figsize"_a = std::array<double, 2>{8, 8});
   ax.scatter(x_coord, y_coord, "s"_a = 1, "label"_a = "scatter");
   ax.scatter(xt::col(centroids, 0), xt::col(centroids, 1), "s"_a = 0.1, "label"_a = "scatter",
              "color"_a = "red");
@@ -53,13 +54,14 @@ int main() {
   // for every centroid row
   // for (std::size_t i = 0; i < centroids.shape()[0]; ++i) {
   //   auto row = xt::row(centroids, i);
-  //   ax.text(row(0), row(1), std::to_string(i), "fontsize"_a = 4, "color"_a = "red", "rasterized"_a=true);
+  //   ax.text(row(0), row(1), std::to_string(i), "fontsize"_a = 4, "color"_a = "red",
+  //   "rasterized"_a=true);
   // }
   plt::show();
 }
 
 // {
-  // Example of 3d plot
-  // plt::Figure fig = plt::figure("constrained_layout"_a = true);
-  // auto ax = fig.add_subplot("projection"_a = "3d");
+// Example of 3d plot
+// plt::Figure fig = plt::figure("constrained_layout"_a = true);
+// auto ax = fig.add_subplot("projection"_a = "3d");
 // }
