@@ -17,10 +17,7 @@ class DGMesh {
   const Mesh &mesh() const { return _mesh; }
   std::span<uint> order() { return _order; }
 
-  uint order_at (std::size_t pos) const {
-    return _order[pos];
-  }
-
+  uint order_at(std::size_t pos) const { return _order[pos]; }
 
  private:
   Mesh _mesh;

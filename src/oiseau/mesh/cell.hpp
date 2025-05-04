@@ -13,6 +13,7 @@ enum class CellKind {
   Point,
   Interval,
   Triangle,
+  Quadrilateral,
   Tetrahedron
 };
 
@@ -35,7 +36,7 @@ class Cell {
   std::vector<std::vector<int>> get_sub_entities(int dim0, int dim1) const;
   std::vector<std::vector<std::vector<std::vector<int>>>> topology() const { return m_topology; }
   int num_sub_entities(int dim) const;
-  CellKind kind() const { return m_kind; } 
+  CellKind kind() const { return m_kind; }
 };
 
 class PointCell : public Cell {
@@ -62,6 +63,17 @@ class TriangleCell : public Cell {
 
  public:
   TriangleCell();
+  Cell *facet() override { return &m_facet; }
+  Cell *edge() override { return &m_edge; }
+};
+
+class QuadrilateralCell : public Cell {
+ private:
+  IntervalCell m_facet;
+  PointCell m_edge;
+
+ public:
+  QuadrilateralCell();
   Cell *facet() override { return &m_facet; }
   Cell *edge() override { return &m_edge; }
 };

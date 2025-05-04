@@ -16,6 +16,9 @@ CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
   case 2:
     return oiseau::mesh::get_cell_type("triangle");
     break;
+  case 3:
+    return oiseau::mesh::get_cell_type("quadrilateral");
+    break;
   case 4:
     return oiseau::mesh::get_cell_type("tetrahedron");
     break;

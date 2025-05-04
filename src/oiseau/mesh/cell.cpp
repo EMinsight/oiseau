@@ -8,6 +8,7 @@ CellType get_cell_type(const std::string &cell) {
   static const PointCell point;
   static const IntervalCell interval;
   static const TriangleCell triangle;
+  static const QuadrilateralCell quadrilateral;
   static const TetrahedronCell tetrahedron;
   if (cell == "point")
     return &point;
@@ -15,6 +16,8 @@ CellType get_cell_type(const std::string &cell) {
     return &interval;
   } else if (cell == "triangle") {
     return &triangle;
+  } else if (cell == "quadrilateral") {
+    return &quadrilateral;
   } else if (cell == "tetrahedron") {
     return &tetrahedron;
   } else
@@ -100,6 +103,35 @@ TriangleCell::TriangleCell() {
       },
       {
           {{0, 1, 2}, {0, 1, 2}, {0}},
+      },
+  };
+}
+
+QuadrilateralCell::QuadrilateralCell() {
+  m_name = "quadrilateral";
+  m_kind = CellKind::Quadrilateral;
+  m_dim = 2;
+
+  m_geometry = {
+      {0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0},
+      {4, 2},
+  };
+
+  m_topology = {
+      {
+          {{0}, {0, 3}, {0}},
+          {{1}, {0, 1}, {0}},
+          {{2}, {1, 2}, {0}},
+          {{3}, {2, 3}, {0}},
+      },
+      {
+          {{0, 1}, {0, 1}, {0}},
+          {{1, 2}, {1, 2}, {0}},
+          {{2, 3}, {2, 3}, {0}},
+          {{3, 0}, {3, 0}, {0}},
+      },
+      {
+          {{0, 1, 2, 3}, {0, 1, 2, 3}, {0}},
       },
   };
 }

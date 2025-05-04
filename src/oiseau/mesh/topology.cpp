@@ -39,7 +39,7 @@ void Topology::calculate_connectivity() {
   }
   m_e_to_e.resize(faces.size());
   m_e_to_f.resize(faces.size());
-  for (int i = 0; i < m_e_to_e.size(); i++){
+  for (int i = 0; i < m_e_to_e.size(); i++) {
     m_e_to_e[i] = std::vector<std::size_t>(faces[i].size(), i);
     m_e_to_f[i].resize(faces[i].size());
     std::iota(m_e_to_f[i].begin(), m_e_to_f[i].end(), 0);
