@@ -1,11 +1,10 @@
-add_executable(oiseau_nodaldg nodaldg.cpp)
-target_link_libraries(oiseau_nodaldg PRIVATE oiseau)
+macro(oiseau_add_executable name)
+    add_executable(oiseau_${name} ${name}.cpp)
+    target_link_libraries(oiseau_${name} PRIVATE oiseau)
+endmacro()
 
-add_executable(oiseau_mesh mesh.cpp)
-target_link_libraries(oiseau_mesh PRIVATE oiseau)
-
-add_executable(oiseau_io io.cpp)
-target_link_libraries(oiseau_io PRIVATE oiseau)
-
-add_executable(oiseau_plotting plotting.cpp)
-target_link_libraries(oiseau_plotting PRIVATE oiseau)
+oiseau_add_executable(nodaldg)
+oiseau_add_executable(mesh)
+oiseau_add_executable(io)
+oiseau_add_executable(plotting)
+oiseau_add_executable(logging)
