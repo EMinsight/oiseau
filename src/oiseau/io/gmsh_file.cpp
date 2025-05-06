@@ -57,6 +57,11 @@ std::vector<T> from_file(std::istream& f, int n, bool is_binary = false) {
 
 MeshFormatSection mesh_format_handler(std::istream& f_handler) {
   auto [version] = from_file<double, 1>(f_handler);
+  if (version != 4.1) {
+    throw std::runtime_error(
+        "Unsupported GMSH version detected."
+        "Please ensure you are using version 4.1.");
+  }
   auto [is_binary] = from_file<int, 1>(f_handler);
   auto [size_t_size] = from_file<std::size_t, 1>(f_handler);
   if (is_binary) {
