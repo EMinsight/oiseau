@@ -1,6 +1,8 @@
 #include "oiseau/io/gmsh.hpp"
+#include <fstream>
 #include <string>
 #include <utility>
+#include <sstream>
 #include <vector>
 #include "oiseau/io/gmsh_file.hpp"
 #include "oiseau/mesh/cell.hpp"
@@ -25,8 +27,18 @@ CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
 }
 }  // namespace oiseau::mesh
 
-oiseau::mesh::Mesh oiseau::io::gmsh_read(std::string filename) {
-  GMSHFile file = GMSHFile(std::string(filename));
+oiseau::mesh::Mesh oiseau::io::gmsh_read_from_string(const std::string content) {
+    std::istringstream stream(content);
+    return oiseau::io::gmsh_read_from_stream(stream);
+}
+
+oiseau::mesh::Mesh oiseau::io::gmsh_read_from_path(const std::filesystem::path &path) {
+  std::ifstream f_handler(path);
+  return oiseau::io::gmsh_read_from_stream(f_handler);
+}
+
+oiseau::mesh::Mesh oiseau::io::gmsh_read_from_stream(std::istream &f_handler) {
+  GMSHFile file = GMSHFile(f_handler);
   std::vector<double> x;
   std::vector<std::vector<std::size_t>> conn;
   std::vector<CellType> cell_types;

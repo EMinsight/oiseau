@@ -138,7 +138,7 @@ class GMSHFile {
         nodes_section(std::move(nodes_section)),
         elements_section(std::move(elements_section)) {}
 
-  explicit GMSHFile(const std::string& filename) { read(filename); }
+  explicit GMSHFile(std::istream& f_handler) { read(f_handler); }
 
   MeshFormatSection mesh_format_section;
   PhysicalNamesSection physical_names_section;
@@ -147,7 +147,7 @@ class GMSHFile {
   ElementSection elements_section;
 
  private:
-  void read(const std::string& filename);
+  void read(std::istream& f_handler);
 };
 
 namespace detail {

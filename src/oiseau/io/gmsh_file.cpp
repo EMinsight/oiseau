@@ -171,10 +171,9 @@ void skip_to_end_of_environment(std::istream& f_handler) {
 }
 }  // namespace detail
 
-void GMSHFile::read(const std::string& filename) {
+void GMSHFile::read(std::istream& f_handler) {
   using namespace detail;
-  std::ifstream f_handler(filename);
-  if (f_handler.fail()) throw std::runtime_error("Could not open file");
+  if (f_handler.fail()) throw std::runtime_error("Could not read file stream");
   std::string line;
   bool is_binary;
   while (getline(f_handler, line)) {
@@ -195,6 +194,5 @@ void GMSHFile::read(const std::string& filename) {
       skip_to_end_of_environment(f_handler);
     }
   }
-  if (f_handler.is_open()) f_handler.close();
 }
 }  // namespace oiseau::io
