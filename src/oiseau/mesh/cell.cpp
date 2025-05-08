@@ -10,6 +10,7 @@ CellType get_cell_type(const std::string &cell) {
   static const TriangleCell triangle;
   static const QuadrilateralCell quadrilateral;
   static const TetrahedronCell tetrahedron;
+  static const HexahedronCell hexahedron;
   if (cell == "point")
     return &point;
   else if (cell == "interval") {
@@ -20,6 +21,8 @@ CellType get_cell_type(const std::string &cell) {
     return &quadrilateral;
   } else if (cell == "tetrahedron") {
     return &tetrahedron;
+  } else if (cell == "hexahedron") {
+    return &hexahedron;
   } else
     throw std::runtime_error("Unknown cell type (" + cell + ")");
 }
@@ -167,6 +170,45 @@ TetrahedronCell::TetrahedronCell() {
       },
       {
           {{0, 1, 2, 3}, {0, 1, 2, 3, 4, 5}, {0, 1, 2, 3}, {0}},
+      },
+  };
+}
+
+HexahedronCell::HexahedronCell() {
+  m_name = "hexahedron";
+  m_kind = CellKind::Hexahedron;
+  m_dim = 3;
+
+  m_geometry = {
+      {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0},
+      {8, 3},
+  };
+
+  m_topology = {
+      {
+          {{0}, {0, 1, 2, 3}, {0}},
+          {{1}, {4, 5, 6, 7}, {0}},
+          {{2}, {0, 1, 5, 4}, {0}},
+          {{3}, {1, 2, 6, 5}, {0}},
+          {{4}, {2, 3, 7, 6}, {0}},
+          {{5}, {3, 0, 4, 7}, {0}},
+      },
+      {
+          {{0, 1}, {0, 1}, {0}},
+          {{1, 2}, {1, 2}, {0}},
+          {{2, 3}, {2, 3}, {0}},
+          {{3, 0}, {3, 0}, {0}},
+          {{4, 5}, {4, 5}, {0}},
+          {{5, 6}, {5, 6}, {0}},
+          {{6, 7}, {6, 7}, {0}},
+          {{7, 4}, {7, 4}, {0}},
+          {{0, 4}, {0, 4}, {0}},
+          {{1, 5}, {1, 5}, {0}},
+          {{2, 6}, {2, 6}, {0}},
+          {{3, 7}, {3, 7}, {0}},
+      },
+      {
+          {{0, 1, 2, 3, 4, 5, 6, 7}, {0, 1, 2, 3, 4, 5, 6, 7}, {0}},
       },
   };
 }

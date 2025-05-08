@@ -1,8 +1,8 @@
 #include "oiseau/io/gmsh.hpp"
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <utility>
-#include <sstream>
 #include <vector>
 #include "oiseau/io/gmsh_file.hpp"
 #include "oiseau/mesh/cell.hpp"
@@ -21,6 +21,8 @@ CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
     return oiseau::mesh::get_cell_type("quadrilateral");
   case 4:
     return oiseau::mesh::get_cell_type("tetrahedron");
+  case 5:
+    return oiseau::mesh::get_cell_type("hexahedron");
   default:
     throw std::runtime_error("Unknown Gmsh cell type: " + std::to_string(s));
   }
@@ -28,8 +30,8 @@ CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
 }  // namespace oiseau::mesh
 
 oiseau::mesh::Mesh oiseau::io::gmsh_read_from_string(const std::string content) {
-    std::istringstream stream(content);
-    return oiseau::io::gmsh_read_from_stream(stream);
+  std::istringstream stream(content);
+  return oiseau::io::gmsh_read_from_stream(stream);
 }
 
 oiseau::mesh::Mesh oiseau::io::gmsh_read_from_path(const std::filesystem::path &path) {

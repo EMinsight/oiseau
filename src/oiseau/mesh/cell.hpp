@@ -9,12 +9,13 @@ namespace oiseau {
 namespace mesh {
 
 enum class CellKind {
-  Undefined = 0,  // Optional: A default/error value
+  Undefined = 0,
   Point,
   Interval,
   Triangle,
   Quadrilateral,
-  Tetrahedron
+  Tetrahedron,
+  Hexahedron
 };
 
 class Cell {
@@ -85,6 +86,17 @@ class TetrahedronCell : public Cell {
 
  public:
   TetrahedronCell();
+  Cell *facet() override { return &m_facet; }
+  Cell *edge() override { return &m_edge; }
+};
+
+class HexahedronCell : public Cell {
+ private:
+  QuadrilateralCell m_facet;
+  IntervalCell m_edge;
+
+ public:
+  HexahedronCell();
   Cell *facet() override { return &m_facet; }
   Cell *edge() override { return &m_edge; }
 };
