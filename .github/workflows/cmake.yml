@@ -1,0 +1,24 @@
+name: CMake Build and Test with Ninja
+
+on:
+  push:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: sudo apt update && sudo apt install -y cmake ninja-build build-essential libblas-dev liblapack-dev libboost-all-dev libatlas-base-dev
+
+    - name: Configure CMake with Ninja
+      run: cmake -S . -B build -G Ninja
+
+    - name: Build with Ninja
+      run: ninja -C build
+
+    - name: Run tests
+      run: ctest --test-dir build --output-on-failure
