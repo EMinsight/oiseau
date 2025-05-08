@@ -4,27 +4,28 @@
 
 namespace oiseau::mesh {
 
-CellType get_cell_type(const std::string &cell) {
+CellType get_cell_type(const CellKind cell) {
   static const PointCell point;
   static const IntervalCell interval;
   static const TriangleCell triangle;
   static const QuadrilateralCell quadrilateral;
   static const TetrahedronCell tetrahedron;
   static const HexahedronCell hexahedron;
-  if (cell == "point")
-    return &point;
-  else if (cell == "interval") {
-    return &interval;
-  } else if (cell == "triangle") {
-    return &triangle;
-  } else if (cell == "quadrilateral") {
-    return &quadrilateral;
-  } else if (cell == "tetrahedron") {
-    return &tetrahedron;
-  } else if (cell == "hexahedron") {
-    return &hexahedron;
-  } else
-    throw std::runtime_error("Unknown cell type (" + cell + ")");
+
+  static const std::unordered_map<CellKind, CellType> cell_map = {
+      {CellKind::Point, &point},
+      {CellKind::Interval, &interval},
+      {CellKind::Triangle, &triangle},
+      {CellKind::Quadrilateral, &quadrilateral},
+      {CellKind::Tetrahedron, &tetrahedron},
+      {CellKind::Hexahedron, &hexahedron},
+  };
+
+  auto it = cell_map.find(cell);
+  if (it == cell_map.end()) {
+    throw std::runtime_error("Unknown cell type");
+  }
+  return it->second;
 }
 
 std::string_view Cell::name() const { return m_name; }

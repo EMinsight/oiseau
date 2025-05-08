@@ -10,22 +10,16 @@
 
 namespace oiseau::mesh {
 CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
-  switch (s) {
-  case 15:
-    return oiseau::mesh::get_cell_type("point");
-  case 1:
-    return oiseau::mesh::get_cell_type("interval");
-  case 2:
-    return oiseau::mesh::get_cell_type("triangle");
-  case 3:
-    return oiseau::mesh::get_cell_type("quadrilateral");
-  case 4:
-    return oiseau::mesh::get_cell_type("tetrahedron");
-  case 5:
-    return oiseau::mesh::get_cell_type("hexahedron");
-  default:
+  static const std::unordered_map<std::size_t, CellKind> gmsh_to_kind = {
+      {15, CellKind::Point},        {1, CellKind::Interval},    {2, CellKind::Triangle},
+      {3, CellKind::Quadrilateral}, {4, CellKind::Tetrahedron}, {5, CellKind::Hexahedron},
+  };
+  auto it = gmsh_to_kind.find(s);
+  if (it == gmsh_to_kind.end()) {
     throw std::runtime_error("Unknown Gmsh cell type: " + std::to_string(s));
   }
+
+  return oiseau::mesh::get_cell_type(it->second);
 }
 }  // namespace oiseau::mesh
 

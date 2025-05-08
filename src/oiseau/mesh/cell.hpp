@@ -101,7 +101,7 @@ class HexahedronCell : public Cell {
   Cell *edge() override { return &m_edge; }
 };
 
-CellType get_cell_type(const std::string &cell);
+CellType get_cell_type(const CellKind cell);
 
 }  // namespace mesh
 }  // namespace oiseau
