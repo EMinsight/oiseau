@@ -1,5 +1,4 @@
 #include "oiseau/io/gmsh.hpp"
-#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -10,20 +9,18 @@
 namespace oiseau::mesh {
 CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
   switch (s) {
+  case 15:
+    return oiseau::mesh::get_cell_type("point");
   case 1:
     return oiseau::mesh::get_cell_type("interval");
-    break;
   case 2:
     return oiseau::mesh::get_cell_type("triangle");
-    break;
   case 3:
     return oiseau::mesh::get_cell_type("quadrilateral");
-    break;
   case 4:
     return oiseau::mesh::get_cell_type("tetrahedron");
-    break;
   default:
-    throw std::runtime_error("Unknown cell type");
+    throw std::runtime_error("Unknown Gmsh cell type: " + std::to_string(s));
   }
 }
 }  // namespace oiseau::mesh

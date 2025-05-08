@@ -24,8 +24,11 @@ const std::size_t gmsh_nodes_per_cell(const std::size_t s) {
     return 6;
   else if (s == 7)  // wedge
     return 5;
-  else
-    throw std::runtime_error("Unknown cell type");
+  else if (s == 15)  // vertex
+    return 1;
+  else {
+    throw std::runtime_error("Unknown GMSH cell type: " + std::to_string(s));
+  }
 }
 
 template <class T>
