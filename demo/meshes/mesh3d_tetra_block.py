@@ -1,23 +1,46 @@
-import gmsh
-import sys
+import numpy as np
+import meshio
 
 
 def main():
-    gmsh.initialize()
-    gmsh.model.add("mesh3d_tetra_block")
+    # Define 8 cube vertices
+    points = np.array(
+        [
+            [0.0, 0.0, 0.0],  # 0
+            [1.0, 0.0, 0.0],  # 1
+            [1.0, 1.0, 0.0],  # 2
+            [0.0, 1.0, 0.0],  # 3
+            [0.0, 0.0, 1.0],  # 4
+            [1.0, 0.0, 1.0],  # 5
+            [1.0, 1.0, 1.0],  # 6
+            [0.0, 1.0, 1.0],  # 7
+        ]
+    )
 
-    gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 1.00)
+    # Define 5 tetrahedra that fill the cube
+    cells = [
+        (
+            "tetra",
+            np.array(
+                [
+                    [0, 1, 3, 4],
+                    [1, 2, 3, 6],
+                    [1, 3, 4, 6],
+                    [1, 4, 5, 6],
+                    [3, 4, 6, 7],
+                ]
+            ),
+        )
+    ]
 
-    gmsh.model.occ.addBox(0, 0, 0, 1, 1, 1)
-    gmsh.model.occ.synchronize()
-    gmsh.model.mesh.generate(3)
-
-    gmsh.write("mesh3d_tetra_block.msh")
-
-    if "-nopopup" not in sys.argv:
-        gmsh.fltk.run()
-
-    gmsh.finalize()
+    # Create and write the mesh
+    mesh = meshio.Mesh(points=points, cells=cells)
+    meshio.write(
+        "mesh3d_tetra_block.msh",
+        mesh,
+        file_format="gmsh",
+        binary=False,
+    )
 
 
 if __name__ == "__main__":
