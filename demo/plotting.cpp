@@ -13,7 +13,7 @@ using namespace oiseau::dg::nodal::utils;
 int main() {
   plt::scoped_interpreter guard{};
 
-  Mesh mesh = gmsh_read("demo/meshes/mesh.msh");
+  Mesh mesh = gmsh_read_from_path("demo/meshes/mesh.msh");
 
   auto x = mesh.geometry().x();
   std::vector<std::size_t> shape = {x.size() / 3, 3};

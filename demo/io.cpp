@@ -1,14 +1,14 @@
 #include <fmt/core.h>
 #include <fmt/ranges.h>
+#include <ranges>
 #include "oiseau/io/gmsh.hpp"
-#include "oiseau/mesh/dgmesh.hpp"
 #include "oiseau/plotting/triplot.hpp"
 
 using namespace oiseau::io;
 using namespace oiseau::mesh;
 
-int main() {
-  Mesh mesh = gmsh_read("demo/meshes/mesh2d_split_triangles_quads.msh");
+void two_dimensional() {
+  Mesh mesh = gmsh_read_from_path("demo/meshes/mesh2d_split_triangles_quads.msh");
   auto& geometry = mesh.geometry();
   auto& topology = mesh.topology();
 
@@ -23,14 +23,23 @@ int main() {
   oiseau::plotting::triplot(ax, mesh);
 
   plt::show();
+}
 
-  //
-  // auto dgmesh = DGMesh(mesh, 5);
-  //
-  // fmt::print("number of elements = {}\n", dgmesh.mesh().topology().n_cells());
-  // fmt::print("order of the first element = {}\n", dgmesh.order_at(0));
-  // topology.calculate_connectivity();
-  //
-  // auto e_to_f = topology.e_to_f();
-  // fmt::print("{}", e_to_f);
+void three_dimensional() {
+  Mesh mesh = gmsh_read_from_path("demo/meshes/mesh3d_tetra_hexa_block.msh");
+  auto& geometry = mesh.geometry();
+  auto& topology = mesh.topology();
+
+  auto cell_types = topology.cell_types();
+  auto conn = topology.conn();
+
+  for (auto [ct, vertices] : std::views::zip(cell_types, conn)) {
+    std::cout << ct->name() << std::endl;
+    fmt::print("{}", vertices);
+  }
+}
+
+int main() {
+  two_dimensional();
+  three_dimensional();
 }
