@@ -1,6 +1,7 @@
 #include "oiseau/dg/nodal/utils.hpp"
 #include <boost/math/special_functions/gamma.hpp>
 #include <cmath>
+#include <numbers>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/containers/xtensor.hpp>
 #include <xtensor/core/xmath.hpp>
@@ -82,7 +83,7 @@ xt::xarray<double> generate_triangle_equidistant_nodes(std::size_t n) {
 
 #define l2 (1.0 - l1 - l3)
   xt::view(out, xt::all(), 0) = -l2 + l3;
-  xt::view(out, xt::all(), 1) = (-l2 - l3 + 2.0 * l1) / std::sqrt(3.0);
+  xt::view(out, xt::all(), 1) = (-l2 - l3 + 2.0 * l1) / std::numbers::sqrt3;
 #undef l2
   return out;
 }
@@ -106,9 +107,9 @@ xt::xarray<double> conversion_equilateral_xy_to_rs(const xt::xarray<double> &coo
   auto l_coords = xt::zeros_like(coords);
   auto x = xt::col(coords, 0);
   auto y = xt::col(coords, 1);
-  auto l1 = (std::sqrt(3.0) * y + 1.0) / 3.0;
-  auto l2 = (-3.0 * x - std::sqrt(3.0) * y + 2.0) / 6.0;
-  auto l3 = (3.0 * x - std::sqrt(3.0) * y + 2.0) / 6.0;
+  auto l1 = (std::numbers::sqrt3 * y + 1.0) / 3.0;
+  auto l2 = (-3.0 * x - std::numbers::sqrt3 * y + 2.0) / 6.0;
+  auto l3 = (3.0 * x - std::numbers::sqrt3 * y + 2.0) / 6.0;
   xt::col(l_coords, 0) = -l2 + l3 - l1;
   xt::col(l_coords, 1) = -l2 - (l3 - l1);
   return l_coords;
@@ -119,7 +120,7 @@ xt::xarray<double> simplexp_2d(xt::xarray<double> ab, int i, int j) {
   xt::xarray<double> b = xt::col(ab, 1);
   auto h1 = oiseau::utils::jacobi_p(i, 0.0, 0.0, a);
   auto h2 = oiseau::utils::jacobi_p(j, 2.0 * i + 1.0, 0.0, b);
-  return std::sqrt(2.0) * h1 * h2 * xt::pow(1 - b, i);
+  return std::numbers::sqrt2 * h1 * h2 * xt::pow(1 - b, i);
 }
 
 xt::xarray<double> grad_simplexp_2d(xt::xarray<double> ab, int i, int j) {
@@ -186,8 +187,9 @@ xt::xarray<double> conversion_rs_to_ab(const xt::xarray<double> &rs) {
 }
 
 xt::xarray<double> generate_triangle_nodes(std::size_t n) {
-  double alp_opt[] = {0.0000, 0.0000, 1.4152, 0.1001, 0.2751, 0.9800, 1.0999, 1.2832,
-                      1.3648, 1.4773, 1.4959, 1.5743, 1.5770, 1.6223, 1.6258};
+  constexpr auto alp_opt =
+      std::to_array({0.0000, 0.0000, std::numbers::sqrt2, 0.1001, 0.2751, 0.9800, 1.0999, 1.2832,
+                     1.3648, 1.4773, 1.4959, 1.5743, 1.5770, 1.6223, 1.6258});
   double alpha = (n < 16) ? alp_opt[n - 1] : 5.0 / 3.0;
   std::size_t n_p = (n + 1) * (n + 2) / 2;
   xt::xarray<double> l1 = xt::zeros<double>({n_p});
@@ -216,7 +218,7 @@ xt::xarray<double> generate_triangle_nodes(std::size_t n) {
   auto &&y = xt::col(out, 1);
   auto pi = xt::numeric_constants<double>::PI;
   xt::col(out, 0) = -l2 + l3;
-  xt::col(out, 1) = (-l2 - l3 + 2.0 * l1) / std::sqrt(3.0);
+  xt::col(out, 1) = (-l2 - l3 + 2.0 * l1) / std::numbers::sqrt3;
   x = x + 1 * warp1 + std::cos(2 * pi / 3) * warp2 + std::cos(4 * pi / 3) * warp3;
   y = y + 0 * warp1 + std::sin(2 * pi / 3) * warp2 + std::sin(4 * pi / 3) * warp3;
   return out;
@@ -290,9 +292,9 @@ xt::xarray<double> generate_tetrahedron_nodes(std::size_t p) {
   auto r = xt::col(rst, 0), s = xt::col(rst, 1), t = xt::col(rst, 2);
   xt::xarray<double> l1 = (1 + t) / 2, l2 = (1 + s) / 2, l3 = -(1 + r + s + t) / 2,
                      l4 = (1 + r) / 2;
-  xt::xtensor<double, 1> v1 = {-1.0, -1.0 / std::sqrt(3), -1.0 / std::sqrt(6)};
-  xt::xtensor<double, 1> v2 = {1.0, -1.0 / std::sqrt(3), -1.0 / std::sqrt(6)};
-  xt::xtensor<double, 1> v3 = {0.0, 2.0 / std::sqrt(3), -1.0 / std::sqrt(6)};
+  xt::xtensor<double, 1> v1 = {-1.0, -1.0 / std::numbers::sqrt3, -1.0 / std::sqrt(6)};
+  xt::xtensor<double, 1> v2 = {1.0, -1.0 / std::numbers::sqrt3, -1.0 / std::sqrt(6)};
+  xt::xtensor<double, 1> v3 = {0.0, 2.0 / std::numbers::sqrt3, -1.0 / std::sqrt(6)};
   xt::xtensor<double, 1> v4 = {0.0, 0.0, 3.0 / std::sqrt(6)};
   xt::xtensor<double, 2> t1 = xt::zeros<double>({4, 3});
   xt::xtensor<double, 2> t2 = xt::zeros<double>({4, 3});
@@ -356,7 +358,7 @@ xt::xarray<double> generate_tetrahedron_nodes(std::size_t p) {
 }
 
 xt::xarray<double> conversion_equilateral_xyz_to_rst(const xt::xarray<double> &coords) {
-  const double sqrt3 = std::sqrt(3.0);
+  const double sqrt3 = std::numbers::sqrt3;
   const double sqrt6 = std::sqrt(6.0);
   xt::xtensor<double, 1> v1 = {-1, -1 / sqrt3, -1 / sqrt6};
   xt::xtensor<double, 1> v2 = {1, -1 / sqrt3, -1 / sqrt6};
@@ -375,7 +377,7 @@ xt::xarray<double> simplexp_3d(xt::xarray<double> abc, int i, int j, int k) {
   auto h1 = oiseau::utils::jacobi_p(i, 0.0, 0.0, a);
   auto h2 = oiseau::utils::jacobi_p(j, 2.0 * i + 1.0, 0.0, b);
   auto h3 = oiseau::utils::jacobi_p(k, 2.0 * (i + j) + 2.0, 0.0, c);
-  return 2 * std::sqrt(2) * h1 * h2 * xt::pow(1 - b, i) * h3 * xt::pow(1 - c, i + j);
+  return 2 * std::numbers::sqrt2 * h1 * h2 * xt::pow(1 - b, i) * h3 * xt::pow(1 - c, i + j);
 }
 
 xt::xarray<double> conversion_rst_to_abc(const xt::xarray<double> &rst) {
