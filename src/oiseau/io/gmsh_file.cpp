@@ -4,7 +4,7 @@
 #include <string_view>
 #include "oiseau/utils/logging.hpp"
 
-#define PREFIX '$'
+enum { PREFIX = '$' };
 
 namespace oiseau::io {
 
