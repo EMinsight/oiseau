@@ -39,4 +39,4 @@ jobs:
 
             - name: Run clang-tidy
               run: |
-                  find src -name '*.cpp' | xargs -r -n 1 -P $(nproc) clang-tidy -p build
+                  find src -name '*.cpp' | xargs -r -n 1 -P $(nproc) clang-tidy -p build 2>/dev/null
