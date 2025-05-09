@@ -1,5 +1,5 @@
 ---
-name: CMake Build and Test with Ninja
+name: CMake Build, Test and Analysis
 
 on:
     push:
@@ -32,7 +32,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Install clang-tidy and build tools
-              run: sudo apt update && sudo apt install -y clang-tidy  cmake ninja-build build-essential libblas-dev liblapack-dev libboost-all-dev libatlas-base-dev
+              run: sudo apt update && sudo apt install -y clang-tidy cmake ninja-build build-essential libblas-dev liblapack-dev libboost-all-dev libatlas-base-dev
 
             - name: Configure project to regenerate compile_commands.json
               run: cmake -S . -B build -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
@@ -40,3 +40,17 @@ jobs:
             - name: Run clang-tidy
               run: |
                   find src -name '*.cpp' | xargs -r -n 1 -P $(nproc) clang-tidy -p build 2>/dev/null
+
+    cppcheck:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Install cppcheck
+              run: sudo apt update && sudo apt install -y cppcheck
+
+            - name: Run cppcheck
+              run: |
+                  cppcheck --enable=all --inconclusive --std=c++23 --suppress=missingIncludeSystem --suppress=unusedFunction --error-exitcode=2 src -I src
