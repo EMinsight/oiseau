@@ -30,11 +30,14 @@ add_subdirectory(vendor)
 add_subdirectory(src)
 
 # export oiseau target
-add_library(oiseau SHARED)
-target_link_libraries(oiseau PUBLIC oiseau_core)
+add_library(oiseau STATIC ${OISEAU_CORE_SOURCES})
+target_include_directories(
+    oiseau PUBLIC $<BUILD_INTERFACE:${OISEAU_PUBLIC_INCLUDE_DIR}>
+                  $<INSTALL_INTERFACE:include>${CMAKE_INSTALL_PREFIX}/include
+)
 target_link_libraries(oiseau PUBLIC oiseau_deps)
 set_target_properties(oiseau PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-
+#
 # demos
 if(OISEAU_BUILD_DEMO)
     add_subdirectory(demo)

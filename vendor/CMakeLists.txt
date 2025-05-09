@@ -35,7 +35,6 @@ include(eigen.cmake)
 
 include(loguru.cmake)
 target_link_libraries(oiseau_deps INTERFACE loguru)
-target_precompile_headers(oiseau_deps INTERFACE <loguru.hpp>)
 
 include(boost.cmake)
 target_link_libraries(oiseau_deps INTERFACE Boost::boost)
