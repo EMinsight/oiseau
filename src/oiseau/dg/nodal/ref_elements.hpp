@@ -26,7 +26,7 @@ class RefLine : DGElement {
   RefLine(const RefLine &) = default;
   RefLine &operator=(RefLine &&) = default;
   RefLine &operator=(const RefLine &) = default;
-  ~RefLine() = default;
+  ~RefLine() override = default;
 
   xt::xarray<double> &v() override;
   xt::xarray<double> &gv() override;
@@ -48,7 +48,7 @@ class RefTriangle : DGElement {
   RefTriangle(const RefTriangle &) = default;
   RefTriangle &operator=(RefTriangle &&) = default;
   RefTriangle &operator=(const RefTriangle &) = default;
-  ~RefTriangle() = default;
+  ~RefTriangle() override = default;
 
   xt::xarray<double> &v() override;
   xt::xarray<double> &gv() override;
@@ -71,7 +71,7 @@ class RefTetrahedron : DGElement {
   RefTetrahedron(const RefTetrahedron &) = default;
   RefTetrahedron &operator=(RefTetrahedron &&) = default;
   RefTetrahedron &operator=(const RefTetrahedron &) = default;
-  ~RefTetrahedron() = default;
+  ~RefTetrahedron() override = default;
 
   xt::xarray<double> &v() override;
   xt::xarray<double> &gv() override;

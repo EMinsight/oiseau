@@ -30,7 +30,7 @@ struct type_caster<E> {
   PYBIND11_TYPE_CASTER(array_type, _("xexpression"));
   static handle cast(const E &expr, return_value_policy, handle) {
     xt::xarray<value_type> tmp = xt::eval(expr);
-    xt::xarray<value_type> *data_holder = new xt::xarray<double>(std::move(tmp));
+    auto *data_holder = new xt::xarray<double>(std::move(tmp));
     py::capsule owner_capsule(data_holder,
                               [](void *p) { delete static_cast<xt::xarray<value_type> *>(p); });
     py::array result(data_holder->shape(), data_holder->data(), owner_capsule);
@@ -127,7 +127,7 @@ DEFINE_PYPLOT_FUNC_WRAPPED(Figure, figure)
 template <typename... Args>
 std::pair<Figure, AxesSubPlot> subplots(Args &&...args) {
   py::object result = plt().attr("subplots")(std::forward<Args>(args)...);
-  py::tuple res = result.cast<py::tuple>();
+  auto res = result.cast<py::tuple>();
   return {Figure(res[0]), AxesSubPlot(res[1])};
 }
 

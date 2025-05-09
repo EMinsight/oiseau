@@ -6,7 +6,8 @@ Checks: >
     # performance-*
     google-readability-*,
     modernize-*,
-    -modernize-use-trailing-return-type
+    -modernize-use-trailing-return-type,
+    -modernize-use-nodiscard,
 HeaderFilterRegex: src/.*
 FormatStyle: file
 WarningsAsErrors: '*'

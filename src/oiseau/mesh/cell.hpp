@@ -5,8 +5,7 @@
 
 #define CellType oiseau::mesh::Cell const *
 
-namespace oiseau {
-namespace mesh {
+namespace oiseau::mesh {
 
 enum class CellKind {
   Undefined = 0,
@@ -103,5 +102,4 @@ class HexahedronCell : public Cell {
 
 CellType get_cell_type(const CellKind cell);
 
-}  // namespace mesh
-}  // namespace oiseau
+}  // namespace oiseau::mesh
