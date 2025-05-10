@@ -36,7 +36,9 @@ class Cell {
   int num_entities(int dim) const;
   std::vector<std::vector<int>> get_entity_vertices(int dim) const;
   std::vector<std::vector<int>> get_sub_entities(int dim0, int dim1) const;
-  std::vector<std::vector<std::vector<std::vector<int>>>> topology() const { return m_topology; }
+  const std::vector<std::vector<std::vector<std::vector<int>>>> &topology() const {
+    return m_topology;
+  }
   int num_sub_entities(int dim) const;
   CellKind kind() const { return m_kind; }
 };

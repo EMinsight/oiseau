@@ -1,9 +1,9 @@
 #include "oiseau/plotting/triplot.hpp"
+#include <ranges>
 
 namespace oiseau::plotting {
 
 void triplot(plt::AxesSubPlot &ax, oiseau::mesh::Mesh &mesh) {
-  std::vector<std::vector<std::vector<std::size_t>>> faces;
   auto topology = mesh.topology();
   auto geometry = mesh.geometry();
   auto connectivity = topology.conn();
@@ -12,17 +12,16 @@ void triplot(plt::AxesSubPlot &ax, oiseau::mesh::Mesh &mesh) {
   std::vector<std::size_t> shape = {x.size() / 3, 3};
   auto coords = xt::adapt(x.data(), x.size(), xt::no_ownership(), shape);
 
-  for (int i = 0; i < connectivity.size(); i++) {
+  for (std::size_t i = 0; i < connectivity.size(); ++i) {
     auto cell = topology.cell_types()[i];
     auto conn = connectivity[i];
 
     auto face_vertices = cell->get_entity_vertices(1);
-    std::vector<std::vector<std::size_t>> faces;
-    for (auto &face_vertice : face_vertices) {
-      std::vector<std::size_t> temp(2);
-      for (int k = 0; k < face_vertice.size(); k++) {
-        temp[k] = conn[face_vertice[k]];
-      }
+    for (const auto &face_vertice : face_vertices) {
+      std::vector<std::size_t> temp(face_vertice.size());
+      std::ranges::transform(face_vertice, temp.begin(),
+                             [&conn](std::size_t idx) { return conn[idx]; });
+
       auto co = xt::view(coords, xt::keep(temp));
       auto xx = xt::col(co, 0);
       auto yy = xt::col(co, 1);
@@ -30,4 +29,5 @@ void triplot(plt::AxesSubPlot &ax, oiseau::mesh::Mesh &mesh) {
     }
   }
 }
+
 }  // namespace oiseau::plotting

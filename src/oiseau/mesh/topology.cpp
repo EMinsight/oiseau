@@ -24,14 +24,14 @@ void Topology::calculate_connectivity() {
   for (int i = 0; i < m_conn.size(); i++) {
     auto cell = m_cell_types[i];
     if (cell->kind() != CellKind::Triangle) continue;
-    auto conn = m_conn[i];
+    auto _conn = m_conn[i];
 
     auto face_vertices = cell->get_entity_vertices(1);
     std::vector<std::vector<std::size_t>> face(face_vertices.size());
     for (int j = 0; j < face_vertices.size(); j++) {
       face[j].resize(face_vertices[j].size());
       for (int k = 0; k < face_vertices[j].size(); k++) {
-        face[j][k] = conn[face_vertices[j][k]];
+        face[j][k] = _conn[face_vertices[j][k]];
       }
       std::sort(face[j].begin(), face[j].end());
     }

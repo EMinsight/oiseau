@@ -33,7 +33,7 @@ concept Readable = std::is_convertible_v<T, std::string_view> || std::is_arithme
 
 template <Readable T, int N>
 std::array<T, N> from_file(std::istream& f, bool is_binary = false) {
-  std::array<T, N> arr;
+  std::array<T, N> arr{};
   if (is_binary) {
     f.read(reinterpret_cast<char*>(arr.data()), sizeof(T) * N);
   } else

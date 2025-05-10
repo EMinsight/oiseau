@@ -39,9 +39,8 @@ std::vector<std::vector<int>> Cell::get_sub_entities(int dim0, int dim1) const {
 std::vector<std::vector<int>> Cell::get_entity_vertices(int dim) const {
   std::vector<std::vector<int>> slice;
   slice.reserve(m_topology[dim].size());
-  for (const auto &s : m_topology[dim]) {
-    slice.push_back(s[0]);
-  }
+  std::transform(m_topology[dim].begin(), m_topology[dim].end(), std::back_inserter(slice),
+                 [](const auto& s) { return s[0]; });
   return slice;
 }
 

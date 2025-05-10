@@ -47,7 +47,7 @@ oiseau::mesh::Mesh oiseau::io::gmsh_read_from_stream(std::istream &f_handler) {
   cell_types.reserve(file.elements_section.num_elements);
   conn.reserve(file.elements_section.num_elements);
 
-  for (auto &block : file.elements_section.blocks) {
+  for (const auto &block : file.elements_section.blocks) {
     std::size_t elem_size = block.data.size() / block.num_elements_in_block;
     for (int i = 0; i < block.num_elements_in_block; ++i) {
       std::vector<std::size_t> tmp;
@@ -64,6 +64,6 @@ oiseau::mesh::Mesh oiseau::io::gmsh_read_from_stream(std::istream &f_handler) {
   return mesh;
 };
 
-void oiseau::io::gmsh_write(std::string filename, oiseau::mesh::Mesh &mesh) {
+void oiseau::io::gmsh_write(const std::string &filename, const oiseau::mesh::Mesh &mesh) {
   throw std::logic_error("gmsh_write not implemented yet.");
 };

@@ -18,6 +18,6 @@ class Geometry {
 
  private:
   std::vector<double> m_x;
-  int m_dim;
+  int m_dim = 3;
 };
 }  // namespace oiseau::mesh
