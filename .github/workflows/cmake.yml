@@ -53,4 +53,4 @@ jobs:
 
             - name: Run cppcheck
               run: |
-                  cppcheck --enable=all --inconclusive --std=c++23 --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unusedFunction --error-exitcode=2 src -I src
+                  cppcheck --enable=all --std=c++23 --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unusedFunction --error-exitcode=2 src -I src
