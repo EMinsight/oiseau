@@ -1,18 +1,42 @@
 #include "oiseau/utils/math.hpp"
-#include <boost/math/special_functions/gamma.hpp>
-#include <boost/math/special_functions/jacobi.hpp>
-#include <utility>
+#include <cmath>
 #include <vector>
 #include <xtensor/containers/xtensor.hpp>
 
 namespace oiseau::utils {
 
+template <std::floating_point Real>
+Real jacobi(unsigned n, Real alpha, Real beta, Real x) {
+  if (n == 0) {
+    return Real(1);
+  }
+
+  Real y0 = 1;
+  Real y1 = (alpha + 1) + (alpha + beta + 2) * (x - 1) / Real(2);
+
+  Real yk = y1;
+  unsigned k = 2;
+  Real k_max = n * (1 + std::numeric_limits<Real>::epsilon());
+
+  while (k < k_max) {
+    Real denom = 2 * k * (k + alpha + beta) * (2 * k + alpha + beta - 2);
+    Real gamma1 =
+        (2 * k + alpha + beta - 1) *
+        ((2 * k + alpha + beta) * (2 * k + alpha + beta - 2) * x + alpha * alpha - beta * beta);
+    Real gamma0 = -2 * (k + alpha - 1) * (k + beta - 1) * (2 * k + alpha + beta);
+    yk = (gamma1 * y1 + gamma0 * y0) / denom;
+    y0 = y1;
+    y1 = yk;
+    k += 1;
+  }
+  return yk;
+}
+
 template <std::floating_point Real, FloatingArrayLike Container>
 Container jacobi_p(unsigned n, Real alpha, Real beta, Container v) {
-  using boost::math::tgamma, boost::math::jacobi;
   Real norm = std::pow(2, alpha + beta + 1) / (2 * n + alpha + beta + 1);
-  norm *= tgamma(n + alpha + 1) * tgamma(n + beta + 1);
-  norm /= (tgamma(n + 1) * tgamma(n + alpha + beta + 1));
+  norm *= std::tgamma(n + alpha + 1) * std::tgamma(n + beta + 1);
+  norm /= (std::tgamma(n + 1) * std::tgamma(n + alpha + beta + 1));
   auto partial = [n, alpha, beta, norm](auto &k) {
     k = jacobi(n, alpha, beta, k) / std::sqrt(norm);
   };

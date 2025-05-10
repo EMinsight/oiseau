@@ -1,5 +1,4 @@
 #include "oiseau/dg/nodal/utils.hpp"
-#include <boost/math/special_functions/gamma.hpp>
 #include <cmath>
 #include <numbers>
 #include <xtensor-blas/xlinalg.hpp>
@@ -28,9 +27,8 @@ std::pair<xt::xarray<double>, xt::xarray<double>> jacobi_gq(unsigned n, double a
   if (alpha + beta == 0) m(0, 0) = 0;
   m += xt::transpose(m);
   auto [d, v] = xt::linalg::eigh(m);
-  using boost::math::tgamma;
-  double cte = std::pow(2, (alpha + beta + 1)) / (alpha + beta + 1) * tgamma(alpha + 1) *
-               tgamma(beta + 1) / tgamma(alpha + beta + 1);
+  double cte = std::pow(2, (alpha + beta + 1)) / (alpha + beta + 1) * std::tgamma(alpha + 1) *
+               std::tgamma(beta + 1) / std::tgamma(alpha + beta + 1);
   xt::xarray<double> w = cte * xt::square(xt::view(v, 0, xt::all())), x = d;
   return {x, w};
 }

@@ -7,6 +7,7 @@ Checks: >
     google-readability-*,
     modernize-*,
     -modernize-use-trailing-return-type,
+    -modernize-use-std-numbers,
     -modernize-use-nodiscard,
 HeaderFilterRegex: src/.*
 FormatStyle: file

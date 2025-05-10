@@ -30,18 +30,14 @@ include(fmt.cmake)
 target_link_libraries(oiseau_deps INTERFACE fmt::fmt)
 target_precompile_headers(oiseau_deps INTERFACE <fmt/ranges.h> <fmt/core.h>)
 
-include(eigen.cmake)
-# include(blaze.cmake)
-
 include(loguru.cmake)
 target_link_libraries(oiseau_deps INTERFACE loguru)
 
-include(boost.cmake)
-target_link_libraries(oiseau_deps INTERFACE Boost::boost)
-target_precompile_headers(
-    oiseau_deps INTERFACE <boost/math/special_functions/gamma.hpp>
-    <boost/math/special_functions/jacobi.hpp>
-)
+# include(eigen.cmake)
+
+# include(blaze.cmake)
+
+# include(boost.cmake) target_link_libraries(oiseau_deps INTERFACE Boost::boost)
 
 target_precompile_headers(
     oiseau_deps
