@@ -10,23 +10,24 @@ namespace oiseau::io {
 
 namespace detail {
 const std::size_t gmsh_nodes_per_cell(const std::size_t s) {
-  if (s == 1)  // line
-    return 2;
-  else if (s == 2)  // triangle
-    return 3;
-  else if (s == 3)  // quad
-    return 4;
-  else if (s == 4)  // tetra
-    return 4;
-  else if (s == 5)  // hexahedron
-    return 8;
-  else if (s == 6)  // hexahedron
-    return 6;
-  else if (s == 7)  // wedge
-    return 5;
-  else if (s == 15)  // vertex
-    return 1;
-  else {
+  switch (s) {
+  case 1:
+    return 2;  // line
+  case 2:
+    return 3;  // triangle
+  case 3:
+    return 4;  // quad
+  case 4:
+    return 4;  // tetra
+  case 5:
+    return 8;  // hexahedron
+  case 6:
+    return 6;  // prism?
+  case 7:
+    return 5;  // wedge
+  case 15:
+    return 1;  // vertex
+  default:
     throw std::runtime_error("Unknown GMSH cell type: " + std::to_string(s));
   }
 }
