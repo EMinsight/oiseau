@@ -35,9 +35,7 @@ template <Readable T, int N>
 std::array<T, N> from_file(std::istream& f, bool is_binary = false) {
   std::array<T, N> arr;
   if (is_binary) {
-    for (std::size_t i = 0; i < N; i++) {
-      f.read((char*)&arr[i], sizeof(T));
-    };
+    f.read(reinterpret_cast<char*>(arr.data()), sizeof(T) * N);
   } else
     for (std::size_t i = 0; i < N; i++) f >> arr.at(i);
   return arr;
@@ -47,9 +45,7 @@ template <Readable T>
 std::vector<T> from_file(std::istream& f, int n, bool is_binary = false) {
   std::vector<T> vec(n);
   if (is_binary) {
-    for (std::size_t i = 0; i < n; i++) {
-      f.read((char*)&vec[i], sizeof(T));
-    };
+    f.read(reinterpret_cast<char*>(vec.data()), sizeof(T) * n);
   } else
     for (std::size_t i = 0; i < n; i++) f >> vec.at(i);
   return vec;
