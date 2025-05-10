@@ -1,4 +1,5 @@
 #include "oiseau/utils/logging.hpp"
+
 #include <vector>
 
 namespace oiseau::logging {

@@ -1,4 +1,5 @@
 #include <xtensor/containers/xadapt.hpp>
+
 #include "oiseau/dg/nodal/ref_elements.hpp"
 
 using namespace oiseau::dg::nodal;

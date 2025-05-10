@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+
 #include <oiseau/io/gmsh_file.hpp>
 #include <sstream>
 

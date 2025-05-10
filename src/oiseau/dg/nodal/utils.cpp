@@ -1,10 +1,12 @@
 #include "oiseau/dg/nodal/utils.hpp"
+
 #include <cmath>
 #include <numbers>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/containers/xtensor.hpp>
 #include <xtensor/core/xmath.hpp>
 #include <xtensor/views/xview.hpp>
+
 #include "oiseau/utils/math.hpp"
 
 namespace oiseau::dg::nodal::utils {

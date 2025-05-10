@@ -1,4 +1,5 @@
 #include "oiseau/plotting/triplot.hpp"
+
 #include <ranges>
 
 namespace oiseau::plotting {

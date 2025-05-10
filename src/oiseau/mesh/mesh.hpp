@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utility>
+
 #include "oiseau/mesh/geometry.hpp"
 #include "oiseau/mesh/topology.hpp"
 

@@ -1,10 +1,12 @@
 #include "oiseau/io/gmsh.hpp"
+
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
 #include "oiseau/io/gmsh_file.hpp"
 #include "oiseau/mesh/cell.hpp"
 #include "oiseau/mesh/mesh.hpp"

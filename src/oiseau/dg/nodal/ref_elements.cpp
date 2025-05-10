@@ -1,4 +1,5 @@
 #include "oiseau/dg/nodal/ref_elements.hpp"
+
 #include "oiseau/dg/nodal/utils.hpp"
 
 using namespace oiseau::dg::nodal::utils;

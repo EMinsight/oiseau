@@ -1,6 +1,8 @@
 #include <fmt/core.h>
 #include <fmt/ranges.h>
+
 #include <ranges>
+
 #include "oiseau/io/gmsh.hpp"
 #include "oiseau/plotting/triplot.hpp"
 

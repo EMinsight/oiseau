@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utility>
+
 #include "oiseau/mesh/mesh.hpp"
 
 namespace oiseau::mesh {

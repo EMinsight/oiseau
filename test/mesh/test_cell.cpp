@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+
 #include "oiseau/mesh/cell.hpp"
 
 TEST(test_mesh, triangle_cell) {

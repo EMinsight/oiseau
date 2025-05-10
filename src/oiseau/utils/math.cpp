@@ -1,4 +1,5 @@
 #include "oiseau/utils/math.hpp"
+
 #include <cmath>
 #include <vector>
 #include <xtensor/containers/xtensor.hpp>

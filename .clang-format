@@ -1,5 +1,5 @@
 ---
 BasedOnStyle: Google
+Standard: c++20
 IndentCaseLabels: false
-IncludeBlocks: Merge
 ColumnLimit: 100

@@ -1,4 +1,5 @@
 #include <pybind11/pybind11.h>
+
 #include "oiseau/mesh/cell.hpp"
 
 namespace py = pybind11;

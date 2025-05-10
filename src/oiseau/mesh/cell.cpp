@@ -1,4 +1,5 @@
 #include "oiseau/mesh/cell.hpp"
+
 #include <string>
 #include <string_view>
 

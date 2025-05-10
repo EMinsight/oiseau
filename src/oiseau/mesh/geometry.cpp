@@ -1,4 +1,5 @@
 #include "oiseau/mesh/geometry.hpp"
+
 #include <array>
 #include <vector>
 

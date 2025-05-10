@@ -1,4 +1,5 @@
 #include "oiseau/mesh/topology.hpp"
+
 #include <array>
 #include <vector>
 
