@@ -1,8 +1,4 @@
 #include "oiseau/io/gmsh_file.hpp"
-#include <fstream>
-#include <iostream>
-#include <string_view>
-#include "oiseau/utils/logging.hpp"
 
 enum { PREFIX = '$' };
 
