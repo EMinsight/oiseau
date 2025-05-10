@@ -1,8 +1,9 @@
 #include "oiseau/io/gmsh.hpp"
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
-#include <utility>
+#include <unordered_map>
 #include <vector>
 #include "oiseau/io/gmsh_file.hpp"
 #include "oiseau/mesh/cell.hpp"
@@ -23,7 +24,7 @@ CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
 }
 }  // namespace oiseau::mesh
 
-oiseau::mesh::Mesh oiseau::io::gmsh_read_from_string(const std::string content) {
+oiseau::mesh::Mesh oiseau::io::gmsh_read_from_string(const std::string &content) {
   std::istringstream stream(content);
   return oiseau::io::gmsh_read_from_stream(stream);
 }
@@ -63,4 +64,6 @@ oiseau::mesh::Mesh oiseau::io::gmsh_read_from_stream(std::istream &f_handler) {
   return mesh;
 };
 
-void oiseau::io::gmsh_write(std::string filename, oiseau::mesh::Mesh &mesh) {};
+void oiseau::io::gmsh_write(std::string filename, oiseau::mesh::Mesh &mesh) {
+  throw std::logic_error("gmsh_write not implemented yet.");
+};

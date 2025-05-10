@@ -2,6 +2,8 @@
 
 #include <array>
 #include <string>
+#include <string_view>
+#include <vector>
 
 #define CellType oiseau::mesh::Cell const *
 

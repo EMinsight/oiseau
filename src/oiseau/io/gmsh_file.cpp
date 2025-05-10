@@ -71,7 +71,7 @@ MeshFormatSection mesh_format_handler(std::istream& f_handler) {
     if (size_t_size != sizeof(std::size_t)) throw std::runtime_error("Invalid GMSH file");
   }
   return {version, is_binary, size_t_size};
-};
+}
 
 PhysicalNamesSection physical_names_handler(std::istream& f_handler) {
   auto [num_phys_names] = from_file<int, 1>(f_handler);
@@ -89,7 +89,7 @@ PhysicalNamesSection physical_names_handler(std::istream& f_handler) {
     names.emplace_back(name);
   }
   return {num_phys_names, std::move(dimensions), std::move(physical_tags), std::move(names)};
-};
+}
 
 EntitiesSection entities_handler(std::istream& f_handler, bool is_binary) {
   auto quantity = from_file<std::size_t, 4>(f_handler, is_binary);
@@ -112,7 +112,7 @@ EntitiesSection entities_handler(std::istream& f_handler, bool is_binary) {
     }
   }
   return EntitiesSection(std::move(blocks));
-};
+}
 
 NodesSection nodes_handler(std::istream& f_handler, bool is_binary) {
   auto [num_entity_blocks, total_num_nodes, min_node_tag, max_node_tag] =
@@ -141,7 +141,7 @@ NodesSection nodes_handler(std::istream& f_handler, bool is_binary) {
                         std::move(node_coords));
   }
   return {num_entity_blocks, total_num_nodes, min_node_tag, max_node_tag, std::move(blocks)};
-};
+}
 
 ElementSection elements_handler(std::istream& f_handler, bool is_binary) {
   auto [num_element_blocks, num_elements, min_element_tag, max_element_tag] =
