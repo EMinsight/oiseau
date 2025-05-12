@@ -2,9 +2,22 @@
 
 #include "oiseau/dg/nodal/utils.hpp"
 
-using namespace oiseau::dg::nodal::utils;
-
 namespace oiseau::dg::nodal {
+
+using utils::conversion_equilateral_xy_to_rs;
+using utils::conversion_equilateral_xyz_to_rst;
+using utils::d_matrix_1d;
+using utils::d_matrix_2d;
+using utils::d_matrix_3d;
+using utils::generate_tetrahedron_nodes;
+using utils::generate_triangle_nodes;
+using utils::grad_vandermonde_1d;
+using utils::grad_vandermonde_2d;
+using utils::grad_vandermonde_3d;
+using utils::jacobi_gl;
+using utils::vandermonde_1d;
+using utils::vandermonde_2d;
+using utils::vandermonde_3d;
 
 RefLine::RefLine(unsigned order)
     : m_order(order), m_r(jacobi_gl(order, 0.0, 0.0)), m_np(order + 1) {}
