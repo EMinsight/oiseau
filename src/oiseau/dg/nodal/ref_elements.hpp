@@ -4,6 +4,8 @@
 
 namespace oiseau::dg::nodal {
 
+enum class ElementType { Line, Triangle, Quadrilateral, Tetrahedron, Hexahedron };
+
 class DGElement {
  public:
   virtual ~DGElement() = default;
@@ -53,5 +55,7 @@ class RefHexahedron : public DGElement {
  public:
   explicit RefHexahedron(unsigned order);
 };
+
+std::shared_ptr<DGElement> get_ref_element(ElementType type, unsigned order);
 
 }  // namespace oiseau::dg::nodal

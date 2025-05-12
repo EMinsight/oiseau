@@ -67,4 +67,46 @@ RefHexahedron::RefHexahedron(unsigned order) : DGElement(order) {
   this->m_d = d_matrix_3d(this->m_v, this->m_gv);
 }
 
+std::shared_ptr<DGElement> get_ref_element(ElementType type, unsigned order) {
+  using Key = std::pair<ElementType, unsigned>;
+
+  struct KeyHash {
+    std::size_t operator()(const Key& k) const {
+      return std::hash<int>()(static_cast<int>(k.first)) ^ std::hash<unsigned>()(k.second);
+    }
+  };
+
+  static std::unordered_map<Key, std::shared_ptr<DGElement>, KeyHash> cache;
+
+  Key key{type, order};
+  auto it = cache.find(key);
+  if (it != cache.end()) {
+    return it->second;
+  }
+
+  std::shared_ptr<DGElement> elem;
+  switch (type) {
+  case ElementType::Line:
+    elem = std::make_shared<RefLine>(order);
+    break;
+  case ElementType::Triangle:
+    elem = std::make_shared<RefTriangle>(order);
+    break;
+  case ElementType::Quadrilateral:
+    elem = std::make_shared<RefQuadrilateral>(order);
+    break;
+  case ElementType::Tetrahedron:
+    elem = std::make_shared<RefTetrahedron>(order);
+    break;
+  case ElementType::Hexahedron:
+    elem = std::make_shared<RefHexahedron>(order);
+    break;
+  default:
+    throw std::invalid_argument("Unknown element type");
+  }
+
+  cache[key] = elem;
+  return elem;
+}
+
 }  // namespace oiseau::dg::nodal
