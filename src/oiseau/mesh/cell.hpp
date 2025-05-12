@@ -5,9 +5,10 @@
 #include <string_view>
 #include <vector>
 
-#define CellType oiseau::mesh::Cell const *
-
 namespace oiseau::mesh {
+
+class Cell;
+using CellType = Cell const *;
 
 enum class CellKind {
   Undefined = 0,

@@ -11,11 +11,12 @@
 #include "oiseau/mesh/cell.hpp"
 #include "oiseau/mesh/mesh.hpp"
 
-namespace oiseau::mesh {
-CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
-  static const std::unordered_map<std::size_t, CellKind> gmsh_to_kind = {
-      {15, CellKind::Point},        {1, CellKind::Interval},    {2, CellKind::Triangle},
-      {3, CellKind::Quadrilateral}, {4, CellKind::Tetrahedron}, {5, CellKind::Hexahedron},
+namespace {
+oiseau::mesh::CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
+  static const std::unordered_map<std::size_t, oiseau::mesh::CellKind> gmsh_to_kind = {
+      {15, oiseau::mesh::CellKind::Point},      {1, oiseau::mesh::CellKind::Interval},
+      {2, oiseau::mesh::CellKind::Triangle},    {3, oiseau::mesh::CellKind::Quadrilateral},
+      {4, oiseau::mesh::CellKind::Tetrahedron}, {5, oiseau::mesh::CellKind::Hexahedron},
   };
   auto it = gmsh_to_kind.find(s);
   if (it == gmsh_to_kind.end()) {
@@ -24,23 +25,25 @@ CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
 
   return oiseau::mesh::get_cell_type(it->second);
 }
-}  // namespace oiseau::mesh
+}  // namespace
 
-oiseau::mesh::Mesh oiseau::io::gmsh_read_from_string(const std::string &content) {
+namespace oiseau::io {
+
+oiseau::mesh::Mesh gmsh_read_from_string(const std::string &content) {
   std::istringstream stream(content);
-  return oiseau::io::gmsh_read_from_stream(stream);
+  return gmsh_read_from_stream(stream);
 }
 
-oiseau::mesh::Mesh oiseau::io::gmsh_read_from_path(const std::filesystem::path &path) {
+oiseau::mesh::Mesh gmsh_read_from_path(const std::filesystem::path &path) {
   std::ifstream f_handler(path);
-  return oiseau::io::gmsh_read_from_stream(f_handler);
+  return gmsh_read_from_stream(f_handler);
 }
 
-oiseau::mesh::Mesh oiseau::io::gmsh_read_from_stream(std::istream &f_handler) {
+oiseau::mesh::Mesh gmsh_read_from_stream(std::istream &f_handler) {
   GMSHFile file = GMSHFile(f_handler);
   std::vector<double> x;
   std::vector<std::vector<std::size_t>> conn;
-  std::vector<CellType> cell_types;
+  std::vector<oiseau::mesh::CellType> cell_types;
 
   x.reserve(file.nodes_section.num_nodes * 3);
   for (auto &block : file.nodes_section.blocks)
@@ -55,7 +58,7 @@ oiseau::mesh::Mesh oiseau::io::gmsh_read_from_stream(std::istream &f_handler) {
       std::vector<std::size_t> tmp;
       tmp.reserve(elem_size - 1);
       for (int j = 1; j < elem_size; ++j) tmp.emplace_back(block.data[i * elem_size + j] - 1);
-      cell_types.emplace_back(oiseau::mesh::gmsh_celltype_to_oiseau_celltype(block.element_type));
+      cell_types.emplace_back(gmsh_celltype_to_oiseau_celltype(block.element_type));
       conn.emplace_back(std::move(tmp));
     }
   }
@@ -66,6 +69,8 @@ oiseau::mesh::Mesh oiseau::io::gmsh_read_from_stream(std::istream &f_handler) {
   return mesh;
 };
 
-void oiseau::io::gmsh_write(const std::string &filename, const oiseau::mesh::Mesh &mesh) {
+void gmsh_write(const std::string &filename, const oiseau::mesh::Mesh &mesh) {
   throw std::logic_error("gmsh_write not implemented yet.");
 };
+
+}  // namespace oiseau::io
