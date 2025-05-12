@@ -1,55 +1,71 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(oiseau)
+project(oiseau LANGUAGES CXX)
 
-# building parameters
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+# ------------------------------------------------------------------------------
+# Build Configuration
+# ------------------------------------------------------------------------------
+
+# Enable compile commands for tools like clangd
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Require modern C++ standard
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Default to Debug build if not specified
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE
         "Debug"
-        CACHE STRING
-              "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
-              FORCE
+        CACHE STRING "Choose the type of build: Debug, Release, RelWithDebInfo, MinSizeRel." FORCE
     )
-endif(NOT CMAKE_BUILD_TYPE)
-message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+endif()
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-option(OISEAU_BUILD_DEMO "Build demo" ON)
-option(OISEAU_BUILD_TEST "Build test" ON)
-option(OISEAU_BUILD_DOCS "Build Docs" OFF)
-option(OISEAU_BUILD_BENC "Build Benc" OFF)
+# ------------------------------------------------------------------------------
+# Build Options
+# ------------------------------------------------------------------------------
 
-# third party dependencies
+option(OISEAU_BUILD_DEMO "Build demo applications" ON)
+option(OISEAU_BUILD_TEST "Build unit tests" ON)
+option(OISEAU_BUILD_DOCS "Build documentation" OFF)
+option(OISEAU_BUILD_BENC "Build benchmarks" OFF)
+
+# ------------------------------------------------------------------------------
+# Dependencies
+# ------------------------------------------------------------------------------
+
 add_subdirectory(vendor)
 
-# oiseau library
+# ------------------------------------------------------------------------------
+# Library Target
+# ------------------------------------------------------------------------------
+
 add_subdirectory(src)
 
-# export oiseau target
 add_library(oiseau STATIC ${OISEAU_CORE_SOURCES})
-target_include_directories(
-    oiseau PUBLIC $<BUILD_INTERFACE:${OISEAU_PUBLIC_INCLUDE_DIR}>
-                  $<INSTALL_INTERFACE:include>${CMAKE_INSTALL_PREFIX}/include
-)
-target_link_libraries(oiseau PUBLIC oiseau_deps)
 set_target_properties(oiseau PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-#
-# demos
+
+target_include_directories(
+    oiseau PUBLIC $<BUILD_INTERFACE:${OISEAU_PUBLIC_INCLUDE_DIR}> $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(oiseau PUBLIC oiseau_deps)
+
+# ------------------------------------------------------------------------------
+# Optional Subdirectories
+# ------------------------------------------------------------------------------
+
 if(OISEAU_BUILD_DEMO)
     add_subdirectory(demo)
 endif()
 
-# tests
 if(OISEAU_BUILD_TEST)
     enable_testing()
     add_subdirectory(test)
 endif()
 
-# benchmarks
 if(OISEAU_BUILD_BENC)
     add_subdirectory(benchmark)
 endif()
