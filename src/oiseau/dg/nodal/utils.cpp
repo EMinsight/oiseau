@@ -224,6 +224,47 @@ xt::xarray<double> generate_triangle_nodes(std::size_t n) {
   return out;
 }
 
+xt::xarray<double> generate_quadrilateral_nodes(unsigned order) {
+  xt::xarray<double> r1d = jacobi_gl(order, 0.0, 0.0);
+  unsigned Np1 = order + 1;
+  unsigned Np_quad = Np1 * Np1;
+  std::vector<std::size_t> shape = {static_cast<std::size_t>(Np_quad), 2ul};
+  xt::xarray<double> rs_nodes = xt::zeros<double>(shape);
+
+  unsigned k = 0;
+  for (unsigned i = 0; i < Np1; ++i) {
+    for (unsigned j = 0; j < Np1; ++j) {
+      rs_nodes(k, 0) = r1d(j);
+      rs_nodes(k, 1) = r1d(i);
+      k++;
+    }
+  }
+  return rs_nodes;
+}
+
+xt::xarray<double> generate_hexahedron_nodes(unsigned order) {
+  xt::xarray<double> r1d = jacobi_gl(order, 0.0, 0.0);
+
+  unsigned Np1 = order + 1;
+  std::size_t Np_hex = Np1 * Np1 * Np1;
+
+  std::vector<std::size_t> shape = {Np_hex, 3ul};
+  xt::xarray<double> rst_nodes = xt::zeros<double>(shape);
+
+  unsigned k_idx = 0;
+  for (unsigned k_loop = 0; k_loop < Np1; ++k_loop) {
+    for (unsigned i_loop = 0; i_loop < Np1; ++i_loop) {
+      for (unsigned j_loop = 0; j_loop < Np1; ++j_loop) {
+        rst_nodes(k_idx, 0) = r1d(j_loop);
+        rst_nodes(k_idx, 1) = r1d(i_loop);
+        rst_nodes(k_idx, 2) = r1d(k_loop);
+        k_idx++;
+      }
+    }
+  }
+  return rst_nodes;
+}
+
 xt::xarray<double> generate_tetraedron_equidistant_nodes(std::size_t n) {
   auto n_p = ((n + 1) * (n + 2) * (n + 3)) / 6;
   auto shape = xt::xarray<double>::shape_type{n_p, 3};

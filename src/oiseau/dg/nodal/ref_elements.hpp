@@ -39,9 +39,19 @@ class RefTriangle : public DGElement {
   explicit RefTriangle(unsigned order);
 };
 
+class RefQuadrilateral : public DGElement {
+ public:
+  explicit RefQuadrilateral(unsigned order);
+};
+
 class RefTetrahedron : public DGElement {
  public:
   explicit RefTetrahedron(unsigned order);
+};
+
+class RefHexahedron : public DGElement {
+ public:
+  explicit RefHexahedron(unsigned order);
 };
 
 }  // namespace oiseau::dg::nodal

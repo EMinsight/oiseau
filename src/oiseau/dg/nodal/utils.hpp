@@ -47,6 +47,8 @@ xt::xarray<double> conversion_equilateral_xy_to_rs(const xt::xarray<double> &coo
 xt::xarray<double> conversion_rs_to_ab(const xt::xarray<double> &rs);
 xt::xarray<double> generate_triangle_nodes(std::size_t n);
 xt::xarray<double> generate_tetraedron_equidistant_nodes(std::size_t n);
+xt::xarray<double> generate_quadrilateral_nodes(unsigned n);
+xt::xarray<double> generate_hexahedron_nodes(unsigned n);
 xt::xarray<double> eval_warp(int p, const xt::xarray<double> &xnodes,
                              const xt::xarray<double> &xout);
 xt::xarray<double> eval_shift(int p, double pval, const xt::xarray<double> &l1,
