@@ -8,73 +8,40 @@ class DGElement {
  public:
   virtual ~DGElement() = default;
 
-  virtual xt::xarray<double>& v() = 0;
-  virtual xt::xarray<double>& gv() = 0;
-  virtual xt::xarray<double>& d() = 0;
-  virtual xt::xarray<double>& r() = 0;
+  const xt::xarray<double>& v() const { return m_v; }
+  const xt::xarray<double>& gv() const { return m_gv; }
+  const xt::xarray<double>& d() const { return m_d; }
+  const xt::xarray<double>& r() const { return m_r; }
+
+  unsigned get_order() const { return m_order; }
+  unsigned get_np() const { return m_np; }
+  unsigned get_nfp() const { return m_nfp; }
+
+ protected:
+  explicit DGElement(unsigned order_val) : m_order(order_val) {}
+
+  unsigned m_order;
+  unsigned m_np{};
+  unsigned m_nfp{};
+  xt::xarray<double> m_v;
+  xt::xarray<double> m_gv;
+  xt::xarray<double> m_d;
+  xt::xarray<double> m_r;
 };
 
 class RefLine : public DGElement {
  public:
   explicit RefLine(unsigned order);
-  RefLine(const RefLine&) = default;
-  RefLine& operator=(RefLine&&) = default;
-  RefLine& operator=(const RefLine&) = default;
-  ~RefLine() override = default;
-
-  xt::xarray<double>& v() override;
-  xt::xarray<double>& gv() override;
-  xt::xarray<double>& d() override;
-  xt::xarray<double>& r() override;
-
- private:
-  static constexpr unsigned m_nfp = 1;
-  static constexpr unsigned m_nfaces = 2;
-  unsigned m_order;
-  unsigned m_np;
-  xt::xarray<double> m_r;
 };
 
 class RefTriangle : public DGElement {
  public:
   explicit RefTriangle(unsigned order);
-  RefTriangle(const RefTriangle&) = default;
-  RefTriangle& operator=(RefTriangle&&) = default;
-  RefTriangle& operator=(const RefTriangle&) = default;
-  ~RefTriangle() override = default;
-
-  xt::xarray<double>& v() override;
-  xt::xarray<double>& gv() override;
-  xt::xarray<double>& d() override;
-  xt::xarray<double>& r() override;
-
- private:
-  static constexpr unsigned m_nfaces = 3;
-  unsigned m_order;
-  unsigned m_np;
-  unsigned m_nfp;
-  xt::xarray<double> m_r;
 };
 
 class RefTetrahedron : public DGElement {
  public:
   explicit RefTetrahedron(unsigned order);
-  RefTetrahedron(const RefTetrahedron&) = default;
-  RefTetrahedron& operator=(RefTetrahedron&&) = default;
-  RefTetrahedron& operator=(const RefTetrahedron&) = default;
-  ~RefTetrahedron() override = default;
-
-  xt::xarray<double>& v() override;
-  xt::xarray<double>& gv() override;
-  xt::xarray<double>& d() override;
-  xt::xarray<double>& r() override;
-
- private:
-  static constexpr unsigned m_nfaces = 4;
-  unsigned m_order;
-  unsigned m_np;
-  unsigned m_nfp;
-  xt::xarray<double> m_r;
 };
 
 }  // namespace oiseau::dg::nodal
