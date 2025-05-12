@@ -39,14 +39,13 @@ RefTriangle::RefTriangle(unsigned order) : DGElement(order) {
   this->m_d = d_matrix_2d(this->m_v, this->m_gv);
 }
 
-RefQuadrilateral::RefQuadrilateral(unsigned order)  // New Implementation
-    : DGElement(order) {
+RefQuadrilateral::RefQuadrilateral(unsigned order) : DGElement(order) {
   this->m_np = (order + 1) * (order + 1);
-  this->m_nfp = order + 1;  // A face of a quadrilateral is a line
+  this->m_nfp = order + 1;
   this->m_r = generate_quadrilateral_nodes(this->m_order);
   this->m_v = vandermonde_2d(this->m_order, this->m_r);
   this->m_gv = grad_vandermonde_2d(this->m_order, this->m_r);
-  this->m_d = d_matrix_2d(this->m_v, this->m_gv);  // Reuses generic 2D D-matrix calculator
+  this->m_d = d_matrix_2d(this->m_v, this->m_gv);
 }
 
 RefTetrahedron::RefTetrahedron(unsigned order) : DGElement(order) {
