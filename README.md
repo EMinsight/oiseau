@@ -1,11 +1,16 @@
 # 🐦 oiseau
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![Coverage](https://img.shields.io/badge/coverage--report-view-green)](https://tiagovla.github.io/oiseau/coverage)
+[![Docs](https://img.shields.io/badge/docs-available-brightgreen)](https://tiagovla.github.io/oiseau/docs)
+[![Website](https://img.shields.io/badge/website-oiseau-blue)](https://tiagovla.github.io/oiseau)
+
 **oiseau** is a specialized **Discontinuous Galerkin Time-Domain (DGTD)**
 framework designed for advanced simulation of electromagnetic and wave
 propagation problems. This modular and research-oriented tool aims to support a
 wide range of complex materials, including dispersive and anisotropic media.
 
-> ⚠️ **Work in Progress**  
+> ⚠️ **Work in Progress**
 > oiseau is still under active development. APIs, features, and interfaces may evolve quickly.
 
 ## ✨ Features (Planned)
@@ -30,5 +35,5 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ## 🧪 License
 
-This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.  
+This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
 See the [LICENSE](LICENSE) file for more details.
