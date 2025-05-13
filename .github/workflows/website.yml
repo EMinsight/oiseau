@@ -13,9 +13,26 @@ permissions:
 jobs:
     build:
         runs-on: ubuntu-latest
+
         steps:
-            - name: Checkout repository
+            - name: Checkout code
               uses: actions/checkout@v4
+
+            - name: Install dependencies
+              run: sudo apt update && sudo apt install -y cmake ninja-build build-essential libblas-dev liblapack-dev libboost-all-dev libatlas-base-dev
+                  doxygen
+
+            - name: Configure CMake with Ninja
+              run: cmake -DOISEAU_BUILD_DOCS=ON -S . -B build -G Ninja
+
+            - name: Build with Ninja
+              run: cmake --build build -- -j$(nproc)
+
+            - name: Prepare website structure
+              run: |
+                  mkdir -p website/docs
+                  ls build
+                  cp -r build/docs/html/* website/docs/
 
             - name: Setup Pages
               uses: actions/configure-pages@v5

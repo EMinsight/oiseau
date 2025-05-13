@@ -29,7 +29,7 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 option(OISEAU_BUILD_DEMO "Build demo applications" ON)
 option(OISEAU_BUILD_TEST "Build unit tests" ON)
-option(OISEAU_BUILD_DOCS "Build documentation" OFF)
+option(OISEAU_BUILD_DOCS "Build documentation" ON)
 option(OISEAU_BUILD_BENC "Build benchmarks" OFF)
 option(OISEAU_BUILD_COVERAGE "Build with coverage" ON)
 
