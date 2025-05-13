@@ -31,7 +31,7 @@ option(OISEAU_BUILD_DEMO "Build demo applications" ON)
 option(OISEAU_BUILD_TEST "Build unit tests" ON)
 option(OISEAU_BUILD_DOCS "Build documentation" OFF)
 option(OISEAU_BUILD_BENC "Build benchmarks" OFF)
-option(OISEAU_BUILD_COVERAGE "Build with coverage" ON)
+option(OISEAU_BUILD_COVR "Build with coverage" OFF)
 
 # ------------------------------------------------------------------------------
 # Dependencies
@@ -57,7 +57,7 @@ target_link_libraries(oiseau PUBLIC oiseau_deps)
 # ------------------------------------------------------------------------------
 # Optional Subdirectories
 # ------------------------------------------------------------------------------
-if(OISEAU_BUILD_COVERAGE)
+if(OISEAU_BUILD_COVR)
     message(STATUS "Coverage build enabled")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")

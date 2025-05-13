@@ -23,7 +23,7 @@ jobs:
                   gcovr doxygen
 
             - name: Configure CMake with Ninja
-              run: cmake -DOISEAU_BUILD_TEST=ON -DOISEAU_BUILD_DOCS=ON -S . -B build -G Ninja
+              run: cmake -DOISEAU_BUILD_COVR=ON -DOISEAU_BUILD_TEST=ON -DOISEAU_BUILD_DOCS=ON -S . -B build -G Ninja
 
             - name: Build with Ninja
               run: cmake --build build -- -j$(nproc)
