@@ -1,6 +1,9 @@
 macro(oiseau_add_executable name)
     add_executable(oiseau_${name} ${name}.cpp)
     target_link_libraries(oiseau_${name} PRIVATE oiseau)
+    set_target_properties(
+        oiseau_${name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/demo
+    )
 endmacro()
 
 oiseau_add_executable(nodaldg)
