@@ -6,7 +6,8 @@ set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 if(OISEAU_BUILD_TEST)
     include(googletest.cmake)
 endif()
-if(OISEAU_BUILD_BENCH)
+
+if(OISEAU_BUILD_BENC)
     include(benchmark.cmake)
 endif()
 
