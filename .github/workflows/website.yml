@@ -20,10 +20,10 @@ jobs:
 
             - name: Install dependencies
               run: sudo apt update && sudo apt install -y cmake ninja-build build-essential libblas-dev liblapack-dev libboost-all-dev libatlas-base-dev
-                  doxygen
+                  gcovr doxygen
 
             - name: Configure CMake with Ninja
-              run: cmake -DOISEAU_BUILD_DOCS=ON -S . -B build -G Ninja
+              run: cmake -DOISEAU_BUILD_TEST=ON -DOISEAU_BUILD_DOCS=ON -S . -B build -G Ninja
 
             - name: Build with Ninja
               run: cmake --build build -- -j$(nproc)
@@ -31,8 +31,13 @@ jobs:
             - name: Prepare website structure
               run: |
                   mkdir -p website/docs
-                  ls build
                   cp -r build/docs/html/* website/docs/
+
+            - name: Run tests and generate coverage
+              run: |
+                  ctest --test-dir build --output-on-failure
+                  mkdir -p website/coverage
+                  gcovr --filter src/ --html-details -o website/coverage/index.html
 
             - name: Setup Pages
               uses: actions/configure-pages@v5
