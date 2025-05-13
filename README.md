@@ -1,4 +1,4 @@
-# 🐦 oiseau
+![banner](assets/banner.svg)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage--report-view-green)](https://tiagovla.github.io/oiseau/coverage)
