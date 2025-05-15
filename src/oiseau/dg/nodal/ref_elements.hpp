@@ -1,14 +1,17 @@
 #pragma once
 
+#include <memory>
 #include <xtensor/containers/xarray.hpp>
+
+#include "xtensor/core/xtensor_forward.hpp"
 
 namespace oiseau::dg::nodal {
 
-enum class ElementType { Line, Triangle, Quadrilateral, Tetrahedron, Hexahedron };
+enum class RefElementType { Line, Triangle, Quadrilateral, Tetrahedron, Hexahedron };
 
-class DGElement {
+class RefElement {
  public:
-  virtual ~DGElement() = default;
+  virtual ~RefElement() = default;
 
   const xt::xarray<double>& v() const { return m_v; }
   const xt::xarray<double>& gv() const { return m_gv; }
@@ -20,7 +23,7 @@ class DGElement {
   unsigned get_nfp() const { return m_nfp; }
 
  protected:
-  explicit DGElement(unsigned order_val) : m_order(order_val) {}
+  explicit RefElement(unsigned order_val) : m_order(order_val) {}
 
   unsigned m_order;
   unsigned m_np{};
@@ -31,31 +34,31 @@ class DGElement {
   xt::xarray<double> m_r;
 };
 
-class RefLine : public DGElement {
+class RefLine : public RefElement {
  public:
   explicit RefLine(unsigned order);
 };
 
-class RefTriangle : public DGElement {
+class RefTriangle : public RefElement {
  public:
   explicit RefTriangle(unsigned order);
 };
 
-class RefQuadrilateral : public DGElement {
+class RefQuadrilateral : public RefElement {
  public:
   explicit RefQuadrilateral(unsigned order);
 };
 
-class RefTetrahedron : public DGElement {
+class RefTetrahedron : public RefElement {
  public:
   explicit RefTetrahedron(unsigned order);
 };
 
-class RefHexahedron : public DGElement {
+class RefHexahedron : public RefElement {
  public:
   explicit RefHexahedron(unsigned order);
 };
 
-std::shared_ptr<DGElement> get_ref_element(ElementType type, unsigned order);
+std::shared_ptr<RefElement> get_ref_element(RefElementType type, unsigned order);
 
 }  // namespace oiseau::dg::nodal

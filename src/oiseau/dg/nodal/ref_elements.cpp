@@ -28,7 +28,7 @@ using utils::vandermonde_1d;
 using utils::vandermonde_2d;
 using utils::vandermonde_3d;
 
-RefLine::RefLine(unsigned order) : DGElement(order) {
+RefLine::RefLine(unsigned order) : RefElement(order) {
   this->m_np = order + 1;
   this->m_nfp = 1;
   this->m_r = jacobi_gl(this->m_order, 0.0, 0.0);
@@ -37,7 +37,7 @@ RefLine::RefLine(unsigned order) : DGElement(order) {
   this->m_d = d_matrix_1d(this->m_v, this->m_gv);
 }
 
-RefTriangle::RefTriangle(unsigned order) : DGElement(order) {
+RefTriangle::RefTriangle(unsigned order) : RefElement(order) {
   this->m_np = ((order + 1) * (order + 2)) / 2;
   this->m_nfp = order + 1;
   this->m_r = conversion_equilateral_xy_to_rs(generate_triangle_nodes(this->m_order));
@@ -46,7 +46,7 @@ RefTriangle::RefTriangle(unsigned order) : DGElement(order) {
   this->m_d = d_matrix_2d(this->m_v, this->m_gv);
 }
 
-RefQuadrilateral::RefQuadrilateral(unsigned order) : DGElement(order) {
+RefQuadrilateral::RefQuadrilateral(unsigned order) : RefElement(order) {
   this->m_np = (order + 1) * (order + 1);
   this->m_nfp = order + 1;
   this->m_r = generate_quadrilateral_nodes(this->m_order);
@@ -55,7 +55,7 @@ RefQuadrilateral::RefQuadrilateral(unsigned order) : DGElement(order) {
   this->m_d = d_matrix_2d(this->m_v, this->m_gv);
 }
 
-RefTetrahedron::RefTetrahedron(unsigned order) : DGElement(order) {
+RefTetrahedron::RefTetrahedron(unsigned order) : RefElement(order) {
   this->m_np = ((order + 1) * (order + 2) * (order + 3)) / 6;
   this->m_nfp = ((order + 1) * (order + 2)) / 2;
   this->m_r = conversion_equilateral_xyz_to_rst(generate_tetrahedron_nodes(this->m_order));
@@ -64,7 +64,7 @@ RefTetrahedron::RefTetrahedron(unsigned order) : DGElement(order) {
   this->m_d = d_matrix_3d(this->m_v, this->m_gv);
 }
 
-RefHexahedron::RefHexahedron(unsigned order) : DGElement(order) {
+RefHexahedron::RefHexahedron(unsigned order) : RefElement(order) {
   this->m_np = (order + 1) * (order + 1) * (order + 1);
   this->m_nfp = (order + 1) * (order + 1);
   this->m_r = generate_hexahedron_nodes(this->m_order);
@@ -73,8 +73,8 @@ RefHexahedron::RefHexahedron(unsigned order) : DGElement(order) {
   this->m_d = d_matrix_3d(this->m_v, this->m_gv);
 }
 
-std::shared_ptr<DGElement> get_ref_element(ElementType type, unsigned order) {
-  using Key = std::pair<ElementType, unsigned>;
+std::shared_ptr<RefElement> get_ref_element(RefElementType type, unsigned order) {
+  using Key = std::pair<RefElementType, unsigned>;
 
   struct KeyHash {
     std::size_t operator()(const Key& k) const {
@@ -82,7 +82,7 @@ std::shared_ptr<DGElement> get_ref_element(ElementType type, unsigned order) {
     }
   };
 
-  static std::unordered_map<Key, std::shared_ptr<DGElement>, KeyHash> cache;
+  static std::unordered_map<Key, std::shared_ptr<RefElement>, KeyHash> cache;
 
   Key key{type, order};
   auto it = cache.find(key);
@@ -90,21 +90,21 @@ std::shared_ptr<DGElement> get_ref_element(ElementType type, unsigned order) {
     return it->second;
   }
 
-  std::shared_ptr<DGElement> elem;
+  std::shared_ptr<RefElement> elem;
   switch (type) {
-  case ElementType::Line:
+  case RefElementType::Line:
     elem = std::make_shared<RefLine>(order);
     break;
-  case ElementType::Triangle:
+  case RefElementType::Triangle:
     elem = std::make_shared<RefTriangle>(order);
     break;
-  case ElementType::Quadrilateral:
+  case RefElementType::Quadrilateral:
     elem = std::make_shared<RefQuadrilateral>(order);
     break;
-  case ElementType::Tetrahedron:
+  case RefElementType::Tetrahedron:
     elem = std::make_shared<RefTetrahedron>(order);
     break;
-  case ElementType::Hexahedron:
+  case RefElementType::Hexahedron:
     elem = std::make_shared<RefHexahedron>(order);
     break;
   default:
