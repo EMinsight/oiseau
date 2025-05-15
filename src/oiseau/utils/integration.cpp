@@ -1506,6 +1506,10 @@ std::pair<xt::xarray<double>, xt::xarray<double>> cubature(int order) {
 }
 
 std::pair<xt::xarray<double>, xt::xarray<double>> quadrature(int order) {
+  if (order <= 0) {
+    throw std::out_of_range("quadrature: n must be a positive integer, but got " +
+                            std::to_string(order));
+  }
   // TODO(tiagovla): check order/number of nodes relationship
   int n = std::ceil((order + 1) / 2);
 

@@ -54,3 +54,13 @@ TEST(test_integration, test_cubature) {
     }
   }
 }
+
+TEST(test_integration, test_cubature_zero_and_negative) {
+  EXPECT_THROW(oiseau::utils::integration::cubature(-1), std::out_of_range);
+  EXPECT_THROW(oiseau::utils::integration::cubature(0), std::out_of_range);
+}
+
+TEST(test_integration, test_quadrature_zero_and_negative) {
+  EXPECT_THROW(oiseau::utils::integration::quadrature(-1), std::out_of_range);
+  EXPECT_THROW(oiseau::utils::integration::quadrature(0), std::out_of_range);
+}
