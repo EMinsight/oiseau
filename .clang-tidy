@@ -2,6 +2,7 @@
 Checks: >
     clang-analyzer-*,
     google-readability-*,
+    -google-readability-avoid-underscore-in-googletest-name,
     modernize-*,
     -modernize-use-trailing-return-type,
     -modernize-use-std-numbers,
