@@ -1,4 +1,5 @@
 #include <xtensor/containers/xadapt.hpp>
+#include <xtensor/io/xio.hpp>
 
 #include "oiseau/dg/nodal/ref_elements.hpp"
 

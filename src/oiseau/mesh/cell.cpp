@@ -2,6 +2,7 @@
 
 #include <string>
 #include <string_view>
+#include <xtensor/containers/xadapt.hpp>
 
 namespace oiseau::mesh {
 

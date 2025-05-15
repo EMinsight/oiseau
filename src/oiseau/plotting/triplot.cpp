@@ -1,6 +1,7 @@
 #include "oiseau/plotting/triplot.hpp"
 
-#include <ranges>
+#include <xtensor/containers/xadapt.hpp>
+#include <xtensor/views/xview.hpp>
 
 namespace oiseau::plotting {
 

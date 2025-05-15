@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <xtensor/views/xview.hpp>
+
 #include "oiseau/utils/integration.hpp"
 
 namespace {

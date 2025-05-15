@@ -1,4 +1,6 @@
 #pragma once
+#include <span>
+
 #include "oiseau/mesh/cell.hpp"
 
 namespace oiseau::mesh {

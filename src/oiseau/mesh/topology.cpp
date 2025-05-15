@@ -2,6 +2,7 @@
 
 #include <array>
 #include <vector>
+#include <xtensor/containers/xadapt.hpp>
 
 using namespace oiseau::mesh;
 

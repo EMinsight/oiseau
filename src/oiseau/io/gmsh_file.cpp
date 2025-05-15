@@ -1,5 +1,7 @@
 #include "oiseau/io/gmsh_file.hpp"
 
+#include <xtensor/containers/xadapt.hpp>
+
 enum { PREFIX = '$' };
 
 namespace oiseau::io {

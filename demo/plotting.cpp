@@ -1,9 +1,10 @@
+#include <xtensor/views/xview.hpp>
+
 #include "oiseau/dg/nodal/utils.hpp"
 #include "oiseau/io/gmsh.hpp"
 #include "oiseau/plotting/pyplot.hpp"
 #include "xtensor/containers/xadapt.hpp"
 #include "xtensor/core/xmath.hpp"
-#include "xtensor/views/xindex_view.hpp"
 
 using namespace oiseau::io;
 using namespace oiseau::mesh;

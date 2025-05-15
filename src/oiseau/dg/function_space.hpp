@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 namespace oiseau::mesh {
 class Mesh;
