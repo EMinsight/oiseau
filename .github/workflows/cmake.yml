@@ -39,7 +39,7 @@ jobs:
 
             - name: Run clang-tidy
               run: |
-                  find src -name '*.cpp' | xargs -r -n 1 -P $(nproc) clang-tidy -p build 2>/dev/null
+                  find src -name '*.cpp' | xargs -r -n 1 -P $(nproc) clang-tidy -p build --header-filter='^src/oiseau' 2>/dev/null
 
     cppcheck:
         runs-on: ubuntu-latest
