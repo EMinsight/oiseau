@@ -1,6 +1,6 @@
 #pragma once
 
-#include "loguru.hpp"
+#include <loguru.hpp>
 
 namespace oiseau::logging {
 

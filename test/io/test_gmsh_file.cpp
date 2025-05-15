@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 
-#include <oiseau/io/gmsh_file.hpp>
 #include <sstream>
+#include <string>
+
+#include "oiseau/io/gmsh_file.hpp"
 
 TEST(test_io, gmsh_parser_mesh_format_handler) {
   std::string str =

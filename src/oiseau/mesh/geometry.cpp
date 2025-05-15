@@ -1,6 +1,8 @@
 #include "oiseau/mesh/geometry.hpp"
 
-#include <array>
+#include <cstddef>
+#include <span>
+#include <utility>
 #include <vector>
 
 using namespace oiseau::mesh;

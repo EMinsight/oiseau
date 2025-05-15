@@ -1,15 +1,21 @@
 #include "oiseau/io/gmsh.hpp"
 
+#include <cstddef>
+#include <filesystem>
 #include <fstream>
+#include <istream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "oiseau/io/gmsh_file.hpp"
 #include "oiseau/mesh/cell.hpp"
+#include "oiseau/mesh/geometry.hpp"
 #include "oiseau/mesh/mesh.hpp"
+#include "oiseau/mesh/topology.hpp"
 
 namespace {
 oiseau::mesh::CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {

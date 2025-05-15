@@ -1,7 +1,16 @@
 #include "oiseau/plotting/triplot.hpp"
 
+#include <pybind11/cast.h>
+
+#include <algorithm>
+#include <cstddef>
+#include <vector>
 #include <xtensor/containers/xadapt.hpp>
+#include <xtensor/containers/xbuffer_adaptor.hpp>
+#include <xtensor/views/xslice.hpp>
 #include <xtensor/views/xview.hpp>
+
+#include "oiseau/mesh/mesh.hpp"
 
 namespace oiseau::plotting {
 

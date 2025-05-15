@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
 
+#include <cmath>
+#include <stdexcept>
+#include <xtensor/core/xmath.hpp>
 #include <xtensor/views/xview.hpp>
 
 #include "oiseau/utils/integration.hpp"

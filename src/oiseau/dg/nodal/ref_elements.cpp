@@ -1,5 +1,12 @@
 #include "oiseau/dg/nodal/ref_elements.hpp"
 
+#include <cstddef>
+#include <functional>
+#include <memory>
+#include <stdexcept>
+#include <unordered_map>
+#include <utility>
+
 #include "oiseau/dg/nodal/utils.hpp"
 
 namespace oiseau::dg::nodal {

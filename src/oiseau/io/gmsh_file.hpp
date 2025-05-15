@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstddef>
+#include <istream>
 #include <string>
 #include <vector>
 

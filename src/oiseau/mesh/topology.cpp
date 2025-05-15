@@ -1,8 +1,14 @@
 #include "oiseau/mesh/topology.hpp"
 
-#include <array>
+#include <algorithm>
+#include <cstddef>
+#include <numeric>
+#include <span>
+#include <utility>
 #include <vector>
 #include <xtensor/containers/xadapt.hpp>
+
+#include "oiseau/mesh/cell.hpp"
 
 using namespace oiseau::mesh;
 

@@ -1,7 +1,12 @@
 #include "oiseau/mesh/cell.hpp"
 
+#include <algorithm>
+#include <iterator>
+#include <stdexcept>
 #include <string>
 #include <string_view>
+#include <unordered_map>
+#include <vector>
 #include <xtensor/containers/xadapt.hpp>
 
 namespace oiseau::mesh {

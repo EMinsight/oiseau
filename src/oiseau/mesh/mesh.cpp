@@ -1,5 +1,8 @@
 #include "oiseau/mesh/mesh.hpp"
 
+#include "oiseau/mesh/geometry.hpp"
+#include "oiseau/mesh/topology.hpp"
+
 using namespace oiseau::mesh;
 
 Topology& Mesh::topology() { return _topology; }

@@ -1,18 +1,28 @@
 #include "oiseau/utils/integration.hpp"
 
+#include <array>
 #include <cmath>
+#include <cstddef>
+#include <stdexcept>
+#include <string>
 #include <utility>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/containers/xadapt.hpp>
 #include <xtensor/containers/xarray.hpp>
+#include <xtensor/core/xeval.hpp>
+#include <xtensor/core/xmath.hpp>
+#include <xtensor/core/xtensor_forward.hpp>
+#include <xtensor/generators/xbuilder.hpp>
 #include <xtensor/io/xio.hpp>
+#include <xtensor/misc/xcomplex.hpp>
 #include <xtensor/misc/xmanipulation.hpp>
+#include <xtensor/misc/xpad.hpp>
 #include <xtensor/misc/xsort.hpp>
+#include <xtensor/views/xslice.hpp>
+#include <xtensor/views/xstrided_view.hpp>
 #include <xtensor/views/xview.hpp>
 
 #include "oiseau/dg/nodal/utils.hpp"
-#include "xtensor/misc/xmanipulation.hpp"
-#include "xtensor/misc/xpad.hpp"
 
 namespace {
 

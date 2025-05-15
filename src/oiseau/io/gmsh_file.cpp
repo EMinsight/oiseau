@@ -1,5 +1,13 @@
 #include "oiseau/io/gmsh_file.hpp"
 
+#include <array>
+#include <cstddef>
+#include <istream>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <utility>
+#include <vector>
 #include <xtensor/containers/xadapt.hpp>
 
 enum { PREFIX = '$' };
@@ -7,7 +15,7 @@ enum { PREFIX = '$' };
 namespace oiseau::io {
 
 namespace detail {
-const std::size_t gmsh_nodes_per_cell(const std::size_t s) {
+std::size_t gmsh_nodes_per_cell(const std::size_t s) {
   switch (s) {
   case 1:
     return 2;  // line

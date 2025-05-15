@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <istream>
 
 #include "oiseau/mesh/mesh.hpp"
 

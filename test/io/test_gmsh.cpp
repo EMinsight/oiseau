@@ -1,6 +1,11 @@
 #include <gtest/gtest.h>
 
-#include <oiseau/io/gmsh.hpp>
+#include <cstddef>
+#include <string>
+#include <vector>
+
+#include "oiseau/io/gmsh.hpp"
+#include "oiseau/mesh/mesh.hpp"
 
 TEST(test_io, gmsh_read_from_string_3d_tetra_block) {
   std::string str =

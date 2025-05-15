@@ -1,6 +1,9 @@
 #include "oiseau/utils/math.hpp"
 
+#include <algorithm>
 #include <cmath>
+#include <concepts>
+#include <limits>
 #include <vector>
 #include <xtensor/containers/xtensor.hpp>
 

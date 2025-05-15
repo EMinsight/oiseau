@@ -1,5 +1,9 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <cstddef>
+#include <vector>
+
 #include "oiseau/utils/math.hpp"
 
 #define EXPECT_FLOATS_NEARLY_EQ(expected, actual, thresh)                       \

@@ -1,4 +1,4 @@
-#include <oiseau/utils/logging.hpp>
+#include "oiseau/utils/logging.hpp"
 
 int main(int argc, char** argv) {
   oiseau::logging::init(argc, argv);

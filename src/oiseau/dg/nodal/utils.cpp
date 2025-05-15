@@ -1,10 +1,19 @@
 #include "oiseau/dg/nodal/utils.hpp"
 
+#include <array>
 #include <cmath>
+#include <cstddef>
 #include <numbers>
+#include <utility>
+#include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/containers/xtensor.hpp>
 #include <xtensor/core/xmath.hpp>
+#include <xtensor/core/xoperation.hpp>
+#include <xtensor/core/xtensor_forward.hpp>
+#include <xtensor/generators/xbuilder.hpp>
+#include <xtensor/misc/xmanipulation.hpp>
+#include <xtensor/views/xslice.hpp>
 #include <xtensor/views/xview.hpp>
 
 #include "oiseau/utils/math.hpp"

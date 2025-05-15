@@ -1,5 +1,11 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <cstddef>
+#include <xtensor/core/xtensor_forward.hpp>
+#include <xtensor/generators/xbuilder.hpp>
+#include <xtensor/misc/xmanipulation.hpp>
+#include <xtensor/views/xslice.hpp>
 #include <xtensor/views/xview.hpp>
 
 #include "oiseau/dg/nodal/utils.hpp"
