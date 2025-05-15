@@ -1,1 +1,2 @@
 add_test(oiseau_test_utils_math test_math.cpp)
+add_test(oiseau_test_utils_integration test_integration.cpp)
