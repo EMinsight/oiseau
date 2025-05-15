@@ -6,7 +6,6 @@ FetchContent_Declare(
     GIT_TAG v1.9.3
     GIT_SHALLOW 1
     GIT_PROGRESS 1
-    FIND_PACKAGE_ARGS ""
 )
 
 FetchContent_MakeAvailable(benchmark)

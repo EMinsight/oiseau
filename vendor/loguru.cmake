@@ -4,7 +4,6 @@ FetchContent_Declare(
     GIT_TAG 4adaa185883e3c04da25913579c451d3c32cfac1
     GIT_SHALLOW 1
     GIT_PROGRESS 1
-    FIND_PACKAGE_ARGS ""
 )
 
 if(NOT loguru_POPULATED)
