@@ -1,7 +1,7 @@
 FetchContent_Declare(
     loguru
     GIT_REPOSITORY https://github.com/emilk/loguru
-    GIT_TAG 4adaa185883e3c04da25913579c451d3c32cfac1
+    GIT_TAG ${LOGURU_VERSION}
     GIT_SHALLOW 1
     GIT_PROGRESS 1
 )
