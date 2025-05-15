@@ -1,10 +1,12 @@
 #include <gtest/gtest.h>
 
 #include <cstddef>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "oiseau/io/gmsh.hpp"
+#include "oiseau/mesh/cell.hpp"
 #include "oiseau/mesh/mesh.hpp"
 
 TEST(test_io, gmsh_read_from_string_3d_tetra_block) {
@@ -102,4 +104,12 @@ $EndElements)";
   std::vector<std::vector<size_t>> expected = {
       {0, 1, 2, 3, 4, 5, 6, 7}, {1, 8, 2, 5}, {5, 2, 8, 11}};
   EXPECT_EQ(actual, expected);
+}
+
+TEST(test_io, gmsh_celltype_to_oiseau_celltype) {
+  EXPECT_EQ(oiseau::io::detail::gmsh_celltype_to_oiseau_celltype(15),
+            oiseau::mesh::get_cell_type(oiseau::mesh::CellKind::Point));
+  EXPECT_EQ(oiseau::io::detail::gmsh_celltype_to_oiseau_celltype(2),
+            oiseau::mesh::get_cell_type(oiseau::mesh::CellKind::Triangle));
+  EXPECT_THROW(oiseau::io::detail::gmsh_celltype_to_oiseau_celltype(420), std::runtime_error);
 }

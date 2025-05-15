@@ -1,9 +1,16 @@
 #pragma once
 
+#include <cstddef>
 #include <filesystem>
 #include <istream>
+#include <string>
 
+#include "oiseau/mesh/cell.hpp"
 #include "oiseau/mesh/mesh.hpp"
+
+namespace oiseau::io::detail {
+oiseau::mesh::CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s);
+}
 
 namespace oiseau::io {
 oiseau::mesh::Mesh gmsh_read_from_path(const std::filesystem::path& path);

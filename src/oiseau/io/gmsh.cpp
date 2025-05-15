@@ -17,7 +17,9 @@
 #include "oiseau/mesh/mesh.hpp"
 #include "oiseau/mesh/topology.hpp"
 
-namespace {
+namespace oiseau::io {
+
+namespace detail {
 oiseau::mesh::CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
   static const std::unordered_map<std::size_t, oiseau::mesh::CellKind> gmsh_to_kind = {
       {15, oiseau::mesh::CellKind::Point},      {1, oiseau::mesh::CellKind::Interval},
@@ -31,9 +33,7 @@ oiseau::mesh::CellType gmsh_celltype_to_oiseau_celltype(const std::size_t s) {
 
   return oiseau::mesh::get_cell_type(it->second);
 }
-}  // namespace
-
-namespace oiseau::io {
+}  // namespace detail
 
 oiseau::mesh::Mesh gmsh_read_from_string(const std::string &content) {
   std::istringstream stream(content);
@@ -52,19 +52,22 @@ oiseau::mesh::Mesh gmsh_read_from_stream(std::istream &f_handler) {
   std::vector<oiseau::mesh::CellType> cell_types;
 
   x.reserve(file.nodes_section.num_nodes * 3);
-  for (auto &block : file.nodes_section.blocks)
+  for (auto &block : file.nodes_section.blocks) {
     x.insert(x.end(), block.node_coords.begin(), block.node_coords.end());
+  }
 
   cell_types.reserve(file.elements_section.num_elements);
   conn.reserve(file.elements_section.num_elements);
 
   for (const auto &block : file.elements_section.blocks) {
     std::size_t elem_size = block.data.size() / block.num_elements_in_block;
-    for (int i = 0; i < block.num_elements_in_block; ++i) {
+    for (std::size_t i = 0; i < block.num_elements_in_block; ++i) {
       std::vector<std::size_t> tmp;
       tmp.reserve(elem_size - 1);
-      for (int j = 1; j < elem_size; ++j) tmp.emplace_back(block.data[i * elem_size + j] - 1);
-      cell_types.emplace_back(gmsh_celltype_to_oiseau_celltype(block.element_type));
+      for (std::size_t j = 1; j < elem_size; ++j) {
+        tmp.emplace_back(block.data[i * elem_size + j] - 1);
+      }
+      cell_types.emplace_back(detail::gmsh_celltype_to_oiseau_celltype(block.element_type));
       conn.emplace_back(std::move(tmp));
     }
   }
