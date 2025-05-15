@@ -53,7 +53,7 @@ void Topology::calculate_connectivity() {
     std::iota(m_e_to_f[i].begin(), m_e_to_f[i].end(), 0);
   }
 
-  // TODO: this is not efficient, should use a hash map
+  // TODO(tiagovla): this is not efficient, should use a hash map
   for (std::size_t i = 0; i < faces.size(); i++) {
     for (std::size_t j = 0; j < faces[i].size(); j++) {
       for (std::size_t ii = i + 1; ii < faces.size(); ii++) {
