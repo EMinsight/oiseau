@@ -1,9 +1,6 @@
 ---
 Checks: >
     clang-analyzer-*,
-    # cppcoreguidelines-*,
-    # bugprone-*,
-    # performance-*
     google-readability-*,
     modernize-*,
     -modernize-use-trailing-return-type,
