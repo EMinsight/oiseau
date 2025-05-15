@@ -84,11 +84,12 @@ xt::xarray<double> generate_triangle_equidistant_nodes(std::size_t n) {
   xt::xarray<double> out = xt::zeros<double>(xt::xarray<double>::shape_type{n_p, 3});
 
   std::size_t idx = 0;
-  for (std::size_t i = 0; i < n + 1; ++i)
+  for (std::size_t i = 0; i < n + 1; ++i) {
     for (std::size_t j = 0; j < n + 1 - i; ++j, ++idx) {
       l1[idx] = i * 1.0 / n;
       l3[idx] = j * 1.0 / n;
     }
+  }
 
 #define l2 (1.0 - l1 - l3)
   xt::view(out, xt::all(), 0) = -l2 + l3;
@@ -102,8 +103,9 @@ xt::xarray<double> warp_factor(std::size_t n, xt::xarray<double> &rout) {
   auto r_eq = xt::linspace<double>(-1.0, 1.0, n + 1);
   auto v_eq = oiseau::dg::nodal::utils::vandermonde_1d(n, r_eq);
   xt::xarray<double> p_mat = xt::zeros<double>(xt::xarray<double>::shape_type{n + 1, rout.size()});
-  for (std::size_t i = 0; i < n + 1; ++i)
+  for (std::size_t i = 0; i < n + 1; ++i) {
     xt::view(p_mat, i, xt::all()) = oiseau::utils::jacobi_p(i, 0.0, 0.0, rout);
+  }
   auto l_mat = xt::linalg::solve(xt::transpose(v_eq), p_mat);
   auto warp = xt::linalg::dot(xt::transpose(l_mat), (-r_eq + lgl_r));
   auto zerof = xt::abs(rout) < 1.0 - 1e-10;
@@ -158,8 +160,11 @@ xt::xarray<double> vandermonde_2d(unsigned n, const xt::xarray<double> &rs) {
   std::array<size_t, 2> shape = {rs.shape()[0], ((n + 1) * (n + 2)) / 2};
   xt::xtensor<double, 2> output(shape);
   int index = 0;
-  for (int i = 0; i <= n; ++i)
-    for (int j = 0; j <= n - i; ++j, ++index) xt::col(output, index) = simplexp_2d(ab, i, j);
+  for (unsigned i = 0; i <= n; ++i) {
+    for (unsigned j = 0; j <= n - i; ++j, ++index) {
+      xt::col(output, index) = simplexp_2d(ab, i, j);
+    }
+  }
   return output;
 }
 
@@ -168,12 +173,13 @@ xt::xarray<double> grad_vandermonde_2d(unsigned n, const xt::xarray<double> &rs)
   std::array<size_t, 3> shape = {rs.shape()[0], ((n + 1) * (n + 2)) / 2, 2};
   xt::xtensor<double, 3> output(shape);
   int index = 0;
-  for (int i = 0; i <= n; ++i)
-    for (int j = 0; j <= n - i; ++j, ++index) {
+  for (unsigned i = 0; i <= n; ++i) {
+    for (unsigned j = 0; j <= n - i; ++j, ++index) {
       auto tmp = grad_simplexp_2d(ab, i, j);
       xt::view(output, xt::all(), index, 0) = xt::col(tmp, 0);
       xt::view(output, xt::all(), index, 1) = xt::col(tmp, 1);
     }
+  }
   return output;
 }
 
@@ -189,8 +195,9 @@ xt::xarray<double> conversion_rs_to_ab(const xt::xarray<double> &rs) {
   auto ab = xt::zeros_like(rs);
   auto r = xt::col(rs, 0);
   auto s = xt::col(rs, 1);
-  for (auto i = 0; i < rs.shape()[0]; ++i)
+  for (unsigned i = 0; i < rs.shape()[0]; ++i) {
     ab(i, 0) = (s[i] == 1) ? -1 : 2 * (1 + r[i]) / (1 - s[i]) - 1;
+  }
   xt::col(ab, 1) = s;
   return ab;
 }
@@ -205,11 +212,12 @@ xt::xarray<double> generate_triangle_nodes(std::size_t n) {
   xt::xarray<double> l3 = xt::zeros<double>({n_p});
   xt::xarray<double> out = xt::zeros<double>(xt::xarray<double>::shape_type{n_p, 2});
   std::size_t idx = 0;
-  for (std::size_t i = 0; i < n + 1; ++i)
+  for (std::size_t i = 0; i < n + 1; ++i) {
     for (std::size_t j = 0; j < n + 1 - i; ++j, ++idx) {
       l1[idx] = i * 1.0 / n;
       l3[idx] = j * 1.0 / n;
     }
+  }
   xt::xarray<double> l2 = (1.0 - l1 - l3);
   auto blend1 = 4 * l2 * l3;
   auto blend2 = 4 * l1 * l3;
@@ -298,8 +306,9 @@ xt::xarray<double> eval_warp(int p, const xt::xarray<double> &xnodes,
   for (int i = 0; i <= p; i++) xeq(i) = -1.0 + 2.0 * (p - i) / p;
   for (int i = 0; i <= p; i++) {
     xt::xarray<double> d = xt::ones_like(xout) * (xnodes(i) - xeq(i));
-    for (int j = 1; j < p; j++)
+    for (int j = 1; j < p; j++) {
       if (i != j) d = d * (xout - xeq(j)) / (xeq(i) - xeq(j));
+    }
     if (i != 0) d = -d / (xeq(i) - xeq(0));
     if (i != p) d = d / (xeq(i) - xeq(p));
     warp += d;
@@ -438,15 +447,17 @@ xt::xarray<double> conversion_rst_to_abc(const xt::xarray<double> &rst) {
   auto &&a = xt::col(abc, 0);
   auto &&b = xt::col(abc, 1);
   auto &&c = xt::col(abc, 2);
-  for (int n = 0; n < rst.shape()[0]; ++n) {
-    if ((s[n] + t[n]) != 0)
+  for (unsigned n = 0; n < rst.shape()[0]; ++n) {
+    if ((s[n] + t[n]) != 0) {
       a[n] = 2 * ((1 + r[n]) / (-s[n] - t[n])) - 1;
-    else
+    } else {
       a[n] = -1;
-    if (t[n] != 1)
+    }
+    if (t[n] != 1) {
       b[n] = 2 * (1 + s[n]) / (1 - t[n]) - 1;
-    else
+    } else {
       b[n] = -1;
+    }
   }
   c = t;
   return abc;
@@ -457,10 +468,13 @@ xt::xarray<double> vandermonde_3d(unsigned n, const xt::xarray<double> &rst) {
   std::array<size_t, 2> shape = {rst.shape()[0], ((n + 1) * (n + 2) * (n + 3)) / 6};
   xt::xtensor<double, 2> output(shape);
   int index = 0;
-  for (int i = 0; i <= n; ++i)
-    for (int j = 0; j <= n - i; ++j)
-      for (int k = 0; k <= n - i - j; ++k, ++index)
+  for (unsigned i = 0; i <= n; ++i) {
+    for (unsigned j = 0; j <= n - i; ++j) {
+      for (unsigned k = 0; k <= n - i - j; ++k, ++index) {
         xt::col(output, index) = simplexp_3d(abc, i, j, k);
+      }
+    }
+  }
   return output;
 }
 
@@ -507,14 +521,16 @@ xt::xarray<double> grad_vandermonde_3d(unsigned n, const xt::xarray<double> &rst
   std::array<size_t, 3> shape = {rst.shape()[0], ((n + 1) * (n + 2) * (n + 3)) / 6, 3};
   xt::xtensor<double, 3> output(shape);
   int index = 0;
-  for (int i = 0; i <= n; ++i)
-    for (int j = 0; j <= n - i; ++j)
-      for (int k = 0; k <= n - i - j; ++k, ++index) {
+  for (unsigned i = 0; i <= n; ++i) {
+    for (unsigned j = 0; j <= n - i; ++j) {
+      for (unsigned k = 0; k <= n - i - j; ++k, ++index) {
         auto tmp = grad_simplexp_3d(abc, i, j, k);
         xt::view(output, xt::all(), index, 0) = xt::col(tmp, 0);
         xt::view(output, xt::all(), index, 1) = xt::col(tmp, 1);
         xt::view(output, xt::all(), index, 2) = xt::col(tmp, 2);
       }
+    }
+  }
   return output;
 }
 
