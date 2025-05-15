@@ -28,6 +28,9 @@ jobs:
             - name: Build with Ninja
               run: cmake --build build -- -j$(nproc)
 
+            - name: Build the docs
+              run: cmake --build build --target docs -- -j$(nproc)
+
             - name: Prepare website structure
               run: |
                   mkdir -p website/docs
