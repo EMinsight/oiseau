@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <istream>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace oiseau::io {

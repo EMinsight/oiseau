@@ -52,7 +52,7 @@ std::array<T, N> from_file(std::istream& f, bool is_binary = false) {
 }
 
 template <Readable T>
-std::vector<T> from_file(std::istream& f, int n, bool is_binary = false) {
+std::vector<T> from_file(std::istream& f, std::size_t n, bool is_binary = false) {
   std::vector<T> vec(n);
   if (is_binary) {
     f.read(reinterpret_cast<char*>(vec.data()), sizeof(T) * n);
@@ -102,7 +102,7 @@ EntitiesSection entities_handler(std::istream& f_handler, bool is_binary) {
   std::array<std::vector<EntityEntry>, 4> blocks;
   for (std::size_t i = 0; i < 4; i++) blocks.at(i).reserve(quantity.at(i));
   for (int d = 0; d < 4; d++) {
-    for (int j = 0; j < quantity[d]; j++) {
+    for (std::size_t j = 0; j < quantity[d]; j++) {
       auto [tag] = from_file<int, 1>(f_handler, is_binary);
       auto bounding_coods = from_file<double>(f_handler, (d == 0) ? 3 : 6, is_binary);
       auto [num_physicals] = from_file<std::size_t, 1>(f_handler, is_binary);
@@ -127,7 +127,7 @@ NodesSection nodes_handler(std::istream& f_handler, bool is_binary) {
   std::vector<NodesBlock> blocks;
   blocks.reserve(num_entity_blocks);
 
-  for (int i = 0; i < num_entity_blocks; i++) {
+  for (std::size_t i = 0; i < num_entity_blocks; i++) {
     auto [dim, entity_tag, parametric] = from_file<int, 3>(f_handler, is_binary);
     auto [quantity] = from_file<std::size_t, 1>(f_handler, is_binary);
     std::vector<std::size_t> node_tags;
@@ -135,11 +135,11 @@ NodesSection nodes_handler(std::istream& f_handler, bool is_binary) {
     node_tags.reserve(quantity);
     node_coords.reserve(quantity * 3);
 
-    for (int j = 0; j < quantity; j++) {
+    for (std::size_t j = 0; j < quantity; j++) {
       auto [tag] = from_file<std::size_t, 1>(f_handler, is_binary);
       node_tags.emplace_back(tag);
     }
-    for (int j = 0; j < quantity; j++) {
+    for (std::size_t j = 0; j < quantity; j++) {
       auto xyz = from_file<double, 3>(f_handler, is_binary);
       node_coords.insert(node_coords.end(), xyz.begin(), xyz.end());
     }
