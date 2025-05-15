@@ -27,6 +27,10 @@ if(OISEAU_BUILD_BENC)
     include(benchmark.cmake)
 endif()
 
+if(OISEAU_BUILD_DOCS)
+    include(doxygen.cmake)
+endif()
+
 # Create interface target for dependencies
 add_library(oiseau_deps INTERFACE)
 
