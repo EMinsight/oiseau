@@ -54,13 +54,14 @@ target_include_directories(
 
 target_link_libraries(oiseau PUBLIC oiseau_deps)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 # ------------------------------------------------------------------------------
 # Optional Subdirectories
 # ------------------------------------------------------------------------------
 if(OISEAU_BUILD_COVR)
     message(STATUS "Coverage build enabled")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+    include(Coverage)
 endif()
 
 if(OISEAU_BUILD_DEMO)
@@ -80,3 +81,8 @@ endif()
 if(OISEAU_BUILD_DOCS)
     add_subdirectory(doc)
 endif()
+
+# ------------------------------------------------------------------------------
+# Website
+# ------------------------------------------------------------------------------
+add_subdirectory(website)
