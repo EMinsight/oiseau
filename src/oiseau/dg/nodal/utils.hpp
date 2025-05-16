@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstddef>
 #include <utility>
 #include <xtensor/containers/xarray.hpp>
 #include <xtensor/core/xtensor_forward.hpp>
@@ -48,19 +47,19 @@ xt::xarray<double> tensorp_2d(const xt::xarray<double> &rs, int i, int j);
 xt::xarray<double> grad_simplexp_2d(const xt::xarray<double> &ab, int i, int j);
 xt::xarray<double> grad_tensorp_2d(const xt::xarray<double> &rs, int i, int j);
 
-xt::xarray<double> generate_triangle_equidistant_nodes(std::size_t n);
-xt::xarray<double> warp_factor(std::size_t n, const xt::xarray<double> &rout);
+xt::xarray<double> generate_triangle_equidistant_nodes(unsigned n);
+xt::xarray<double> warp_factor(unsigned n, const xt::xarray<double> &rout);
 xt::xarray<double> conversion_equilateral_xy_to_rs(const xt::xarray<double> &coords);
 xt::xarray<double> conversion_rs_to_ab(const xt::xarray<double> &rs);
-xt::xarray<double> generate_triangle_nodes(std::size_t n);
-xt::xarray<double> generate_tetraedron_equidistant_nodes(std::size_t n);
+xt::xarray<double> generate_triangle_nodes(unsigned n);
+xt::xarray<double> generate_tetraedron_equidistant_nodes(unsigned n);
 xt::xarray<double> generate_quadrilateral_nodes(unsigned n);
 xt::xarray<double> generate_hexahedron_nodes(unsigned n);
 xt::xarray<double> eval_warp(int p, const xt::xarray<double> &xnodes,
                              const xt::xarray<double> &xout);
 xt::xarray<double> eval_shift(int p, double pval, const xt::xarray<double> &l1,
                               const xt::xarray<double> &l2, const xt::xarray<double> &l3);
-xt::xarray<double> generate_tetrahedron_nodes(std::size_t n);
+xt::xarray<double> generate_tetrahedron_nodes(unsigned n);
 xt::xarray<double> warp_shift_face_3d(int p, double pval, double pval2,
                                       const xt::xarray<double> &l1, const xt::xarray<double> &l2,
                                       const xt::xarray<double> &l3, const xt::xarray<double> &l4);

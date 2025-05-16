@@ -80,7 +80,7 @@ xt::xarray<double> d_matrix_1d(unsigned n, const xt::xarray<double> &r) {
   return d_matrix_1d(v, gv);
 }
 
-xt::xarray<double> generate_triangle_equidistant_nodes(std::size_t n) {
+xt::xarray<double> generate_triangle_equidistant_nodes(unsigned n) {
   std::size_t n_p = (n + 1) * (n + 2) / 2;
   xt::xarray<double> l1 = xt::zeros<double>({n_p});
   xt::xarray<double> l3 = xt::zeros<double>({n_p});
@@ -101,12 +101,12 @@ xt::xarray<double> generate_triangle_equidistant_nodes(std::size_t n) {
   return out;
 }
 
-xt::xarray<double> warp_factor(std::size_t n, const xt::xarray<double> &rout) {
+xt::xarray<double> warp_factor(unsigned n, const xt::xarray<double> &rout) {
   auto lgl_r = oiseau::dg::nodal::utils::jacobi_gl(n, 0.0, 0.0);
   auto r_eq = xt::linspace<double>(-1.0, 1.0, n + 1);
   auto v_eq = oiseau::dg::nodal::utils::vandermonde_1d(n, r_eq);
   xt::xarray<double> p_mat = xt::zeros<double>(xt::xarray<double>::shape_type{n + 1, rout.size()});
-  for (std::size_t i = 0; i < n + 1; ++i) {
+  for (unsigned i = 0; i < n + 1; ++i) {
     xt::view(p_mat, i, xt::all()) = oiseau::utils::jacobi_p(i, 0.0, 0.0, rout);
   }
   auto l_mat = xt::linalg::solve(xt::transpose(v_eq), p_mat);
@@ -286,7 +286,7 @@ xt::xarray<double> conversion_rs_to_ab(const xt::xarray<double> &rs) {
   return ab;
 }
 
-xt::xarray<double> generate_triangle_nodes(std::size_t n) {
+xt::xarray<double> generate_triangle_nodes(unsigned n) {
   constexpr auto alp_opt =
       std::to_array({0.0000, 0.0000, std::numbers::sqrt2, 0.1001, 0.2751, 0.9800, 1.0999, 1.2832,
                      1.3648, 1.4773, 1.4959, 1.5743, 1.5770, 1.6223, 1.6258});
@@ -366,7 +366,7 @@ xt::xarray<double> generate_hexahedron_nodes(unsigned order) {
   return rst_nodes;
 }
 
-xt::xarray<double> generate_tetraedron_equidistant_nodes(std::size_t n) {
+xt::xarray<double> generate_tetraedron_equidistant_nodes(unsigned n) {
   auto n_p = ((n + 1) * (n + 2) * (n + 3)) / 6;
   auto shape = xt::xarray<double>::shape_type{n_p, 3};
   xt::xarray<double> output = xt::zeros<double>(shape);
@@ -424,7 +424,7 @@ xt::xarray<double> warp_shift_face_3d(int p, double pval, double pval2,
   return eval_shift(p, pval, l2, l3, l4);
 }
 
-xt::xarray<double> generate_tetrahedron_nodes(std::size_t p) {
+xt::xarray<double> generate_tetrahedron_nodes(unsigned p) {
   xt::xarray<double> alphastore = {
       0,      0,       0,      0.1002, 1.1332, 1.5608, 1.3413, 1.2577,
       1.1603, 1.10153, 0.6080, 0.4523, 0.8856, 0.8717, 0.9655,
