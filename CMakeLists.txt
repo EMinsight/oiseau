@@ -85,4 +85,6 @@ endif()
 # ------------------------------------------------------------------------------
 # Website
 # ------------------------------------------------------------------------------
-add_subdirectory(website)
+if(OISEAU_BUILD_DOCS AND OISEAU_BUILD_TEST)
+    add_subdirectory(website)
+endif()
