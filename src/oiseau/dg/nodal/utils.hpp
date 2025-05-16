@@ -43,13 +43,13 @@ xt::xarray<double> vandermonde_2d_tensor(unsigned n, const xt::xarray<double> &r
 xt::xarray<double> grad_vandermonde_2d(unsigned n, const xt::xarray<double> &rs);
 xt::xarray<double> grad_vandermonde_2d_tensor(unsigned n, const xt::xarray<double> &rs);
 
-xt::xarray<double> simplexp_2d(xt::xarray<double> ab, int i, int j);
-xt::xarray<double> tensorp_2d(xt::xarray<double> ab, int i, int j);
-xt::xarray<double> grad_simplexp_2d(xt::xarray<double> ab, int i, int j);
-xt::xarray<double> grad_tensorp_2d(xt::xarray<double> ab, int i, int j);
+xt::xarray<double> simplexp_2d(const xt::xarray<double> &ab, int i, int j);
+xt::xarray<double> tensorp_2d(const xt::xarray<double> &rs, int i, int j);
+xt::xarray<double> grad_simplexp_2d(const xt::xarray<double> &ab, int i, int j);
+xt::xarray<double> grad_tensorp_2d(const xt::xarray<double> &rs, int i, int j);
 
 xt::xarray<double> generate_triangle_equidistant_nodes(std::size_t n);
-xt::xarray<double> warp_factor(std::size_t n, xt::xarray<double> &rout);
+xt::xarray<double> warp_factor(std::size_t n, const xt::xarray<double> &rout);
 xt::xarray<double> conversion_equilateral_xy_to_rs(const xt::xarray<double> &coords);
 xt::xarray<double> conversion_rs_to_ab(const xt::xarray<double> &rs);
 xt::xarray<double> generate_triangle_nodes(std::size_t n);
@@ -70,12 +70,12 @@ xt::xarray<double> conversion_rst_to_abc(const xt::xarray<double> &rst);
 xt::xarray<double> d_matrix_3d(const xt::xarray<double> &v, const xt::xarray<double> &gv);
 xt::xarray<double> vandermonde_3d(unsigned n, const xt::xarray<double> &rst);
 xt::xarray<double> vandermonde_3d_tensor(unsigned n, const xt::xarray<double> &rst);
-xt::xarray<double> grad_simplexp_3d(xt::xarray<double> abc, int i, int j, int k);
-xt::xarray<double> grad_tensorp_3d(xt::xarray<double> rst, int i, int j, int k);
+xt::xarray<double> grad_simplexp_3d(const xt::xarray<double> &abc, int i, int j, int k);
+xt::xarray<double> grad_tensorp_3d(const xt::xarray<double> &rst, int i, int j, int k);
 xt::xarray<double> grad_vandermonde_3d(unsigned n, const xt::xarray<double> &rst);
 xt::xarray<double> grad_vandermonde_3d_tensor(unsigned n, const xt::xarray<double> &rst);
 
-xt::xarray<double> simplexp_3d(xt::xarray<double> abc, int i, int j, int k);
-xt::xarray<double> tensorp_3d(xt::xarray<double> abc, int i, int j, int k);
+xt::xarray<double> simplexp_3d(const xt::xarray<double> &abc, int i, int j, int k);
+xt::xarray<double> tensorp_3d(const xt::xarray<double> &abc, int i, int j, int k);
 
 }  // namespace oiseau::dg::nodal::utils

@@ -101,7 +101,7 @@ xt::xarray<double> generate_triangle_equidistant_nodes(std::size_t n) {
   return out;
 }
 
-xt::xarray<double> warp_factor(std::size_t n, xt::xarray<double> &rout) {
+xt::xarray<double> warp_factor(std::size_t n, const xt::xarray<double> &rout) {
   auto lgl_r = oiseau::dg::nodal::utils::jacobi_gl(n, 0.0, 0.0);
   auto r_eq = xt::linspace<double>(-1.0, 1.0, n + 1);
   auto v_eq = oiseau::dg::nodal::utils::vandermonde_1d(n, r_eq);
@@ -129,7 +129,7 @@ xt::xarray<double> conversion_equilateral_xy_to_rs(const xt::xarray<double> &coo
   return l_coords;
 }
 
-xt::xarray<double> simplexp_2d(xt::xarray<double> ab, int i, int j) {
+xt::xarray<double> simplexp_2d(const xt::xarray<double> &ab, int i, int j) {
   xt::xarray<double> a = xt::col(ab, 0);
   xt::xarray<double> b = xt::col(ab, 1);
   auto h1 = oiseau::utils::jacobi_p(i, 0.0, 0.0, a);
@@ -137,7 +137,7 @@ xt::xarray<double> simplexp_2d(xt::xarray<double> ab, int i, int j) {
   return std::numbers::sqrt2 * h1 * h2 * xt::pow(1 - b, i);
 }
 
-xt::xarray<double> tensorp_2d(xt::xarray<double> rs, int i, int j) {
+xt::xarray<double> tensorp_2d(const xt::xarray<double> &rs, int i, int j) {
   xt::xarray<double> r = xt::col(rs, 0);
   xt::xarray<double> s = xt::col(rs, 1);
   auto h1 = oiseau::utils::jacobi_p(i, 0.0, 0.0, r);
@@ -145,7 +145,7 @@ xt::xarray<double> tensorp_2d(xt::xarray<double> rs, int i, int j) {
   return h1 * h2;
 }
 
-xt::xarray<double> tensorp_3d(xt::xarray<double> rst, int i, int j, int k) {
+xt::xarray<double> tensorp_3d(const xt::xarray<double> &rst, int i, int j, int k) {
   xt::xarray<double> r = xt::col(rst, 0);
   xt::xarray<double> s = xt::col(rst, 1);
   xt::xarray<double> t = xt::col(rst, 2);
@@ -157,7 +157,7 @@ xt::xarray<double> tensorp_3d(xt::xarray<double> rst, int i, int j, int k) {
   return h1 * h2 * h3;
 }
 
-xt::xarray<double> grad_tensorp_2d(xt::xarray<double> rs, int i, int j) {
+xt::xarray<double> grad_tensorp_2d(const xt::xarray<double> &rs, int i, int j) {
   xt::xarray<double> r = xt::col(rs, 0);
   xt::xarray<double> s = xt::col(rs, 1);
 
@@ -172,7 +172,7 @@ xt::xarray<double> grad_tensorp_2d(xt::xarray<double> rs, int i, int j) {
   return xt::stack(xt::xtuple(dphidr, dphids), 1);  // shape: [N, 2]
 }
 
-xt::xarray<double> grad_tensorp_3d(xt::xarray<double> rst, int i, int j, int k) {
+xt::xarray<double> grad_tensorp_3d(const xt::xarray<double> &rst, int i, int j, int k) {
   xt::xarray<double> r = xt::col(rst, 0);
   xt::xarray<double> s = xt::col(rst, 1);
   xt::xarray<double> t = xt::col(rst, 2);
@@ -192,7 +192,7 @@ xt::xarray<double> grad_tensorp_3d(xt::xarray<double> rst, int i, int j, int k) 
   return xt::stack(xt::xtuple(dphidr, dphids, dphidt), 1);  // shape: [N, 3]
 }
 
-xt::xarray<double> grad_simplexp_2d(xt::xarray<double> ab, int i, int j) {
+xt::xarray<double> grad_simplexp_2d(const xt::xarray<double> &ab, int i, int j) {
   xt::xarray<double> a = xt::col(ab, 0);
   xt::xarray<double> b = xt::col(ab, 1);
   xt::xarray<double> fa = oiseau::utils::jacobi_p(i, 0.0, 0.0, a);
@@ -513,7 +513,7 @@ xt::xarray<double> conversion_equilateral_xyz_to_rst(const xt::xarray<double> &c
   return xt::transpose(rst);
 }
 
-xt::xarray<double> simplexp_3d(xt::xarray<double> abc, int i, int j, int k) {
+xt::xarray<double> simplexp_3d(const xt::xarray<double> &abc, int i, int j, int k) {
   xt::xarray<double> a = xt::col(abc, 0);
   xt::xarray<double> b = xt::col(abc, 1);
   xt::xarray<double> c = xt::col(abc, 2);
@@ -576,7 +576,7 @@ xt::xarray<double> vandermonde_3d_tensor(unsigned n, const xt::xarray<double> &r
   return output;
 }
 
-xt::xarray<double> grad_simplexp_3d(xt::xarray<double> abc, int i, int j, int k) {
+xt::xarray<double> grad_simplexp_3d(const xt::xarray<double> &abc, int i, int j, int k) {
   xt::xarray<double> a = xt::col(abc, 0);
   xt::xarray<double> b = xt::col(abc, 1);
   xt::xarray<double> c = xt::col(abc, 2);
