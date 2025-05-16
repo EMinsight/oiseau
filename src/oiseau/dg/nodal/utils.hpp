@@ -52,7 +52,7 @@ xt::xarray<double> warp_factor(unsigned n, const xt::xarray<double> &rout);
 xt::xarray<double> conversion_equilateral_xy_to_rs(const xt::xarray<double> &coords);
 xt::xarray<double> conversion_rs_to_ab(const xt::xarray<double> &rs);
 xt::xarray<double> generate_triangle_nodes(unsigned n);
-xt::xarray<double> generate_tetraedron_equidistant_nodes(unsigned n);
+xt::xarray<double> generate_tetrahedron_equidistant_nodes(unsigned n);
 xt::xarray<double> generate_quadrilateral_nodes(unsigned n);
 xt::xarray<double> generate_hexahedron_nodes(unsigned n);
 xt::xarray<double> eval_warp(int p, const xt::xarray<double> &xnodes,

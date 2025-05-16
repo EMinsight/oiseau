@@ -366,7 +366,7 @@ xt::xarray<double> generate_hexahedron_nodes(unsigned order) {
   return rst_nodes;
 }
 
-xt::xarray<double> generate_tetraedron_equidistant_nodes(unsigned n) {
+xt::xarray<double> generate_tetrahedron_equidistant_nodes(unsigned n) {
   auto n_p = ((n + 1) * (n + 2) * (n + 3)) / 6;
   auto shape = xt::xarray<double>::shape_type{n_p, 3};
   xt::xarray<double> output = xt::zeros<double>(shape);
@@ -431,7 +431,7 @@ xt::xarray<double> generate_tetrahedron_nodes(unsigned p) {
   };
   double alpha = p > 14 ? 1 : alphastore[p];
   double tol = 1e-10;
-  auto rst = generate_tetraedron_equidistant_nodes(p);
+  auto rst = generate_tetrahedron_equidistant_nodes(p);
   auto r = xt::col(rst, 0), s = xt::col(rst, 1), t = xt::col(rst, 2);
   xt::xarray<double> l1 = (1 + t) / 2, l2 = (1 + s) / 2, l3 = -(1 + r + s + t) / 2,
                      l4 = (1 + r) / 2;

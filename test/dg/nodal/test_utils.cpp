@@ -324,9 +324,9 @@ TEST(test_dg_nodal_utils, test_d_matrix_2d) {
   }
 }
 
-TEST(test_dg_nodal_utils, test_generate_tetraedron_equidistant_nodes) {
+TEST(test_dg_nodal_utils, test_generate_tetrahedron_equidistant_nodes) {
   unsigned order = 2;
-  auto output = generate_tetraedron_equidistant_nodes(order);
+  auto output = generate_tetrahedron_equidistant_nodes(order);
   xt::xarray<double> expected = {{-1, 0, 1, -1, 0, -1, -1, 0, -1, -1},
                                  {-1, -1, -1, 0, 0, 1, -1, -1, 0, -1},
                                  {-1, -1, -1, -1, -1, -1, 0, 0, 0, 1}};
