@@ -33,5 +33,7 @@ add_custom_command(
     COMMAND ${CMAKE_CTEST_COMMAND} --test-dir ${CMAKE_BINARY_DIR}
     COMMAND ${GCOVR_EXECUTABLE} --delete --filter ${CMAKE_SOURCE_DIR}/src/ --html-details -o
             ${COVERAGE_DIR}/index.html
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/website/coverage/custom.css
+            ${COVERAGE_DIR}/index.css
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
