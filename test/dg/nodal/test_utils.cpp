@@ -1,14 +1,22 @@
+#include <fmt/core.h>
+#include <fmt/ranges.h>
 #include <gtest/gtest.h>
 
 #include <algorithm>
 #include <cstddef>
+#include <iostream>
+#include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/core/xtensor_forward.hpp>
 #include <xtensor/generators/xbuilder.hpp>
+#include <xtensor/io/xio.hpp>
 #include <xtensor/misc/xmanipulation.hpp>
 #include <xtensor/views/xslice.hpp>
+#include <xtensor/views/xstrided_view.hpp>
 #include <xtensor/views/xview.hpp>
 
+#include "fmt/base.h"
 #include "oiseau/dg/nodal/utils.hpp"
+#include "xtensor/core/xmath.hpp"
 
 #define EXPECT_FLOATS_NEARLY_EQ(expected, actual, thresh)                       \
   EXPECT_EQ(expected.size(), actual.size()) << "Array sizes differ.";           \
@@ -177,6 +185,29 @@ TEST(test_dg_nodal_utils, test_grad_vandermonde_2d) {
     xt::xarray<double> c_output = xt::view(output, xt::all(), xt::all(), i);
     xt::xarray<double> c_expected = xt::view(expected, xt::all(), xt::all(), i);
     EXPECT_FLOATS_NEARLY_EQ(c_output, c_expected, 0.01);
+  }
+}
+
+TEST(test_dg_nodal_utils, d_matrix_1d_consistency) {
+  for (unsigned order = 2; order < 10; ++order) {
+    auto r = jacobi_gl(order, 0, 0);
+    auto vandermonde = vandermonde_1d(order, r);
+    auto grad_vandermonde = grad_vandermonde_1d(order, r);
+    auto d_matrix_from_v = d_matrix_1d(vandermonde, grad_vandermonde);
+    auto d_matrix_direct = d_matrix_1d(order, r);
+    EXPECT_FLOATS_NEARLY_EQ(d_matrix_from_v, d_matrix_direct, 1e-10);
+  }
+}
+
+TEST(test_dg_nodal_utils, d_matrix_1d_differentiates_polynomials) {
+  unsigned order = 10;
+  auto r = jacobi_gl(order, 0, 0);
+  auto d = d_matrix_1d(order, r);
+  for (unsigned i = 1; i < order; ++i) {
+    auto y = xt::pow(r, i);             // y = r^i
+    auto dydr = xt::linalg::dot(d, y);  // dydr = i * r^(i-1)
+    auto expected = (i)*xt::pow(r, (i - 1));
+    EXPECT_FLOATS_NEARLY_EQ(dydr, expected, 1e-10);
   }
 }
 
