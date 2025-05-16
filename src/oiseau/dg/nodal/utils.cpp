@@ -45,6 +45,9 @@ std::pair<xt::xarray<double>, xt::xarray<double>> jacobi_gq(unsigned n, double a
 }
 
 xt::xarray<double> jacobi_gl(unsigned n, double alpha, double beta) {
+  if (n == 1) {
+    return xt::xarray<double>{-1.0, 1.0};
+  }
   auto [x, _] = jacobi_gq(n - 2, alpha + 1.0, beta + 1.0);
   return xt::concatenate(xt::xtuple(-xt::ones<double>({1}), x, xt::ones<double>({1})));
 }
