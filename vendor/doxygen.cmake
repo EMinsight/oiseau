@@ -5,4 +5,3 @@ FetchContent_Declare(
     URL https://github.com/jothepro/doxygen-awesome-css/archive/refs/heads/main.zip
 )
 FetchContent_MakeAvailable(doxygen-awesome-css)
-FetchContent_GetProperties(doxygen-awesome-css SOURCE_DIR AWESOME_CSS_DIR)
