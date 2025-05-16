@@ -22,11 +22,15 @@ using utils::generate_tetrahedron_nodes;
 using utils::generate_triangle_nodes;
 using utils::grad_vandermonde_1d;
 using utils::grad_vandermonde_2d;
+using utils::grad_vandermonde_2d_tensor;
 using utils::grad_vandermonde_3d;
+using utils::grad_vandermonde_3d_tensor;
 using utils::jacobi_gl;
 using utils::vandermonde_1d;
 using utils::vandermonde_2d;
+using utils::vandermonde_2d_tensor;
 using utils::vandermonde_3d;
+using utils::vandermonde_3d_tensor;
 
 RefLine::RefLine(unsigned order) : RefElement(order) {
   this->m_np = order + 1;
@@ -50,8 +54,8 @@ RefQuadrilateral::RefQuadrilateral(unsigned order) : RefElement(order) {
   this->m_np = (order + 1) * (order + 1);
   this->m_nfp = order + 1;
   this->m_r = generate_quadrilateral_nodes(this->m_order);
-  this->m_v = vandermonde_2d(this->m_order, this->m_r);
-  this->m_gv = grad_vandermonde_2d(this->m_order, this->m_r);
+  this->m_v = vandermonde_2d_tensor(this->m_order, this->m_r);
+  this->m_gv = grad_vandermonde_2d_tensor(this->m_order, this->m_r);
   this->m_d = d_matrix_2d(this->m_v, this->m_gv);
 }
 
@@ -68,8 +72,8 @@ RefHexahedron::RefHexahedron(unsigned order) : RefElement(order) {
   this->m_np = (order + 1) * (order + 1) * (order + 1);
   this->m_nfp = (order + 1) * (order + 1);
   this->m_r = generate_hexahedron_nodes(this->m_order);
-  this->m_v = vandermonde_3d(this->m_order, this->m_r);
-  this->m_gv = grad_vandermonde_3d(this->m_order, this->m_r);
+  this->m_v = vandermonde_3d_tensor(this->m_order, this->m_r);
+  this->m_gv = grad_vandermonde_3d_tensor(this->m_order, this->m_r);
   this->m_d = d_matrix_3d(this->m_v, this->m_gv);
 }
 

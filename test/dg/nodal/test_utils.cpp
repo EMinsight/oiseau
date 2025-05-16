@@ -4,7 +4,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <iostream>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/core/xtensor_forward.hpp>
 #include <xtensor/generators/xbuilder.hpp>
@@ -14,7 +13,6 @@
 #include <xtensor/views/xstrided_view.hpp>
 #include <xtensor/views/xview.hpp>
 
-#include "fmt/base.h"
 #include "oiseau/dg/nodal/utils.hpp"
 #include "xtensor/core/xmath.hpp"
 
@@ -34,6 +32,14 @@ TEST(test_dg_nodal_utils, test_jacobi_gq) {
   xt::xarray<double> w_expected = {0.08666291, 0.44123335, 0.59015336, 0.21528371};
   EXPECT_FLOATS_NEARLY_EQ(x, x_expected, 0.0001);
   EXPECT_FLOATS_NEARLY_EQ(w, w_expected, 0.0001);
+}
+
+TEST(test_dg_nodal_utils, test_jacobi_gl_n1) {
+  unsigned n = 1;
+  double alpha = 0.0, beta = 0.0;
+  auto output = jacobi_gl(n, alpha, beta);
+  xt::xarray<double> expected = {-1., 1.};
+  EXPECT_FLOATS_NEARLY_EQ(output, expected, 1e-10);
 }
 
 TEST(test_dg_nodal_utils, test_jacobi_gl) {
@@ -118,6 +124,75 @@ TEST(test_dg_nodal_utils, test_conversion_equilateral_xy_to_rs) {
   auto output = conversion_equilateral_xy_to_rs(xy);
   xt::xarray<double> expected = {{-0.4880, 1.9761}, {-0.0654, 3.1308}, {0.3573, 4.2855}};
   EXPECT_FLOATS_NEARLY_EQ(output, expected, 0.01);
+}
+
+TEST(test_dg_nodal_utils, d_matrix_2d_tensor_correctness) {
+  const unsigned order = 5;
+
+  // Generate nodal coordinates (r, s) and Vandermonde matrices
+  auto rs = generate_quadrilateral_nodes(order);
+  auto r = xt::col(rs, 0);
+  auto s = xt::col(rs, 1);
+  auto V = vandermonde_2d_tensor(order, rs);
+  auto gradV = grad_vandermonde_2d_tensor(order, rs);
+
+  // Compute differentiation matrices D_r and D_s
+  auto D = d_matrix_2d(V, gradV);
+  xt::xarray<double> Dr = xt::view(D, xt::all(), xt::all(), 0);
+  xt::xarray<double> Ds = xt::view(D, xt::all(), xt::all(), 1);
+
+  // Define test function: f(r,s) = r^3 + s^3
+  xt::xarray<double> f = xt::pow(r, 3) + xt::pow(s, 3);
+
+  // Compute numerical derivatives using D_r and D_s
+  xt::xarray<double> df_dr = xt::linalg::dot(Dr, f);
+  xt::xarray<double> df_ds = xt::linalg::dot(Ds, f);
+
+  // Compute exact derivatives
+  xt::xarray<double> df_dr_expected = 3.0 * xt::pow(r, 2);
+  xt::xarray<double> df_ds_expected = 3.0 * xt::pow(s, 2);
+
+  // Compare with tight tolerance
+  EXPECT_FLOATS_NEARLY_EQ(df_dr, df_dr_expected, 1e-10);
+  EXPECT_FLOATS_NEARLY_EQ(df_ds, df_ds_expected, 1e-10);
+}
+
+TEST(test_dg_nodal_utils, d_matrix_3d_tensor_correctness) {
+  const unsigned order = 4;
+
+  // Generate tensor-product nodes (r, s, t)
+  auto rst = generate_hexahedron_nodes(order);
+  auto r = xt::col(rst, 0);
+  auto s = xt::col(rst, 1);
+  auto t = xt::col(rst, 2);
+
+  // Build Vandermonde and gradient matrices
+  auto V = vandermonde_3d_tensor(order, rst);
+  auto gradV = grad_vandermonde_3d_tensor(order, rst);
+
+  // Get differentiation matrices D_r, D_s, D_t
+  auto D = d_matrix_3d(V, gradV);
+  xt::xarray<double> Dr = xt::view(D, xt::all(), xt::all(), 0);
+  xt::xarray<double> Ds = xt::view(D, xt::all(), xt::all(), 1);
+  xt::xarray<double> Dt = xt::view(D, xt::all(), xt::all(), 2);
+
+  // Test function: f(r, s, t) = r^3 + s^3 + t^3
+  xt::xarray<double> f = xt::pow(r, 3) + xt::pow(s, 3) + xt::pow(t, 3);
+
+  // Compute numerical derivatives
+  auto df_dr = xt::linalg::dot(Dr, f);
+  auto df_ds = xt::linalg::dot(Ds, f);
+  auto df_dt = xt::linalg::dot(Dt, f);
+
+  // Compute exact derivatives
+  auto df_dr_expected = 3.0 * xt::pow(r, 2);
+  auto df_ds_expected = 3.0 * xt::pow(s, 2);
+  auto df_dt_expected = 3.0 * xt::pow(t, 2);
+
+  // Check gradients with tight tolerance
+  EXPECT_FLOATS_NEARLY_EQ(df_dr, df_dr_expected, 1e-10);
+  EXPECT_FLOATS_NEARLY_EQ(df_ds, df_ds_expected, 1e-10);
+  EXPECT_FLOATS_NEARLY_EQ(df_dt, df_dt_expected, 1e-10);
 }
 
 TEST(test_dg_nodal_utils, test_conversion_rs_to_ab) {
