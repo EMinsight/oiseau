@@ -28,19 +28,8 @@ jobs:
             - name: Build with Ninja
               run: cmake --build build -- -j$(nproc)
 
-            - name: Build the docs
-              run: cmake --build build --target docs -- -j$(nproc)
-
-            - name: Prepare website structure
-              run: |
-                  mkdir -p website/docs
-                  cp -r build/docs/html/* website/docs/
-
-            - name: Run tests and generate coverage
-              run: |
-                  ctest --test-dir build --output-on-failure
-                  mkdir -p website/coverage
-                  gcovr --filter src/ --html-details -o website/coverage/index.html
+            - name: Build the website
+              run: cmake --build build --target website -- -j$(nproc)
 
             - name: Setup Pages
               uses: actions/configure-pages@v5
@@ -48,7 +37,7 @@ jobs:
             - name: Upload website folder
               uses: actions/upload-pages-artifact@v3
               with:
-                  path: website
+                  path: build/web
 
     deploy:
         needs: build
