@@ -34,31 +34,6 @@ class RefElement {
   xt::xarray<double> m_r;
 };
 
-class RefLine : public RefElement {
- public:
-  explicit RefLine(unsigned order);
-};
-
-class RefTriangle : public RefElement {
- public:
-  explicit RefTriangle(unsigned order);
-};
-
-class RefQuadrilateral : public RefElement {
- public:
-  explicit RefQuadrilateral(unsigned order);
-};
-
-class RefTetrahedron : public RefElement {
- public:
-  explicit RefTetrahedron(unsigned order);
-};
-
-class RefHexahedron : public RefElement {
- public:
-  explicit RefHexahedron(unsigned order);
-};
-
 std::shared_ptr<RefElement> get_ref_element(RefElementType type, unsigned order);
 
 }  // namespace oiseau::dg::nodal

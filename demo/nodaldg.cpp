@@ -1,7 +1,8 @@
+#include <iostream>
 #include <xtensor/containers/xadapt.hpp>
 #include <xtensor/io/xio.hpp>
 
-#include "oiseau/dg/nodal/ref_elements.hpp"
+#include "oiseau/dg/nodal/ref_line.hpp"
 
 using namespace oiseau::dg::nodal;
 
