@@ -3,7 +3,7 @@
 #include <memory>
 #include <utility>
 
-#include "oiseau/dg/nodal/ref_elements.hpp"
+#include "oiseau/dg/nodal/ref_element.hpp"
 
 namespace oiseau::dg::nodal {
 

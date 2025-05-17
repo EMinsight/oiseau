@@ -1,6 +1,6 @@
 #include "oiseau/dg/nodal/ref_quadrilateral.hpp"
 
-#include "oiseau/dg/nodal/ref_elements.hpp"
+#include "oiseau/dg/nodal/ref_element.hpp"
 #include "oiseau/dg/nodal/utils.hpp"
 
 namespace oiseau::dg::nodal {
