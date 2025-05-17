@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <stdexcept>
 #include <xtensor/containers/xarray.hpp>
 
 #include "xtensor/core/xtensor_forward.hpp"
@@ -13,17 +14,19 @@ class RefElement {
  public:
   virtual ~RefElement() = default;
 
-  const xt::xarray<double>& v() const { return m_v; }
-  const xt::xarray<double>& gv() const { return m_gv; }
-  const xt::xarray<double>& d() const { return m_d; }
-  const xt::xarray<double>& r() const { return m_r; }
+  inline const xt::xarray<double>& v() const { return m_v; }
+  inline const xt::xarray<double>& gv() const { return m_gv; }
+  inline const xt::xarray<double>& d() const { return m_d; }
+  inline const xt::xarray<double>& r() const { return m_r; }
 
-  unsigned get_order() const { return m_order; }
-  unsigned get_np() const { return m_np; }
-  unsigned get_nfp() const { return m_nfp; }
+  inline unsigned order() const { return m_order; }
+  inline unsigned number_of_nodes() const { return m_np; }
+  inline unsigned number_of_face_nodes() const { return m_nfp; }
 
  protected:
-  explicit RefElement(unsigned order_val) : m_order(order_val) {}
+  explicit RefElement(unsigned order) : m_order(order) {
+    if (order == 0) throw std::invalid_argument("Order must be greater than 0");
+  }
 
   unsigned m_order;
   unsigned m_np{};
