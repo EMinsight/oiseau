@@ -1555,4 +1555,28 @@ std::pair<xt::xarray<double>, xt::xarray<double>> quadrature(int order) {
   return std::make_pair(nodes, weights);
 }
 
+std::pair<xt::xarray<double>, xt::xarray<double>> jacobi_gq(unsigned n, double alpha, double beta) {
+  if (n == 0) {
+    xt::xarray<double> x = {(alpha - beta) / (alpha + beta + 2)};
+    xt::xarray<double> w = {2};
+    return make_pair(std::move(x), std::move(w));
+  }
+  xt::xarray<double> h1 = 2 * xt::linspace<double>(0, n, n + 1) + alpha + beta;
+  auto h1s = xt::view(h1, xt::range(0, n));
+  auto lins = xt::arange<double>(1, n + 1);
+  xt::xarray<double> m =
+      xt::diag(-1.0 / 2.0 * (std::pow(alpha, 2) - std::pow(beta, 2)) / (h1 + 2) / h1) +
+      xt::diag(2. / (h1s + 2) *
+                   xt::sqrt(lins * (lins + alpha + beta) * (lins + alpha) * (lins + beta) /
+                            (h1s + 1) / (h1s + 3)),
+               1);
+  if (alpha + beta == 0) m(0, 0) = 0;
+  m += xt::transpose(m);
+  auto [d, v] = xt::linalg::eigh(m);
+  double cte = std::pow(2, (alpha + beta + 1)) / (alpha + beta + 1) * std::tgamma(alpha + 1) *
+               std::tgamma(beta + 1) / std::tgamma(alpha + beta + 1);
+  xt::xarray<double> w = cte * xt::square(xt::view(v, 0, xt::all())), x = d;
+  return {x, w};
+}
+
 }  // namespace oiseau::utils::integration
