@@ -8,3 +8,4 @@ macro(add_benchmark benchmark_name)
 endmacro()
 
 add_benchmark(oiseau_benchmark_oiseau benchmark_oiseau.cpp)
+add_benchmark(oiseau_benchmark_xtensor benchmark_xtensor.cpp)
