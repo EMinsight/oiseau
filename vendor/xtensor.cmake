@@ -34,3 +34,11 @@ add_library(xtensor_stack INTERFACE)
 target_link_libraries(
     xtensor_stack INTERFACE xtl xtensor xtensor-blas LAPACK::LAPACK BLAS::BLAS cblas
 )
+
+get_target_property(XTL_INCLUDES xtl INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(XTENSOR_INCLUDES xtensor INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(XTENSOR_BLAS_INCLUDES xtensor-blas INTERFACE_INCLUDE_DIRECTORIES)
+
+target_include_directories(
+    xtensor_stack SYSTEM INTERFACE ${XTL_INCLUDES} ${XTENSOR_INCLUDES} ${XTENSOR_BLAS_INCLUDES}
+)
