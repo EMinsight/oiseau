@@ -8,7 +8,7 @@
  * @brief Defines the reference triangle element used in nodal Discontinuous Galerkin methods.
  *
  * This file contains the declaration of the `RefTriangle` class, which represents
- * a reference triangular element, and associated helper functions in the `detail`
+ * a reference triangular element, and associated internal helper functions in the `detail`
  * namespace for generating nodes, basis functions, and performing coordinate transformations.
  */
 
@@ -16,165 +16,122 @@ namespace oiseau::dg::nodal {
 
 /**
  * @class RefTriangle
- * @brief Represents a reference triangular element for Discontinuous Galerkin methods.
+ * @brief Represents a reference triangular element for nodal Discontinuous Galerkin methods.
  *
- * The reference triangle is defined in (r,s) coordinates with vertices at
- * (-1,-1), (1,-1), and (-1,1). This class computes and stores properties
- * like nodal distribution, Vandermonde matrix, and differentiation matrices
- * for a given polynomial order.
+ * The reference triangle is defined in (r, s) coordinates with vertices at
+ * (-1, -1), (1, -1), and (-1, 1). This class computes and stores properties
+ * such as nodal distribution, Vandermonde matrix, and differentiation matrices
+ * for a specified polynomial order.
  */
 class RefTriangle : public RefElement {
  public:
   /**
    * @brief Constructs a RefTriangle object of a specific polynomial order.
    * @param order The polynomial order for the basis functions on the triangle.
-   *              This determines the number of nodes and the accuracy of the approximation.
+   *              Determines the number of nodes and approximation accuracy.
    */
   explicit RefTriangle(unsigned order);
+
+  /**
+   * @brief Static member function that evaluates a 2D orthonormal basis function
+   *        on the reference triangle in collapsed (a, b) coordinates.
+   *
+   * The basis function is defined by:
+   * \f$\sqrt{2}\,P_i^{0,0}(a)\,P_j^{2i+1,0}(b)\,(1 - b)^i\f$
+   * where \f$P_n^{\alpha,\beta}\f$ are Jacobi polynomials.
+   *
+   * @param ab 2D array (shape: N_points × 2) of (a, b) coordinates where to evaluate the basis.
+   * @param i  Polynomial degree index for the a-direction component.
+   * @param j  Polynomial degree index for the b-direction component.
+   * @return   1D array (length N_points) of basis function values at each (a, b) point.
+   */
+  static xt::xarray<double> basis_function(const xt::xarray<double>& ab, int i, int j);
+
+  /**
+   * @brief Static member function that computes the gradient of a 2D orthonormal
+   *        basis function on the reference triangle in (r, s) coordinates.
+   *
+   * Uses the chain rule to transform derivatives from collapsed (a, b) to (r, s).
+   *
+   * @param ab 2D array (shape: N_points × 2) of (a, b) coordinates from `rs_to_ab`.
+   * @param i  Polynomial degree index for the a-component.
+   * @param j  Polynomial degree index for the b-component.
+   * @return   2D array (shape: N_points × 2) containing (∂/∂r, ∂/∂s) for each point.
+   */
+  static xt::xarray<double> grad_basis_function(const xt::xarray<double>& ab, int i, int j);
 
  private:
   /**
    * @brief Computes the Vandermonde matrix for the reference triangle.
    *
-   * The Vandermonde matrix V has entries V_ij = phi_j(r_i, s_i), where
-   * (r_i, s_i) are the nodal points and phi_j are the basis functions.
+   * The Vandermonde matrix V has entries V_{k,j} = φ_j(r_k, s_k), where
+   * (r_k, s_k) are the nodal points and φ_j are the basis functions.
    *
-   * @param rs An xt::xarray<double> of shape (N_points, 2) containing the (r,s) coordinates
-   *           of the points at which to evaluate the basis functions.
-   * @return An xt::xarray<double> of shape (N_points, N_basis) representing the Vandermonde matrix.
-   *         N_basis is the number of basis functions, (order+1)*(order+2)/2.
+   * @param rs 2D array (shape: N_points × 2) of (r, s) coordinates.
+   * @return   2D array (shape: N_points × N_basis) representing the Vandermonde matrix.
    */
-  xt::xarray<double> vandermonde(const xt::xarray<double> &rs) const;
+  xt::xarray<double> vandermonde(const xt::xarray<double>& rs) const;
 
   /**
-   * @brief Computes the gradient of the Vandermonde matrix.
+   * @brief Computes the gradient of the Vandermonde matrix for the reference triangle.
    *
-   * This matrix contains the gradients of the basis functions evaluated at the given points.
-   * The output G_V has entries G_V_ijk = d(phi_j)/dx_k (r_i, s_i), where k corresponds to
-   * derivatives with respect to r (k=0) and s (k=1).
-   *
-   * @param rs An xt::xarray<double> of shape (N_points, 2) containing the (r,s) coordinates
-   *           of the points at which to evaluate the gradients of the basis functions.
-   * @return An xt::xarray<double> of shape (N_points, N_basis, 2) representing the
-   *         gradient of the Vandermonde matrix. The last dimension corresponds to dr and ds.
+   * @param rs 2D array (shape: N_points × 2) of (r, s) coordinates.
+   * @return   3D array (shape: N_points × N_basis × 2) of gradients (∂/∂r, ∂/∂s).
    */
-  xt::xarray<double> grad_vandermonde(const xt::xarray<double> &rs) const;
+  xt::xarray<double> grad_vandermonde(const xt::xarray<double>& rs) const;
 
   /**
-   * @brief Computes the differentiation matrices (gradient operator) Dr and Ds.
+   * @brief Computes the differentiation operator matrices Dr and Ds.
    *
-   * These matrices allow computing the derivatives of a function (represented by its
-   * nodal values) with respect to r and s.
-   * Dr = V_r * V_inv and Ds = V_s * V_inv, where V_r and V_s are parts of the
-   * gradient Vandermonde matrix at the element nodes, and V_inv is the inverse
-   * of the Vandermonde matrix at the element nodes.
-   * The implementation computes Dr^T = V_inv^T * V_r^T and Ds^T = V_inv^T * V_s^T.
+   * Dr = V_r * V^{-1}, Ds = V_s * V^{-1}, where V_r and V_s are the parts
+   * of the gradient Vandermonde matrix and V^{-1} is the inverse Vandermonde
+   * at element nodes.
    *
-   * @param v The Vandermonde matrix (xt::xarray<double> of shape (N_nodes, N_basis)).
-   * @param gv The gradient Vandermonde matrix (xt::xarray<double> of shape (N_nodes, N_basis, 2)).
-   * @return An xt::xarray<double> of shape (N_nodes, N_basis, 2) where the slices
-   *         [:, :, 0] and [:, :, 1] are the differentiation matrices Dr and Ds, respectively.
-   *         Note: The returned matrices are such that (Dr * u)_i approximates d(u)/dr at node i.
-   *         Here, N_nodes = N_basis = (order+1)*(order+2)/2.
+   * @param v  2D array (N_nodes × N_basis) Vandermonde matrix.
+   * @param gv 3D array (N_nodes × N_basis × 2) gradient Vandermonde.
+   * @return   3D array (N_nodes × N_basis × 2) containing Dr ([:,:,0]) and Ds ([:,:,1]).
    */
-  xt::xarray<double> grad_operator(const xt::xarray<double> &v, const xt::xarray<double> &gv);
+  xt::xarray<double> grad_operator(const xt::xarray<double>& v, const xt::xarray<double>& gv) const;
 };
 
-/**
- * @namespace detail
- * @brief Contains internal helper functions for RefTriangle implementation.
- *
- * These functions are not intended for direct use outside of the RefTriangle class
- * and its associated implementation files.
- */
 namespace detail {
 
 /**
- * @brief Converts points from (r,s) coordinates to (a,b) collapsed coordinates.
+ * @brief Converts (r, s) coordinates to collapsed (a, b) coordinates for the triangle.
  *
- * The (r,s) coordinates define a bi-unit right triangle with vertices at
- * (-1,-1), (1,-1), (-1,1). The (a,b) coordinates are often used for
- * constructing basis functions on triangles, e.g., via a Duffy-like transformation.
- * a = 2*(1+r)/(1-s) - 1
- * b = s
- * Special handling for s=1 singularity (a=-1).
+ * a = 2*(1+r)/(1-s) - 1,  b = s; with special handling when s == 1.
  *
- * @param rs An xt::xarray<double> of shape (N_points, 2) containing (r,s) coordinates.
- * @return An xt::xarray<double> of shape (N_points, 2) containing the corresponding (a,b)
- * coordinates.
+ * @param rs 2D array (shape: N_points × 2) of (r, s) coordinates.
+ * @return   2D array (shape: N_points × 2) of (a, b) coordinates.
  */
-xt::xarray<double> rs_to_ab(const xt::xarray<double> &rs);
+xt::xarray<double> rs_to_ab(const xt::xarray<double>& rs);
 
 /**
- * @brief Generates nodal points on an equilateral triangle using a Warp & Blend technique.
+ * @brief Generates nodal points on an equilateral triangle via Warp & Blend.
  *
- * These points are then typically transformed to the (r,s) reference triangle.
- * The method aims to provide well-conditioned nodal sets.
+ * The result is then mapped to the (r, s) reference triangle.
  *
- * @param order The polynomial order, determining the number of points.
- *              Number of points generated is (order+1)*(order+2)/2.
- * @return An xt::xarray<double> of shape (N_points, 2) containing (x,y) coordinates
- *         of the nodes on an equilateral triangle.
+ * @param order Polynomial order (number of points = (order+1)*(order+2)/2).
+ * @return      2D array (N_points × 2) of (x, y) on the equilateral triangle.
  */
 xt::xarray<double> generate_triangle_nodes(unsigned order);
 
 /**
- * @brief Converts (x,y) coordinates from an equilateral triangle to (r,s) reference coordinates.
+ * @brief Maps equilateral triangle (x, y) to reference (r, s) coordinates.
  *
- * The specific equilateral triangle definition used in `generate_triangle_nodes` is assumed.
- * The (r,s) coordinates are for the bi-unit right triangle with vertices (-1,-1), (1,-1), (-1,1).
- *
- * @param xy An xt::xarray<double> of shape (N_points, 2) containing (x,y) coordinates
- *           on the equilateral triangle.
- * @return An xt::xarray<double> of shape (N_points, 2) containing the corresponding (r,s)
- * coordinates.
+ * @param xy 2D array (N_points × 2) of equilateral (x, y).
+ * @return   2D array (N_points × 2) of reference (r, s).
  */
-xt::xarray<double> equilateral_xy_to_rs(const xt::xarray<double> &xy);
+xt::xarray<double> equilateral_xy_to_rs(const xt::xarray<double>& xy);
 
 /**
- * @brief Computes a 1D warp factor used in the Warp & Blend node generation.
+ * @brief Computes 1D warp factor for node distribution on triangle edges.
  *
- * This function is part of the `generate_triangle_nodes` algorithm. It warps
- * equispaced points towards Gauss-Lobatto-Legendre points to improve node distribution.
- *
- * @param order The polynomial order.
- * @param rs An xt::xarray<double> of shape (N_points_1D) representing 1D coordinates
- *           (typically along an edge or median direction) to be warped.
- * @return An xt::xarray<double> of shape (N_points_1D) containing the warp values.
+ * @param order Polynomial order.
+ * @param rs    1D array (length = order+1) of coordinates along an edge.
+ * @return      1D array (length = order+1) of warp offsets.
  */
-xt::xarray<double> warp_factor(unsigned order, const xt::xarray<double> &rs);
+xt::xarray<double> warp_factor(unsigned order, const xt::xarray<double>& rs);
 
-/**
- * @brief Computes the value of a 2D orthonormal basis function on the reference triangle.
- *
- * The basis function is defined using (a,b) collapsed coordinates and Jacobi polynomials.
- * Formula: sqrt(2) * P_i^{0,0}(a) * P_j^{2i+1,0}(b) * (1-b)^i
- * (Note: (1-b)^i is equivalent to (2 * (1-b)/2)^i, matching common forms with ((1-b)/2)^i with a
- * 2^i factor)
- *
- * @param ab An xt::xarray<double> of shape (N_points, 2) containing (a,b) coordinates.
- * @param i The polynomial degree index for the 'a' coordinate component.
- * @param j The polynomial degree index for the 'b' coordinate component.
- * @return An xt::xarray<double> of shape (N_points) containing the basis function values.
- */
-xt::xarray<double> basis_function(const xt::xarray<double> &ab, int i, int j);
-
-/**
- * @brief Computes the gradient (dr, ds components) of a 2D orthonormal basis function.
- *
- * The gradient is computed with respect to the (r,s) coordinates of the reference triangle.
- * It uses the chain rule, transforming derivatives from (a,b) coordinates to (r,s) coordinates.
- * The basis functions and their derivatives are consistent with those in Hesthaven & Warburton,
- * "Nodal Discontinuous Galerkin Methods" (scaled by sqrt(2)*2^i).
- *
- * @param ab An xt::xarray<double> of shape (N_points, 2) containing (a,b) coordinates.
- *           These are derived from (r,s) coordinates via `rs_to_ab`.
- * @param i The polynomial degree index for the 'a' coordinate component.
- * @param j The polynomial degree index for the 'b' coordinate component.
- * @return An xt::xarray<double> of shape (N_points, 2) containing the (d/dr, d/ds)
- *         gradients of the basis function.
- */
-xt::xarray<double> grad_basis_function(const xt::xarray<double> &ab, int i, int j);
-
-};  // namespace detail
+}  // namespace detail
 }  // namespace oiseau::dg::nodal

@@ -29,6 +29,41 @@ RefTriangle::RefTriangle(unsigned order) : RefElement(order) {
   this->m_d = this->grad_operator(this->m_v, this->m_gv);
 }
 
+xt::xarray<double> RefTriangle::basis_function(const xt::xarray<double> &ab, int i, int j) {
+  xt::xarray<double> a = xt::col(ab, 0);
+  xt::xarray<double> b = xt::col(ab, 1);
+  auto h1 = oiseau::utils::jacobi_p(i, 0.0, 0.0, a);
+  auto h2 = oiseau::utils::jacobi_p(j, 2.0 * i + 1.0, 0.0, b);
+  return std::numbers::sqrt2 * h1 * h2 * xt::pow(1 - b, i);
+}
+
+xt::xarray<double> RefTriangle::grad_basis_function(const xt::xarray<double> &ab, int i, int j) {
+  xt::xarray<double> a = xt::col(ab, 0);
+  xt::xarray<double> b = xt::col(ab, 1);
+
+  xt::xarray<double> fa = oiseau::utils::jacobi_p(i, 0.0, 0.0, a);
+  xt::xarray<double> dfa = oiseau::utils::grad_jacobi_p(i, 0.0, 0.0, a);
+  xt::xarray<double> gb = oiseau::utils::jacobi_p(j, 2.0 * i + 1.0, 0.0, b);
+  xt::xarray<double> dgb = oiseau::utils::grad_jacobi_p(j, 2.0 * i + 1.0, 0.0, b);
+
+  xt::xarray<double> dmodedr = dfa * gb;
+  xt::xarray<double> dmodeds = dfa * (gb * (0.5 * (1 + a)));
+
+  xt::xarray<double> tmp = dgb * xt::pow(0.5 * (1 - b), i);
+
+  if (i > 0) {
+    dmodedr *= xt::pow(0.5 * (1 - b), i - 1);
+    dmodeds *= xt::pow(0.5 * (1 - b), i - 1);
+    tmp += -0.5 * i * gb * xt::pow(0.5 * (1 - b), i - 1);
+  }
+
+  dmodeds = dmodeds + fa * tmp;
+  dmodedr = pow(2.0, i + 0.5) * dmodedr;
+  dmodeds = pow(2.0, i + 0.5) * dmodeds;
+
+  return xt::stack(xt::xtuple(dmodedr, dmodeds), 1);
+}
+
 xt::xarray<double> RefTriangle::vandermonde(const xt::xarray<double> &rs) const {
   const auto ab = detail::rs_to_ab(rs);
 
@@ -40,7 +75,7 @@ xt::xarray<double> RefTriangle::vandermonde(const xt::xarray<double> &rs) const 
   std::size_t index = 0;
   for (unsigned i = 0; i <= this->m_order; ++i) {
     for (unsigned j = 0; j <= this->m_order - i; ++j, ++index) {
-      xt::col(output, index) = detail::basis_function(ab, i, j);
+      xt::col(output, index) = this->basis_function(ab, i, j);
     }
   }
   return output;
@@ -58,7 +93,7 @@ xt::xarray<double> RefTriangle::grad_vandermonde(const xt::xarray<double> &rs) c
   std::size_t index = 0;
   for (unsigned i = 0; i <= this->m_order; ++i) {
     for (unsigned j = 0; j <= this->m_order - i; ++j, ++index) {
-      auto tmp = detail::grad_basis_function(ab, i, j);
+      auto tmp = this->grad_basis_function(ab, i, j);
       xt::view(output, xt::all(), index, xt::all()) = tmp;
     }
   }
@@ -66,7 +101,7 @@ xt::xarray<double> RefTriangle::grad_vandermonde(const xt::xarray<double> &rs) c
 }
 
 xt::xarray<double> RefTriangle::grad_operator(const xt::xarray<double> &v,
-                                              const xt::xarray<double> &gv) {
+                                              const xt::xarray<double> &gv) const {
   auto gvr = xt::view(gv, xt::all(), xt::all(), 0);
   auto gvs = xt::view(gv, xt::all(), xt::all(), 1);
 
@@ -181,41 +216,6 @@ xt::xarray<double> warp_factor(unsigned order, const xt::xarray<double> &rs) {
   auto sf = 1.0 - xt::pow((zerof * rs), 2);
   warp = warp / sf + warp * (zerof - 1);
   return warp;
-}
-
-xt::xarray<double> basis_function(const xt::xarray<double> &ab, int i, int j) {
-  xt::xarray<double> a = xt::col(ab, 0);
-  xt::xarray<double> b = xt::col(ab, 1);
-  auto h1 = oiseau::utils::jacobi_p(i, 0.0, 0.0, a);
-  auto h2 = oiseau::utils::jacobi_p(j, 2.0 * i + 1.0, 0.0, b);
-  return std::numbers::sqrt2 * h1 * h2 * xt::pow(1 - b, i);
-}
-
-xt::xarray<double> grad_basis_function(const xt::xarray<double> &ab, int i, int j) {
-  xt::xarray<double> a = xt::col(ab, 0);
-  xt::xarray<double> b = xt::col(ab, 1);
-
-  xt::xarray<double> fa = oiseau::utils::jacobi_p(i, 0.0, 0.0, a);
-  xt::xarray<double> dfa = oiseau::utils::grad_jacobi_p(i, 0.0, 0.0, a);
-  xt::xarray<double> gb = oiseau::utils::jacobi_p(j, 2.0 * i + 1.0, 0.0, b);
-  xt::xarray<double> dgb = oiseau::utils::grad_jacobi_p(j, 2.0 * i + 1.0, 0.0, b);
-
-  xt::xarray<double> dmodedr = dfa * gb;
-  xt::xarray<double> dmodeds = dfa * (gb * (0.5 * (1 + a)));
-
-  xt::xarray<double> tmp = dgb * xt::pow(0.5 * (1 - b), i);
-
-  if (i > 0) {
-    dmodedr *= xt::pow(0.5 * (1 - b), i - 1);
-    dmodeds *= xt::pow(0.5 * (1 - b), i - 1);
-    tmp += -0.5 * i * gb * xt::pow(0.5 * (1 - b), i - 1);
-  }
-
-  dmodeds = dmodeds + fa * tmp;
-  dmodedr = pow(2.0, i + 0.5) * dmodedr;
-  dmodeds = pow(2.0, i + 0.5) * dmodeds;
-
-  return xt::stack(xt::xtuple(dmodedr, dmodeds), 1);
 }
 
 }  // namespace oiseau::dg::nodal::detail
