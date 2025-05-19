@@ -10,6 +10,18 @@
  * This file contains the declaration of the `RefTriangle` class, which represents
  * a reference triangular element, and associated internal helper functions in the `detail`
  * namespace for generating nodes, basis functions, and performing coordinate transformations.
+
+ * ASCII representation of the reference triangle node numbering (order=4):
+ *
+ * (14)
+ *  |   \
+ * (12)  (13)
+ *  |        \
+ * (9)  (10)  (11)
+ *  |            \
+ * (5)  (6)  (7)  (8)
+ *  |                 \
+ * (0)--(1)--(2)--(3)--(4)
  */
 
 namespace oiseau::dg::nodal {
