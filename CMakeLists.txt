@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(oiseau LANGUAGES CXX)
+project(
+    oiseau
+    VERSION 0.1.0
+    LANGUAGES CXX
+)
 
 # ------------------------------------------------------------------------------
 # Build Configuration
