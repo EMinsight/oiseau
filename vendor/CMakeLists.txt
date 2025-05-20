@@ -23,7 +23,7 @@ if(OISEAU_BUILD_TEST)
     include(googletest.cmake)
 endif()
 
-if(OISEAU_BUILD_BENC)
+if(OISEAU_BUILD_BENCHMARK)
     include(benchmark.cmake)
 endif()
 

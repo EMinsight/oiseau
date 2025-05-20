@@ -29,15 +29,16 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 option(OISEAU_BUILD_DEMO "Build demo applications" ON)
 option(OISEAU_BUILD_TEST "Build unit tests" ON)
-option(OISEAU_BUILD_DOCS "Build documentation" OFF)
-option(OISEAU_BUILD_BENC "Build benchmarks" OFF)
-option(OISEAU_BUILD_COVR "Build with coverage" OFF)
+option(OISEAU_BUILD_DOCS "Build documentation" ON)
+option(OISEAU_BUILD_BENCHMARK "Build benchmarks" OFF)
+option(OISEAU_BUILD_COVERAGE "Build with coverage" OFF)
+option(OISEAU_BUILD_SHARED "Build static library" ON)
 
 # ------------------------------------------------------------------------------
 # Dependencies
 # ------------------------------------------------------------------------------
 
-add_subdirectory(vendor)
+add_subdirectory(vendor EXCLUDE_FROM_ALL)
 
 # ------------------------------------------------------------------------------
 # Library Target
@@ -45,40 +46,69 @@ add_subdirectory(vendor)
 
 add_subdirectory(src)
 
-add_library(oiseau STATIC ${OISEAU_CORE_SOURCES})
-set_target_properties(oiseau PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+# conditional to build static or shared
+if(OISEAU_BUILD_SHARED)
+    message(STATUS "oiseau: Building SHARED library")
+    add_library(oiseau SHARED ${OISEAU_CORE_SOURCES})
+else()
+    message(STATUS "oiseau: Building STATIC library")
+    add_library(oiseau STATIC ${OISEAU_CORE_SOURCES})
+endif()
 
+target_link_libraries(oiseau PRIVATE oiseau_deps)
 target_include_directories(
     oiseau PUBLIC $<BUILD_INTERFACE:${OISEAU_PUBLIC_INCLUDE_DIR}> $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(oiseau PUBLIC oiseau_deps)
+# ------------------------------------------------------------------------------
+# Install the library
+# ------------------------------------------------------------------------------
+
+install(
+    TARGETS oiseau
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES
+    DESTINATION include
+)
+install(
+    DIRECTORY ${OISEAU_PUBLIC_INCLUDE_DIR}/
+    DESTINATION include
+    FILES_MATCHING
+    PATTERN "*.hpp"
+)
+
+# CMAKE Modules
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # ------------------------------------------------------------------------------
 # Optional Subdirectories
 # ------------------------------------------------------------------------------
-if(OISEAU_BUILD_COVR)
-    message(STATUS "Coverage build enabled")
+if(OISEAU_BUILD_COVERAGE)
+    message(STATUS "oiseau: Coverage build enabled")
     include(Coverage)
 endif()
 
 if(OISEAU_BUILD_DEMO)
+    message(STATUS "oiseau: Demo build enabled")
     add_subdirectory(demo)
 endif()
 
 if(OISEAU_BUILD_TEST)
+    message(STATUS "oiseau: Test build enabled")
     include(CTest)
     enable_testing()
     add_subdirectory(test)
 endif()
 
-if(OISEAU_BUILD_BENC)
+if(OISEAU_BUILD_BENCHMARK)
+    message(STATUS "oiseau: Benchmark build enabled")
     add_subdirectory(benchmark)
 endif()
 
 if(OISEAU_BUILD_DOCS)
+    message(STATUS "oiseau: Documentation build enabled")
     add_subdirectory(doc)
 endif()
 

@@ -1,7 +1,7 @@
 macro(add_benchmark benchmark_name)
     add_executable(${benchmark_name} ${ARGN})
-    target_link_libraries(${benchmark_name} oiseau)
-    target_link_libraries(${benchmark_name} benchmark::benchmark benchmark::benchmark_main)
+    target_link_libraries(${benchmark_name} PRIVATE oiseau oiseau_deps)
+    target_link_libraries(${benchmark_name} PRIVATE benchmark::benchmark benchmark::benchmark_main)
     set_target_properties(
         ${benchmark_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/benchmarks
     )
