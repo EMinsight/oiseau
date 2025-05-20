@@ -15,10 +15,6 @@
 
 namespace oiseau::dg::nodal {
 
-using utils::d_matrix_3d;
-using utils::grad_vandermonde_3d_tensor;
-using utils::vandermonde_3d_tensor;
-
 RefHexahedron::RefHexahedron(unsigned order) : RefElement(order) {
   this->m_np = (order + 1) * (order + 1) * (order + 1);
   this->m_nfp = (order + 1) * (order + 1);

@@ -20,10 +20,6 @@
 
 namespace oiseau::dg::nodal {
 
-using utils::d_matrix_3d;
-using utils::grad_vandermonde_3d;
-using utils::vandermonde_3d;
-
 RefTetrahedron::RefTetrahedron(unsigned order) : RefElement(order) {
   this->m_np = ((order + 1) * (order + 2) * (order + 3)) / 6;
   this->m_nfp = ((order + 1) * (order + 2)) / 2;

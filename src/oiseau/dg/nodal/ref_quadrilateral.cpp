@@ -15,11 +15,6 @@
 
 namespace oiseau::dg::nodal {
 
-using utils::d_matrix_2d;
-using utils::generate_quadrilateral_nodes;
-using utils::grad_vandermonde_2d_tensor;
-using utils::vandermonde_2d_tensor;
-
 RefQuadrilateral::RefQuadrilateral(unsigned order) : RefElement(order) {
   this->m_np = (order + 1) * (order + 1);
   this->m_nfp = order + 1;

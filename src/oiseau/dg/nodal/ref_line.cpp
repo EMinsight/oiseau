@@ -10,16 +10,10 @@
 #include <xtensor/views/xview.hpp>
 
 #include "oiseau/dg/nodal/ref_element.hpp"
-#include "oiseau/dg/nodal/utils.hpp"
 #include "oiseau/utils/integration.hpp"
 #include "oiseau/utils/math.hpp"
 
 namespace oiseau::dg::nodal {
-
-using utils::d_matrix_1d;
-using utils::grad_vandermonde_1d;
-using utils::jacobi_gl;
-using utils::vandermonde_1d;
 
 RefLine::RefLine(unsigned order) : RefElement(order) {
   this->m_np = order + 1;
