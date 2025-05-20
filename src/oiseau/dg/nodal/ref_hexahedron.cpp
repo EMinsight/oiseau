@@ -83,7 +83,7 @@ xt::xarray<double> RefHexahedron::grad_vandermonde(const xt::xarray<double> &rst
   for (unsigned i = 0; i <= this->m_order; ++i) {
     for (unsigned j = 0; j <= this->m_order; ++j) {
       for (unsigned k = 0; k <= this->m_order; ++k, ++index) {
-        auto tmp = utils::grad_tensorp_3d(rst, i, j, k);
+        auto tmp = this->grad_basis_function(rst, i, j, k);
         xt::view(output, xt::all(), index, xt::all()) = tmp;
       }
     }
