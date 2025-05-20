@@ -78,11 +78,9 @@ inline auto plt() { return py::module_::import("matplotlib.pyplot"); }
     return WrapperClass(m_obj.attr(#name)(std::forward<Args>(args)...)); \
   }
 
-#pragma GCC visibility push(hidden)
-
 // --- Classes using the simplified macros ---
 
-class AxesSubPlot {
+class PYBIND11_EXPORT AxesSubPlot {
  public:
   explicit AxesSubPlot(py::object axes) : m_obj(std::move(axes)) {}
 
@@ -104,7 +102,7 @@ class AxesSubPlot {
   py::object m_obj;
 };
 
-class Figure {
+class PYBIND11_EXPORT Figure {
  public:
   explicit Figure(py::object fig) : m_obj(std::move(fig)) {}
 
@@ -115,8 +113,6 @@ class Figure {
  private:
   py::object m_obj;
 };
-
-#pragma GCC visibility pop
 
 // --- Free functions using the simplified macros ---
 

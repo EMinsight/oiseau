@@ -1,4 +1,5 @@
 #pragma once
+
 #include "oiseau/mesh/mesh.hpp"
 #include "oiseau/plotting/pyplot.hpp"
 
