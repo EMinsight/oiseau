@@ -8,7 +8,7 @@ namespace oiseau::dg::nodal {
 
 /**
  * @class RefLine
- * @brief Represents a 1D reference line element used in nodal Discontinuous Galerkin methods.
+ * @brief Represents a reference line element used in nodal Discontinuous Galerkin methods.
  *
  * This class implements the necessary basis functions, their gradients, and supporting
  * operators for a 1D reference element (line) of arbitrary polynomial order.
