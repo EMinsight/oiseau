@@ -418,8 +418,7 @@ xt::xarray<double> eval_shift(int p, double pval, const xt::xarray<double> &l1,
   return xt::stack(xt::xtuple(dx, dy), 1);
 }
 
-xt::xarray<double> warp_shift_face_3d(int p, double pval, double pval2,
-                                      const xt::xarray<double> &l1, const xt::xarray<double> &l2,
+xt::xarray<double> warp_shift_face_3d(int p, double pval, const xt::xarray<double> &l2,
                                       const xt::xarray<double> &l3, const xt::xarray<double> &l4) {
   return eval_shift(p, pval, l2, l3, l4);
 }
@@ -479,7 +478,7 @@ xt::xarray<double> generate_tetrahedron_nodes(unsigned p) {
       lc = l3;
       ld = l2;
     }
-    auto warp = warp_shift_face_3d(p, alpha, alpha, la, lb, lc, ld);
+    auto warp = warp_shift_face_3d(p, alpha, lb, lc, ld);
     auto warp1 = xt::col(warp, 0);
     auto warp2 = xt::col(warp, 1);
     xt::xarray<double> blend = lb * lc * ld;
