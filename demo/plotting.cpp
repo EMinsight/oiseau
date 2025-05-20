@@ -1,15 +1,22 @@
+#include <pybind11/cast.h>
+
+#include <cstddef>
+#include <vector>
+#include <xtensor/containers/xbuffer_adaptor.hpp>
+#include <xtensor/core/xtensor_forward.hpp>
+#include <xtensor/generators/xbuilder.hpp>
+#include <xtensor/views/xslice.hpp>
 #include <xtensor/views/xview.hpp>
 
-#include "oiseau/dg/nodal/utils.hpp"
 #include "oiseau/io/gmsh.hpp"
+#include "oiseau/mesh/cell.hpp"
+#include "oiseau/mesh/mesh.hpp"
 #include "oiseau/plotting/pyplot.hpp"
 #include "xtensor/containers/xadapt.hpp"
 #include "xtensor/core/xmath.hpp"
 
 using namespace oiseau::io;
 using namespace oiseau::mesh;
-
-using namespace oiseau::dg::nodal::utils;
 
 int main() {
   plt::scoped_interpreter guard{};
@@ -27,7 +34,7 @@ int main() {
   auto cells = mesh.topology().cell_types();
 
   std::vector<double> flat;
-  for (int i = 0; i < conn.size(); i++) {
+  for (std::size_t i = 0; i < conn.size(); i++) {
     if (cells[i]->kind() == CellKind::Triangle) {
       flat.insert(flat.end(), conn[i].begin(), conn[i].end());
     }
@@ -45,8 +52,9 @@ int main() {
     xt::view(centroids, e) = centroid;
   }
 
-  auto [fig, ax] =
-      plt::subplots(1, 1, "constrained_layout"_a = true, "figsize"_a = std::array<double, 2>{8, 8});
+  auto [fig, ax] = plt::subplots(1, 1, py::arg("constrained_layout") = true,
+                                 py::arg("figsize") = py::make_tuple(8.0, 8.0));
+
   ax.scatter(x_coord, y_coord, "s"_a = 1, "label"_a = "scatter");
   ax.scatter(xt::col(centroids, 0), xt::col(centroids, 1), "s"_a = 0.1, "label"_a = "scatter",
              "color"_a = "red");

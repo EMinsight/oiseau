@@ -1,26 +1,28 @@
 #include <fmt/core.h>
 #include <fmt/ranges.h>
+#include <pybind11/cast.h>
 
+#include <iostream>
+#include <ostream>
 #include <ranges>
 
+#include "fmt/base.h"
 #include "oiseau/io/gmsh.hpp"
+#include "oiseau/mesh/mesh.hpp"
 #include "oiseau/plotting/triplot.hpp"
 
 using namespace oiseau::io;
 using namespace oiseau::mesh;
 
+namespace py = pybind11;
+using namespace pybind11::literals;
+
 void two_dimensional() {
   Mesh mesh = gmsh_read_from_path("demo/meshes/mesh2d_split_triangles_quads.msh");
-  auto& geometry = mesh.geometry();
-  auto& topology = mesh.topology();
-
-  auto cell_types = topology.cell_types();
-  auto conn = topology.conn();
-
   plt::scoped_interpreter guard{};
 
-  auto [fig, ax] =
-      plt::subplots(1, 1, "constrained_layout"_a = true, "figsize"_a = std::array<double, 2>{8, 8});
+  auto [fig, ax] = plt::subplots(1, 1, py::arg("constrained_layout") = true,
+                                 py::arg("figsize") = py::make_tuple(8.0, 8.0));
 
   oiseau::plotting::triplot(ax, mesh);
 
@@ -29,7 +31,6 @@ void two_dimensional() {
 
 void three_dimensional() {
   Mesh mesh = gmsh_read_from_path("demo/meshes/mesh3d_tetra_hexa_block.msh");
-  auto& geometry = mesh.geometry();
   auto& topology = mesh.topology();
 
   auto cell_types = topology.cell_types();
