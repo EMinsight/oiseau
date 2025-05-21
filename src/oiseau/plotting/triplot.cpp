@@ -20,7 +20,7 @@ void triplot(plt::AxesSubPlot &ax, oiseau::mesh::Mesh &mesh) {
   auto connectivity = topology.conn();
   auto x = geometry.x();
 
-  std::vector<std::size_t> shape = {x.size() / 3, 3};
+  std::vector<std::size_t> shape = {x.size() / geometry.dim(), geometry.dim()};
   auto coords = xt::adapt(x.data(), x.size(), xt::no_ownership(), shape);
 
   for (std::size_t i = 0; i < connectivity.size(); ++i) {

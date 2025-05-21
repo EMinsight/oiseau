@@ -7,7 +7,7 @@ namespace oiseau::mesh {
 class Geometry {
  public:
   Geometry();
-  Geometry(std::vector<double> &&x, int dim);
+  Geometry(std::vector<double> &&x, unsigned dim);
   Geometry(Geometry &&) = default;
   Geometry(const Geometry &) = default;
   Geometry &operator=(Geometry &&) = default;
@@ -16,9 +16,10 @@ class Geometry {
 
   std::span<double> x();
   std::span<double> x_at(std::size_t pos);
+  unsigned dim() const;
 
  private:
   std::vector<double> m_x;
-  int m_dim = 3;
+  unsigned m_dim = 3;
 };
 }  // namespace oiseau::mesh
