@@ -4,5 +4,6 @@ FetchContent_Declare(
     doxygen-awesome-css
     GIT_REPOSITORY https://github.com/jothepro/doxygen-awesome-css.git
     GIT_TAG v2.3.4
+    GIT_SHALLOW
 )
 FetchContent_MakeAvailable(doxygen-awesome-css)

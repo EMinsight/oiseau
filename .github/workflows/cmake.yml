@@ -14,6 +14,7 @@ jobs:
 
             - name: Install dependencies
               run: sudo apt update && sudo apt install -y cmake ninja-build build-essential libblas-dev liblapack-dev libboost-all-dev libatlas-base-dev
+                  doxygen
 
             - name: Configure CMake with Ninja
               run: cmake -S . -B build -G Ninja
@@ -33,6 +34,7 @@ jobs:
 
             - name: Install clang-tidy and build tools
               run: sudo apt update && sudo apt install -y clang-tidy cmake ninja-build build-essential libblas-dev liblapack-dev libboost-all-dev libatlas-base-dev
+                  doxygen
 
             - name: Configure project to regenerate compile_commands.json
               run: cmake -S . -B build -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
