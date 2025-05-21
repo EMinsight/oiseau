@@ -8,12 +8,12 @@ jobs:
     build-and-test:
         runs-on: ubuntu-latest
 
+        container:
+            image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
+
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
-
-            - name: Install dependencies
-              run: sudo apt update && sudo apt install -y cmake ninja-build build-essential libblas-dev liblapack-dev libboost-all-dev libatlas-base-dev
 
             - name: Configure CMake with Ninja
               run: cmake -DOISEAU_BUILD_DOCS=OFF -DOISEAU_BUILD_COVERAGE=OFF -DOISEAU_BUILD_SHARED=OFF -S . -B build -G Ninja
@@ -27,16 +27,16 @@ jobs:
     clang-tidy:
         runs-on: ubuntu-latest
 
+        container:
+            image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
+
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
 
-            - name: Install clang-tidy and build tools
-              run: sudo apt update && sudo apt install -y clang-tidy cmake ninja-build build-essential libblas-dev liblapack-dev libboost-all-dev libatlas-base-dev
-                  doxygen
-
             - name: Configure project to regenerate compile_commands.json
-              run: cmake -DOISEAU_BUILD_DOCS=OFF -DOISEAU_BUILD_COVERAGE=OFF -DOISEAU_BUILD_SHARED=OFF -S . -B build -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+              run: cmake  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DOISEAU_BUILD_DOCS=OFF -DOISEAU_BUILD_COVERAGE=OFF -DOISEAU_BUILD_SHARED=OFF -S . -B build
+                  -G Ninja
 
             - name: Run clang-tidy
               run: |
@@ -45,13 +45,13 @@ jobs:
     cppcheck:
         runs-on: ubuntu-latest
 
+        container:
+            image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
+
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
 
-            - name: Install cppcheck
-              run: sudo apt update && sudo apt install -y cppcheck
-
             - name: Run cppcheck
               run: |
-                  cppcheck --enable=all --std=c++23 --suppress=missingInclude --suppress=unmatchedSuppression --suppress=missingIncludeSystem --suppress=unusedFunction --error-exitcode=2 src -I src
+                  cppcheck --enable=all --std=c++20 --suppress=missingInclude --suppress=unmatchedSuppression --suppress=missingIncludeSystem --suppress=unusedFunction --error-exitcode=2 src -I src
