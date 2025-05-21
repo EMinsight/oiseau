@@ -57,6 +57,7 @@ if(OISEAU_BUILD_SHARED)
 else()
     message(STATUS "oiseau: Building STATIC library")
     add_library(oiseau STATIC ${OISEAU_CORE_SOURCES})
+    target_compile_options(oiseau PRIVATE -fPIC)
 endif()
 
 target_link_libraries(oiseau PRIVATE oiseau_deps)

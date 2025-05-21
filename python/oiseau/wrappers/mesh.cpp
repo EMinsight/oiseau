@@ -1,4 +1,10 @@
+#include <pybind11/cast.h>
+#include <pybind11/detail/common.h>
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
+
+#include <memory>
+#include <vector>
 
 #include "oiseau/mesh/cell.hpp"
 
