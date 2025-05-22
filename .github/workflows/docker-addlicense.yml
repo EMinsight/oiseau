@@ -1,36 +1,28 @@
----
 name: Build and push latest version of addlicense
-
 on:
-    push:
-        branches: [master]
-        paths:
-            - .github/workflows/docker-addlicense.yml
-    workflow_dispatch:
-
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/docker-addlicense.yml
+  workflow_dispatch:
 jobs:
-    build-and-push:
-        runs-on: ubuntu-latest
-
-        permissions:
-            contents: read
-            packages: write
-
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Log in to GHCR
-              uses: docker/login-action@v3
-              with:
-                  registry: ghcr.io
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Build Docker image
-              run: |
-                  docker build -t ghcr.io/${{ github.repository_owner }}/oiseau-addlicense:latest .github/docker/oiseau-addlicense/
-
-            - name: Push Docker image
-              run: |
-                  docker push ghcr.io/${{ github.repository_owner }}/oiseau-addlicense:latest
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/oiseau-addlicense:latest .github/docker/oiseau-addlicense/
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/oiseau-addlicense:latest

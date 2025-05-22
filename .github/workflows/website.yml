@@ -1,71 +1,57 @@
----
 name: Deploy to GitHub Pages
-
 on:
-    push:
-        branches: [master]
-    workflow_dispatch:
-
+  push:
+    branches: [master]
+  workflow_dispatch:
 permissions:
-    contents: read
-    pages: write
-    id-token: write
-
+  contents: read
+  pages: write
+  id-token: write
 jobs:
-    build:
-        name: Build and Upload Site
-        runs-on: ubuntu-latest
-        container:
-            image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Configure CMake with Ninja
-              run: |
-                  cmake -DOISEAU_BUILD_COVERAGE=ON \
-                    -DOISEAU_BUILD_TEST=ON \
-                    -DOISEAU_BUILD_DOCS=ON \
-                    -S . -B build -G Ninja
-
-            - name: Build with Ninja
-              run: cmake --build build -- -j$(nproc)
-
-            - name: Build the website
-              run: cmake --build build --target website -- -j$(nproc)
-
-            - name: Setup Pages
-              uses: actions/configure-pages@v5
-
-            - name: Upload website folder
-              uses: actions/upload-pages-artifact@v3
-              with:
-                  path: build/web
-
-    cleanup:
-        name: Cleanup old deployments
-        needs: build
-        runs-on: ubuntu-latest
-        permissions: write-all
-
-        steps:
-            - name: github-pages
-              uses: strumwolf/delete-deployment-environment@v2
-              with:
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  environment: github-pages
-                  onlyRemoveDeployments: true
-
-    deploy:
-        name: Deploy to GitHub Pages
-        needs: [build, cleanup]
-        runs-on: ubuntu-latest
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
-
-        steps:
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v4
+  build:
+    name: Build and Upload Site
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Configure CMake with Ninja
+        run: |
+          cmake -DOISEAU_BUILD_COVERAGE=ON \
+            -DOISEAU_BUILD_TEST=ON \
+            -DOISEAU_BUILD_DOCS=ON \
+            -S . -B build -G Ninja
+      - name: Build with Ninja
+        run: cmake --build build -- -j$(nproc)
+      - name: Build the website
+        run: cmake --build build --target website -- -j$(nproc)
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload website folder
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+  cleanup:
+    name: Cleanup old deployments
+    needs: build
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: github-pages
+        uses: strumwolf/delete-deployment-environment@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: github-pages
+          onlyRemoveDeployments: true
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: [build, cleanup]
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

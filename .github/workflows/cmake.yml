@@ -1,120 +1,99 @@
----
 name: C++ Build, Test, and Static Analysis
-
 on:
-    push:
-        branches: [master]
-    pull_request:
-        branches: [master]
-
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
 jobs:
-    configure:
-        name: Configure CMake
-        runs-on: ubuntu-latest
-        container:
-            image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
-
-        outputs:
-            build_directory_name: build
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Configure CMake
-              run: |
-                  cmake -S . -B build \
-                    -G Ninja \
-                    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-                    -DOISEAU_BUILD_DOCS=OFF \
-                    -DOISEAU_BUILD_COVERAGE=OFF \
-                    -DOISEAU_BUILD_SHARED=OFF
-
-            - name: Upload CMake build configuration (for build job)
-              uses: actions/upload-artifact@v4
-              with:
-                  name: cmake-build-dir
-                  path: build/
-                  retention-days: 1
-
-    build-and-test:
-        name: Build and Test
-        runs-on: ubuntu-latest
-        needs: configure
-        container:
-            image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Download CMake build configuration
-              uses: actions/download-artifact@v4
-              with:
-                  name: cmake-build-dir
-                  path: build/
-
-            - name: Build with Ninja
-              run: cmake --build build -- -j$(nproc)
-
-            - name: Run tests
-              run: ctest --test-dir build --parallel --output-on-failure
-
-    clang-tidy:
-        name: Clang-Tidy Analysis
-        runs-on: ubuntu-latest
-        needs: configure
-        container:
-            image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Download CMake build configuration
-              uses: actions/download-artifact@v4
-              with:
-                  name: cmake-build-dir
-                  path: build/
-
-            - name: Run clang-tidy
-
-              run: |
-                  echo "Running clang-tidy on .cpp files in src/..."
-                  find src -name '*.cpp' -print0 | \
-                    xargs -0 -r -n 1 -P $(nproc) \
-                    clang-tidy \
-                      -p build \
-                      --header-filter='^src/oiseau' 2> /dev/null
-
-    cppcheck:
-        name: Cppcheck Analysis
-        runs-on: ubuntu-latest
-        needs: configure
-        container:
-            image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Download CMake build configuration
-              uses: actions/download-artifact@v4
-              with:
-                  name: cmake-build-dir
-                  path: build/
-
-            - name: Run cppcheck
-              run: |
-                  cppcheck \
-                    --enable=all \
-                    --std=c++20 \
-                    --suppress=missingInclude \
-                    --suppress=unmatchedSuppression \
-                    --suppress=missingIncludeSystem \
-                    --suppress=unusedFunction \
-                    --suppress=returnByReference \
-                    --error-exitcode=2 \
-                    --check-level=exhaustive \
-                    src \
-                    -I src
+  configure:
+    name: Configure CMake
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
+    outputs:
+      build_directory_name: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DOISEAU_BUILD_DOCS=OFF \
+            -DOISEAU_BUILD_COVERAGE=OFF \
+            -DOISEAU_BUILD_SHARED=OFF
+      - name: Upload CMake build configuration (for build job)
+        uses: actions/upload-artifact@v4
+        with:
+          name: cmake-build-dir
+          path: build/
+          retention-days: 1
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    needs: configure
+    container:
+      image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Download CMake build configuration
+        uses: actions/download-artifact@v4
+        with:
+          name: cmake-build-dir
+          path: build/
+      - name: Build with Ninja
+        run: cmake --build build -- -j$(nproc)
+      - name: Run tests
+        run: ctest --test-dir build --parallel --output-on-failure
+  clang-tidy:
+    name: Clang-Tidy Analysis
+    runs-on: ubuntu-latest
+    needs: configure
+    container:
+      image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Download CMake build configuration
+        uses: actions/download-artifact@v4
+        with:
+          name: cmake-build-dir
+          path: build/
+      - name: Run clang-tidy
+        run: |
+          echo "Running clang-tidy on .cpp files in src/..."
+          find src -name '*.cpp' -print0 | \
+            xargs -0 -r -n 1 -P $(nproc) \
+            clang-tidy \
+              -p build \
+              --header-filter='^src/oiseau' 2> /dev/null
+  cppcheck:
+    name: Cppcheck Analysis
+    runs-on: ubuntu-latest
+    needs: configure
+    container:
+      image: ghcr.io/tiagovla/oiseau-baseline-builder:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Download CMake build configuration
+        uses: actions/download-artifact@v4
+        with:
+          name: cmake-build-dir
+          path: build/
+      - name: Run cppcheck
+        run: |
+          cppcheck \
+            --enable=all \
+            --std=c++20 \
+            --suppress=missingInclude \
+            --suppress=unmatchedSuppression \
+            --suppress=missingIncludeSystem \
+            --suppress=unusedFunction \
+            --suppress=returnByReference \
+            --error-exitcode=2 \
+            --check-level=exhaustive \
+            src \
+            -I src

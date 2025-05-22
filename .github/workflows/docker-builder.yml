@@ -1,37 +1,29 @@
----
 name: Build and Push Docker Image
-
 on:
-    push:
-        branches:
-            - master
-        paths:
-            - .github/docker/Dockerfile
-            - .github/workflows/docker-builder.yml
-
+  push:
+    branches:
+      - master
+    paths:
+      - .github/docker/Dockerfile
+      - .github/workflows/docker-builder.yml
 jobs:
-    build-and-push:
-        runs-on: ubuntu-latest
-
-        permissions:
-            contents: read
-            packages: write
-
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Log in to GHCR
-              uses: docker/login-action@v3
-              with:
-                  registry: ghcr.io
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Build Docker image
-              run: |
-                  docker build -t ghcr.io/${{ github.repository_owner }}/oiseau-baseline-builder:latest .github/docker/oiseau-baseline-builder/
-
-            - name: Push Docker image
-              run: |
-                  docker push ghcr.io/${{ github.repository_owner }}/oiseau-baseline-builder:latest
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/oiseau-baseline-builder:latest .github/docker/oiseau-baseline-builder/
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/oiseau-baseline-builder:latest
