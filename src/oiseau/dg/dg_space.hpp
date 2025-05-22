@@ -9,14 +9,14 @@
 
 namespace oiseau::dg {
 
-class FunctionSpace {
+class DGSpace {
  public:
-  FunctionSpace(const FunctionSpace& V) = delete;
-  FunctionSpace(const mesh::Mesh& mesh, const std::vector<unsigned>& orders);
-  FunctionSpace(FunctionSpace&& V) = default;
-  virtual ~FunctionSpace() = default;
-  FunctionSpace& operator=(const FunctionSpace& V) = delete;
-  FunctionSpace& operator=(FunctionSpace&& V) = delete;
+  DGSpace(const DGSpace& V) = delete;
+  DGSpace(const mesh::Mesh& mesh, const std::vector<unsigned>& orders);
+  DGSpace(DGSpace&& V) = default;
+  virtual ~DGSpace() = default;
+  DGSpace& operator=(const DGSpace& V) = delete;
+  DGSpace& operator=(DGSpace&& V) = delete;
 
   inline const mesh::Mesh& mesh() const { return m_mesh; };
   std::span<const nodal::Element> elements() const;

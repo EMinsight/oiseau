@@ -1,4 +1,4 @@
-#include "oiseau/dg/function_space.hpp"
+#include "oiseau/dg/dg_space.hpp"
 
 #include <array>
 #include <cstddef>
@@ -19,7 +19,7 @@
 
 namespace oiseau::dg {
 
-FunctionSpace::FunctionSpace(const mesh::Mesh& mesh, const std::vector<unsigned>& orders)
+DGSpace::DGSpace(const mesh::Mesh& mesh, const std::vector<unsigned>& orders)
     : m_mesh(mesh), m_orders(orders) {
   m_elements.reserve(orders.size());
 
@@ -59,7 +59,7 @@ FunctionSpace::FunctionSpace(const mesh::Mesh& mesh, const std::vector<unsigned>
   }
   // TODO(tiagovla): clean up this mess, introduce proper api
 }
-std::span<const nodal::Element> FunctionSpace::elements() const { return {m_elements}; }
-std::span<const unsigned> FunctionSpace::orders() const { return {m_orders}; }
+std::span<const nodal::Element> DGSpace::elements() const { return {m_elements}; }
+std::span<const unsigned> DGSpace::orders() const { return {m_orders}; }
 
 }  // namespace oiseau::dg
