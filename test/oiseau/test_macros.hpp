@@ -1,3 +1,9 @@
+// Copyright (C) 2025 Tiago V. L. Amorim (@tiagovla)
+//
+// This file is part of oiseau (https://github.com/tiagovla/oiseau)
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #define EXPECT_FLOATS_NEARLY_EQ(expected, actual, threshold)          \
   ASSERT_EQ(expected.size(), actual.size()) << "Array sizes differ."; \
   for (size_t idx = 0; idx < expected.size(); ++idx) {                \

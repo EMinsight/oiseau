@@ -1,3 +1,9 @@
+# Copyright (C) 2025 Tiago V. L. Amorim (@tiagovla)
+#
+# This file is part of oiseau (https://github.com/tiagovla/oiseau)
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 macro(oiseau_add_executable name)
     add_executable(oiseau_${name} ${name}.cpp)
     target_link_libraries(oiseau_${name} PRIVATE oiseau oiseau_deps)

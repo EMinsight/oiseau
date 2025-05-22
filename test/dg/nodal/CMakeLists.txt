@@ -1,3 +1,9 @@
+# Copyright (C) 2025 Tiago V. L. Amorim (@tiagovla)
+#
+# This file is part of oiseau (https://github.com/tiagovla/oiseau)
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 add_test(oiseau_test_dg_nodal_utils test_utils.cpp)
 
 add_test(oiseau_test_dg_nodal_ref_element test_ref_element.cpp)
