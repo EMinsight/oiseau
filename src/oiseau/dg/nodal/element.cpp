@@ -2,13 +2,15 @@
 
 #include <memory>
 #include <utility>
+#include <xtensor/core/xtensor_forward.hpp>
 
 #include "oiseau/dg/nodal/ref_element.hpp"
 
 namespace oiseau::dg::nodal {
 
-Element::Element(unsigned order, std::shared_ptr<RefElement> ref_elem)
-    : m_order(order), m_reference(std::move(ref_elem)) {}
+Element::Element(std::shared_ptr<RefElement> ref_elem, xt::xarray<double> nodes)
+    : m_reference(std::move(ref_elem)), m_nodes(std::move(nodes)) {}
 const RefElement& Element::reference() const { return *m_reference; }
-unsigned Element::order() const { return m_order; }
+unsigned Element::order() const { return this->m_reference->order(); }
+const xt::xarray<double>& Element::nodes() const { return this->m_nodes; }
 }  // namespace oiseau::dg::nodal

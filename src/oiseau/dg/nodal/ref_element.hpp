@@ -23,6 +23,8 @@ class RefElement {
   inline unsigned number_of_nodes() const { return m_np; }
   inline unsigned number_of_face_nodes() const { return m_nfp; }
 
+  virtual xt::xarray<double> vandermonde(const xt::xarray<double>&) const = 0;
+
  protected:
   explicit RefElement(unsigned order) : m_order(order) {
     if (order == 0) throw std::invalid_argument("Order must be greater than 0");

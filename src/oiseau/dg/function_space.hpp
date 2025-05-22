@@ -1,7 +1,6 @@
 #pragma once
 
-#include <cstddef>
-#include <memory>
+#include <iostream>
 #include <span>
 #include <vector>
 
@@ -13,21 +12,20 @@ namespace oiseau::dg {
 class FunctionSpace {
  public:
   FunctionSpace(const FunctionSpace& V) = delete;
-  FunctionSpace(const std::shared_ptr<const mesh::Mesh>& mesh,
-                const std::vector<nodal::Element>& elements,
-                const std::vector<std::size_t>& orders);
+  FunctionSpace(const mesh::Mesh& mesh, const std::vector<unsigned>& orders);
   FunctionSpace(FunctionSpace&& V) = default;
   virtual ~FunctionSpace() = default;
   FunctionSpace& operator=(const FunctionSpace& V) = delete;
-  FunctionSpace& operator=(FunctionSpace&& V) = default;
+  FunctionSpace& operator=(FunctionSpace&& V) = delete;
 
+  inline const mesh::Mesh& mesh() const { return m_mesh; };
   std::span<const nodal::Element> elements() const;
-  std::span<const std::size_t> orders() const;
+  std::span<const unsigned> orders() const;
 
  private:
-  std::shared_ptr<const mesh::Mesh> m_mesh;
+  const mesh::Mesh& m_mesh;
   std::vector<nodal::Element> m_elements;
-  std::vector<std::size_t> m_orders;
+  const std::vector<unsigned> m_orders;
 };
 
 }  // namespace oiseau::dg

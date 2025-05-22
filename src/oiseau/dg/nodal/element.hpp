@@ -1,19 +1,21 @@
 #pragma once
 
 #include <memory>
+#include <xtensor/core/xtensor_forward.hpp>
 
 #include "oiseau/dg/nodal/ref_element.hpp"
 namespace oiseau::dg::nodal {
 
 class Element {
  public:
-  Element(unsigned order, std::shared_ptr<RefElement> ref_elem);
+  Element(std::shared_ptr<RefElement> ref_elem, xt::xarray<double> nodes);
 
   const RefElement& reference() const;
   unsigned order() const;
+  const xt::xarray<double>& nodes() const;
 
  private:
-  unsigned m_order;
   std::shared_ptr<RefElement> m_reference;
+  xt::xarray<double> m_nodes;
 };
 }  // namespace oiseau::dg::nodal
