@@ -44,9 +44,12 @@ add_library(oiseau_deps INTERFACE)
 include(xtensor.cmake)
 include(fmt.cmake)
 include(loguru.cmake)
+include(spdlog.cmake)
 include(pybind11.cmake)
 
-target_link_libraries(oiseau_deps INTERFACE xtensor_stack fmt::fmt loguru pybind11::embed)
+target_link_libraries(
+    oiseau_deps INTERFACE xtensor_stack fmt::fmt loguru spdlog::spdlog pybind11::embed
+)
 
 # include(eigen.cmake) include(blaze.cmake) include(boost.cmake)
 

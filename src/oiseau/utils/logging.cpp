@@ -6,16 +6,33 @@
 
 #include "oiseau/utils/logging.hpp"
 
-#include <vector>
+#include <spdlog/pattern_formatter.h>
+
+#include <memory>
+
+#include "spdlog/cfg/argv.h"
+#include "spdlog/common.h"
+#include "spdlog/logger.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/spdlog.h"
 
 namespace oiseau::logging {
 
-void set_verbosity(Verbosity level) { loguru::g_stderr_verbosity = level; }
+static std::shared_ptr<spdlog::logger> default_logger;
+
+void set_verbosity(Verbosity level) {
+  spdlog::set_level(static_cast<spdlog::level::level_enum>(level));
+}
 
 void init(int argc, char** argv) {
-  set_verbosity(Verbosity::INFO);  // Default to INFO
-  std::vector<char*> argvv(argv, argv + argc);
-  argvv.push_back(nullptr);
-  loguru::init(argc, argvv.data());
+  spdlog::cfg::load_argv_levels(argc, argv);
+
+  spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%s:%# %!] %v");
+  if (!default_logger) {
+    default_logger = spdlog::stdout_color_mt("oiseau");
+    spdlog::set_default_logger(default_logger);
+  }
+  spdlog::set_level(spdlog::level::info);
 }
+
 }  // namespace oiseau::logging
