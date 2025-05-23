@@ -12,3 +12,5 @@ FetchContent_Declare(
     GIT_PROGRESS 1
 )
 FetchContent_MakeAvailable(spdlog)
+
+set_property(TARGET spdlog PROPERTY POSITION_INDEPENDENT_CODE ON)
