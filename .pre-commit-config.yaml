@@ -49,3 +49,10 @@ repos:
       - id: conventional-pre-commit
         stages: [commit-msg]
         args: []
+  - repo: local
+    hooks:
+      - id: prettier-docker
+        name: prettier (docker)
+        entry: bash -c 'docker run --rm -v "$(pwd):/work" -w /work ghcr.io/tiagovla/oiseau-prettier:latest --write $@' --
+        language: system
+        types_or: [css, javascript, html]
