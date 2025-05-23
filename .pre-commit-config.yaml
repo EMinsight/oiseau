@@ -56,3 +56,8 @@ repos:
         entry: bash -c 'docker run --rm -v "$(pwd):/work" -w /work ghcr.io/tiagovla/oiseau-prettier:latest --write $@' --
         language: system
         types_or: [css, javascript, html]
+  - repo: https://github.com/hukkin/mdformat
+    rev: 0.7.22
+    hooks:
+      - id: mdformat
+        args: ["--number"]

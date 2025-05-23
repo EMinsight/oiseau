@@ -16,6 +16,7 @@ Commit Message Guidelines
 We follow the Conventional Commits format:
 
 Common types:
+
 - feat: A new feature
 - fix: A bug fix
 - docs: Documentation only changes
@@ -25,9 +26,9 @@ Common types:
 - chore: Maintenance tasks (e.g., tooling, CI, build scripts)
 
 Examples:
-  git commit -m "feat(solver): add ADE model for dispersive media"
-  git commit -m "fix(mesh): resolve issue with element connectivity"
-  git commit -m "docs: update README with installation instructions"
+git commit -m "feat(solver): add ADE model for dispersive media"
+git commit -m "fix(mesh): resolve issue with element connectivity"
+git commit -m "docs: update README with installation instructions"
 
 Issues and Feedback
 
