@@ -7,7 +7,7 @@
 FetchContent_Declare(
     spdlog
     GIT_REPOSITORY https://github.com/gabime/spdlog.git
-    GIT_TAG v1.15.3
+    GIT_TAG ${SPDLOG_VERSION}
     GIT_SHALLOW 1
     GIT_PROGRESS 1
 )
