@@ -46,9 +46,10 @@ include(fmt.cmake)
 include(loguru.cmake)
 include(spdlog.cmake)
 include(pybind11.cmake)
+include(mdspan.cmake)
 
 target_link_libraries(
-    oiseau_deps INTERFACE xtensor_stack fmt::fmt loguru spdlog::spdlog pybind11::embed
+    oiseau_deps INTERFACE xtensor_stack fmt::fmt loguru spdlog::spdlog pybind11::embed std::mdspan
 )
 
 # include(eigen.cmake) include(blaze.cmake) include(boost.cmake)
