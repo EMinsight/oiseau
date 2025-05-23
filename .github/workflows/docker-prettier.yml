@@ -1,0 +1,34 @@
+# Copyright (C) 2025 Tiago V. L. Amorim (@tiagovla)
+#
+# This file is part of oiseau (https://github.com/tiagovla/oiseau)
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: Build and push latest version of prettier
+on:
+  push:
+    branches: [master]
+    paths:
+      - .github/docker/oiseau-prettier/Dockerfile
+      - .github/workflows/docker-prettier.yml
+  workflow_dispatch:
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/oiseau-prettier:latest .github/docker/oiseau-prettier/
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/oiseau-prettier:latest
