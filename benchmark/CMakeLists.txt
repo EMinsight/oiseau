@@ -15,3 +15,4 @@ endmacro()
 
 add_benchmark(oiseau_benchmark_oiseau benchmark_oiseau.cpp)
 add_benchmark(oiseau_benchmark_xtensor benchmark_xtensor.cpp)
+add_benchmark(oiseau_benchmark_dot_layout benchmark_dot_layout.cpp)
