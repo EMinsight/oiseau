@@ -3,7 +3,7 @@
 # This file is part of oiseau (https://github.com/tiagovla/oiseau)
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-name: Build and push latest version of addlicense
+name: oiseau-addlicense
 on:
   push:
     branches: [master]

@@ -20,10 +20,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcovr \
     git \
     gnupg \
-    libatlas-base-dev \
-    libblas-dev \
-    libboost-all-dev \
     liblapack-dev \
+    libomp-dev \
+    libopenblas-dev \
     ninja-build \
     pkg-config \
     python3.12 \

@@ -3,13 +3,13 @@
 # This file is part of oiseau (https://github.com/tiagovla/oiseau)
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-name: Build and Push Docker Image
+name: oiseau-baseline-builder
 on:
   push:
     branches:
       - master
     paths:
-      - .github/docker/Dockerfile
+      - .github/docker/oiseau-baseline-builder/Dockerfile
       - .github/workflows/docker-builder.yml
 jobs:
   build-and-push:
