@@ -38,8 +38,8 @@ class Cell {
 
  public:
   virtual ~Cell() = default;
-  virtual Cell *facet() = 0;
-  virtual Cell *edge() = 0;
+  virtual CellType facet() = 0;
+  virtual CellType edge() = 0;
   std::string_view name() const;
   int dimension() const;
   int num_entities(int dim) const;
@@ -55,8 +55,8 @@ class Cell {
 class PointCell : public Cell {
  public:
   PointCell();
-  Cell *facet() override { return nullptr; }
-  Cell *edge() override { return nullptr; }
+  CellType facet() override { return nullptr; }
+  CellType edge() override { return nullptr; }
 };
 
 class IntervalCell : public Cell {
@@ -65,8 +65,8 @@ class IntervalCell : public Cell {
 
  public:
   IntervalCell();
-  Cell *facet() override { return &m_facet; }
-  Cell *edge() override { return nullptr; }
+  CellType facet() override { return &m_facet; }
+  CellType edge() override { return nullptr; }
 };
 
 class TriangleCell : public Cell {
@@ -76,8 +76,8 @@ class TriangleCell : public Cell {
 
  public:
   TriangleCell();
-  Cell *facet() override { return &m_facet; }
-  Cell *edge() override { return &m_edge; }
+  CellType facet() override { return &m_facet; }
+  CellType edge() override { return &m_edge; }
 };
 
 class QuadrilateralCell : public Cell {
@@ -87,8 +87,8 @@ class QuadrilateralCell : public Cell {
 
  public:
   QuadrilateralCell();
-  Cell *facet() override { return &m_facet; }
-  Cell *edge() override { return &m_edge; }
+  CellType facet() override { return &m_facet; }
+  CellType edge() override { return &m_edge; }
 };
 
 class TetrahedronCell : public Cell {
@@ -98,8 +98,8 @@ class TetrahedronCell : public Cell {
 
  public:
   TetrahedronCell();
-  Cell *facet() override { return &m_facet; }
-  Cell *edge() override { return &m_edge; }
+  CellType facet() override { return &m_facet; }
+  CellType edge() override { return &m_edge; }
 };
 
 class HexahedronCell : public Cell {
@@ -109,8 +109,8 @@ class HexahedronCell : public Cell {
 
  public:
   HexahedronCell();
-  Cell *facet() override { return &m_facet; }
-  Cell *edge() override { return &m_edge; }
+  CellType facet() override { return &m_facet; }
+  CellType edge() override { return &m_edge; }
 };
 
 CellType get_cell_type(const CellKind cell);
