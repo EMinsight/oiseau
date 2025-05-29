@@ -16,7 +16,7 @@
 namespace oiseau::mesh {
 
 class Cell;
-using CellType = Cell const *;
+using CellType = const Cell *;
 
 enum class CellKind {
   Undefined = 0,
@@ -28,6 +28,8 @@ enum class CellKind {
   Hexahedron
 };
 
+CellType get_cell_type(const CellKind cell);
+
 class Cell {
  protected:
   CellKind m_kind;
@@ -35,11 +37,13 @@ class Cell {
   int m_dim;
   std::vector<std::vector<std::vector<std::vector<int>>>> m_topology;
   std::pair<std::vector<double>, std::array<std::size_t, 2>> m_geometry;
+  CellType m_facet = nullptr;
+  CellType m_edge = nullptr;
 
  public:
   virtual ~Cell() = default;
-  virtual CellType facet() = 0;
-  virtual CellType edge() = 0;
+  virtual CellType facet() { return m_facet; };
+  virtual CellType edge() { return m_edge; };
   std::string_view name() const;
   int dimension() const;
   int num_entities(int dim) const;
@@ -55,64 +59,32 @@ class Cell {
 class PointCell : public Cell {
  public:
   PointCell();
-  CellType facet() override { return nullptr; }
-  CellType edge() override { return nullptr; }
 };
 
 class IntervalCell : public Cell {
- private:
-  PointCell m_facet;
-
  public:
   IntervalCell();
-  CellType facet() override { return &m_facet; }
-  CellType edge() override { return nullptr; }
 };
 
 class TriangleCell : public Cell {
  private:
-  IntervalCell m_facet;
-  PointCell m_edge;
-
  public:
   TriangleCell();
-  CellType facet() override { return &m_facet; }
-  CellType edge() override { return &m_edge; }
 };
 
 class QuadrilateralCell : public Cell {
- private:
-  IntervalCell m_facet;
-  PointCell m_edge;
-
  public:
   QuadrilateralCell();
-  CellType facet() override { return &m_facet; }
-  CellType edge() override { return &m_edge; }
 };
 
 class TetrahedronCell : public Cell {
- private:
-  TriangleCell m_facet;
-  IntervalCell m_edge;
-
  public:
   TetrahedronCell();
-  CellType facet() override { return &m_facet; }
-  CellType edge() override { return &m_edge; }
 };
 
 class HexahedronCell : public Cell {
- private:
-  QuadrilateralCell m_facet;
-  IntervalCell m_edge;
-
  public:
   HexahedronCell();
-  CellType facet() override { return &m_facet; }
-  CellType edge() override { return &m_edge; }
 };
-
-CellType get_cell_type(const CellKind cell);
 
 }  // namespace oiseau::mesh

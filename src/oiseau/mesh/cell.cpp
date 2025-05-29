@@ -8,37 +8,50 @@
 
 #include <algorithm>
 #include <iterator>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 #include <xtensor/containers/xadapt.hpp>
 
 namespace oiseau::mesh {
 
-CellType get_cell_type(const CellKind cell) {
-  static const PointCell point;
-  static const IntervalCell interval;
-  static const TriangleCell triangle;
-  static const QuadrilateralCell quadrilateral;
-  static const TetrahedronCell tetrahedron;
-  static const HexahedronCell hexahedron;
+CellType get_cell_type(const CellKind cell_kind) {
+  static std::unordered_map<CellKind, std::unique_ptr<Cell>> cache;
 
-  static const std::unordered_map<CellKind, CellType> cell_map = {
-      {CellKind::Point, &point},
-      {CellKind::Interval, &interval},
-      {CellKind::Triangle, &triangle},
-      {CellKind::Quadrilateral, &quadrilateral},
-      {CellKind::Tetrahedron, &tetrahedron},
-      {CellKind::Hexahedron, &hexahedron},
-  };
+  auto it = cache.find(cell_kind);
+  if (it != cache.end()) {
+    return it->second.get();
+  }
 
-  auto it = cell_map.find(cell);
-  if (it == cell_map.end()) {
+  std::unique_ptr<Cell> cell;
+  switch (cell_kind) {
+  case CellKind::Point:
+    cell = std::make_unique<PointCell>();
+    break;
+  case CellKind::Interval:
+    cell = std::make_unique<IntervalCell>();
+    break;
+  case CellKind::Triangle:
+    cell = std::make_unique<TriangleCell>();
+    break;
+  case CellKind::Quadrilateral:
+    cell = std::make_unique<QuadrilateralCell>();
+    break;
+  case CellKind::Tetrahedron:
+    cell = std::make_unique<TetrahedronCell>();
+    break;
+  case CellKind::Hexahedron:
+    cell = std::make_unique<HexahedronCell>();
+    break;
+  default:
     throw std::runtime_error("Unknown cell type");
   }
-  return it->second;
+  cache.emplace(cell_kind, std::move(cell));
+  return cache[cell_kind].get();
 }
 
 std::string_view Cell::name() const { return m_name; }
@@ -121,6 +134,8 @@ TriangleCell::TriangleCell() {
           {{0, 1, 2}, {0, 1, 2}, {0}},
       },
   };
+  m_facet = get_cell_type(CellKind::Interval);
+  m_edge = get_cell_type(CellKind::Point);
 }
 
 QuadrilateralCell::QuadrilateralCell() {
@@ -150,6 +165,8 @@ QuadrilateralCell::QuadrilateralCell() {
           {{0, 1, 2, 3}, {0, 1, 2, 3}, {0}},
       },
   };
+  m_facet = get_cell_type(CellKind::Interval);
+  m_edge = get_cell_type(CellKind::Point);
 }
 
 TetrahedronCell::TetrahedronCell() {
@@ -185,6 +202,8 @@ TetrahedronCell::TetrahedronCell() {
           {{0, 1, 2, 3}, {0, 1, 2, 3, 4, 5}, {0, 1, 2, 3}, {0}},
       },
   };
+  m_facet = get_cell_type(CellKind::Triangle);
+  m_edge = get_cell_type(CellKind::Interval);
 }
 
 HexahedronCell::HexahedronCell() {
@@ -224,6 +243,8 @@ HexahedronCell::HexahedronCell() {
           {{0, 1, 2, 3, 4, 5, 6, 7}, {0, 1, 2, 3, 4, 5, 6, 7}, {0}},
       },
   };
+  m_facet = get_cell_type(CellKind::Quadrilateral);
+  m_edge = get_cell_type(CellKind::Interval);
 }
 
 }  // namespace oiseau::mesh
