@@ -42,7 +42,7 @@ option(OISEAU_BUILD_TEST "Build unit tests" ON)
 option(OISEAU_BUILD_DOCS "Build documentation" OFF)
 option(OISEAU_BUILD_BENCHMARK "Build benchmarks" OFF)
 option(OISEAU_BUILD_COVERAGE "Build with coverage" OFF)
-option(OISEAU_BUILD_SHARED "Build static library" ON)
+option(OISEAU_BUILD_SHARED "Build shared library" OFF)
 
 # ------------------------------------------------------------------------------
 # Dependencies
