@@ -51,7 +51,3 @@ include(mdspan.cmake)
 target_link_libraries(
     oiseau_deps INTERFACE xtensor_stack fmt::fmt spdlog::spdlog pybind11::embed std::mdspan
 )
-
-# include(eigen.cmake) include(blaze.cmake) include(boost.cmake)
-
-# target_link_libraries(oiseau_deps INTERFACE Eigen3::Eigen Blaze::blaze Boost::boost )
